@@ -1,0 +1,20 @@
+{
+    "name": "roll-new-character-stats",
+    "title": "Roll New Character Stats",
+    "description": "Small mod for rolling new D&D character stats to get your game rolling!",
+    "author": "Richard Fox",
+    "version": "1.0.0",
+    "minimumCoreVersion": "9.0.0",
+    "compatibleCoreVersion" : "9",
+    "systems": ["dnd5e"], 
+    "esmodules": [
+      "scripts/roll-new-character-stats.js"
+    ], 
+    "languages": [
+      {
+        "lang": "en",
+        "name": "English",
+        "path": "languages/en.json"
+      }
+    ] 
+  }
