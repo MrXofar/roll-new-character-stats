@@ -4,8 +4,12 @@
     "description": "Small mod for rolling new D&D character stats to get your game rolling!",
     "author": "Richard Fox",
     "version": "1.0.0",
-    "minimumCoreVersion": "9.0.0",
+    "minimumCoreVersion": "0.8.6",
     "compatibleCoreVersion" : "9",
+    "url": "https://github.com/MrXofar/roll-new-character-stats",
+    "readme": "https://github.com/MrXofar/roll-new-character-stats/blob/master/README.md",
+    "bugs": "https://github.com/MrXofar/roll-new-character-stats/issues",
+    "changelog": "",
     "systems": ["dnd5e"], 
     "esmodules": [
       "scripts/roll-new-character-stats.js"
@@ -16,5 +20,6 @@
         "name": "English",
         "path": "languages/en.json"
       }
-    ] 
+    ],
+    "manifest": "https://github.com/MrXofar/roll-new-character-stats/blob/master/module.json"
   }

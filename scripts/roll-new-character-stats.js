@@ -174,9 +174,9 @@ export default async function RollStats() {
 	results_message += over_eighteen ? "Over 18 Allowed</br>" : "No scores over 18 at 1st level</br>";
 	results_message += distribute_results ? "Distribute freely</br></br>" : "Apply as rolled</br></br>";
 	results_message += "<b>Dificulty:</b> " + difficulty_desc + "</br></br>";
-	results_message += "<b>Results:</b></br>";
-
+	
 	// Add results to message
+	results_message += "<b>Results:</b></br>";
 	var apply_to = "";
 	var att_idx = 0;
 	for (var set = 0; set < result_sets.length; set++) {
