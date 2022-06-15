@@ -6,9 +6,6 @@
     "version": "1.0.0",
     "minimumCoreVersion": "0.8.6",
     "compatibleCoreVersion" : "9",
-    "url": "https://github.com/MrXofar/roll-new-character-stats",
-    "readme": "https://github.com/MrXofar/roll-new-character-stats/blob/master/README.md",
-    "bugs": "https://github.com/MrXofar/roll-new-character-stats/issues",
     "changelog": "",
     "systems": ["dnd5e"], 
     "esmodules": [
@@ -21,5 +18,9 @@
         "path": "lang/en.json"
       }
     ],
-    "manifest": "https://github.com/MrXofar/roll-new-character-stats/releases/download/v1.0.1/module.json"
+    "manifest": "https://github.com/MrXofar/roll-new-character-stats/blob/v1.0.0/module.json",
+    "download": "https://github.com/MrXofar/roll-new-character-stats/archive/refs/tags/v1.0.0.zip",
+    "url": "https://github.com/MrXofar/roll-new-character-stats",
+    "readme": "https://github.com/MrXofar/roll-new-character-stats/blob/master/README.md",
+    "bugs": "https://github.com/MrXofar/roll-new-character-stats/issues"
   }
