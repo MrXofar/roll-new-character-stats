@@ -18,7 +18,7 @@
         "path": "lang/en.json"
       }
     ],
-    "manifest": "https://github.com/MrXofar/roll-new-character-stats/blob/v1.0.0/module.json",
+    "manifest": "https://raw.githubusercontent.com/MrXofar/roll-new-character-stats/master/module.json",
     "download": "https://github.com/MrXofar/roll-new-character-stats/archive/refs/tags/v1.0.0.zip",
     "url": "https://github.com/MrXofar/roll-new-character-stats",
     "readme": "https://github.com/MrXofar/roll-new-character-stats/blob/master/README.md",
