@@ -1,13 +1,18 @@
 {
     "name": "roll-new-character-stats",
     "title": "Roll New Character Stats",
-    "description": "Small mod for rolling new D&D character stats to get your game rolling!",
+    "description": "Small mod for rolling new table-top-rpg character stats to get your game rolling!",
     "author": "Richard Fox",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "minimumCoreVersion": "0.8.6",
     "compatibleCoreVersion" : "9",
     "changelog": "",
-    "systems": ["dnd5e"], 
+    "systems": [
+      "dnd5e",
+      "dnd4e",
+      "ose",
+      "archmage"
+    ], 
     "esmodules": [
       "scripts/roll-new-character-stats.js"
     ], 
@@ -19,7 +24,7 @@
       }
     ],
     "manifest": "https://raw.githubusercontent.com/MrXofar/roll-new-character-stats/master/module.json",
-    "download": "https://github.com/MrXofar/roll-new-character-stats/archive/refs/tags/v1.0.0.zip",
+    "download": "https://github.com/MrXofar/roll-new-character-stats/archive/refs/tags/v1.0.1.zip",
     "url": "https://github.com/MrXofar/roll-new-character-stats",
     "readme": "https://github.com/MrXofar/roll-new-character-stats/blob/master/README.md",
     "bugs": "https://github.com/MrXofar/roll-new-character-stats/issues"

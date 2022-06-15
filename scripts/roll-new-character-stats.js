@@ -159,16 +159,18 @@ export default async function RollStats() {
 	}
 
 	// Begin building message
-	var results_message = "<b>Method:</b></br>";
-	results_message += num_die[num_diceIndex].formula + (re_roll_ones ? "; but re-roll ones" : "") + "</br>";
+	var results_message = "<b>" + game.i18n.localize("RNCS.results-text.methods.label") + ":</b></br>";
+	results_message += num_die[num_diceIndex].formula + (re_roll_ones ? game.i18n.localize("RNCS.results-text.methods.but-re-roll-ones") : "") + "</br>";
 	results_message += num_rolls[num_rollIndex].method + "</br>";
 	results_message += bonus_Index > 0 ? "+" + bonus_method + "</br>" : "";
-	results_message += over_eighteen ? "Over 18 Allowed</br>" : "No scores over 18 at 1st level</br>";
-	results_message += distribute_results ? "Distribute freely</br></br>" : "Apply as rolled</br></br>";
+	results_message += (over_eighteen ? game.i18n.localize("RNCS.results-text.methods.over-18-allowed") : game.i18n.localize("RNCS.results-text.methods.over-18-not-allowed")) + "</br>";
+	results_message += (distribute_results ? game.i18n.localize("RNCS.results-text.methods.distribute-freely") : game.i18n.localize("RNCS.results-text.methods.apply-as-rolled")) + "</br></br>";
+	
+	// Add Dificulty to message
 	results_message += "<b>" + game.i18n.localize("RNCS.results-text.difficulty.label") + ":</b> " + difficulty_desc + "</br></br>";
 	
 	// Add results to message
-	results_message += "<b>Results:</b></br>";
+	results_message += "<b>" + game.i18n.localize("RNCS.results-text.results.label") + ":</b></br>";
 	var apply_to = "";
 	var att_idx = 0;
 	for (var set = 0; set < result_sets.length; set++) {
@@ -184,15 +186,20 @@ export default async function RollStats() {
 	}
 
 	// Add Bonus Point(s) to message
-	results_message += (bonus_Index > 0 ? "</br><b>Bonus:</b> " + bonus_roll + "</br></br>" : "</br>");
+	results_message += (bonus_Index > 0 ? "</br><b>" + game.i18n.localize("RNCS.results-text.bonus.label") + ":</b> " + bonus_roll + "</br></br>" : "</br>");
 
 	// Add Note from DM to message
-	results_message += "<b>Note from DM:</b></br>";
-	results_message += distribute_results ? "You may distribute these scores among your attributes as you desire. " : "Each result must be applied to attributes in the order they were rolled. ";
-	if (bonus_Index > 0) { results_message += "The Bonus point(s) may be distributed among any of your scores. "; }
-	results_message += "Final scores may " + (over_eighteen ? "" : "<b>not</b>") + " be above 18 after including ";
-	if (bonus_Index > 0) { results_message += "Bonus and "; }
-	results_message += "any bonuses at 1st level. ";
+	// Label
+	results_message += "<b>" + game.i18n.localize("RNCS.results-text.note-from-dm.label") + ":</b></br>";
+	// Score distribution
+	results_message += distribute_results ? game.i18n.localize("RNCS.results-text.note-from-dm.distribute-freely") : game.i18n.localize("RNCS.results-text.note-from-dm.apply-as-rolled");
+	// Bonus Point distribution - if any
+	if (bonus_Index > 0) { results_message += game.i18n.localize("RNCS.results-text.note-from-dm.distribute-bonus-points"); }
+	// Mention final score limit - if any
+	results_message += (over_eighteen ? game.i18n.localize("RNCS.results-text.note-from-dm.final-scores-may") : game.i18n.localize("RNCS.results-text.note-from-dm.final-scores-may-not")) + game.i18n.localize("RNCS.results-text.note-from-dm.above-18");
+	// Mention bonus points - if any - and any other bonuses
+	if (bonus_Index > 0) { results_message += game.i18n.localize("RNCS.results-text.note-from-dm.bonus-points"); }
+	results_message += game.i18n.localize("RNCS.results-text.note-from-dm.any-bonuses");
 
 	const speaker = ChatMessage.getSpeaker();
 	ChatMessage.create({

@@ -40,7 +40,16 @@
         "Hint": "This setting will allow distribution of results freely among attributes."      
       }
     },
+
     "results-text": {
+      "methods":{
+        "label": "Method",
+        "but-re-roll-ones": "; but reroll ones",
+        "over-18-allowed": "Over 18 Allowed",
+        "over-18-not-allowed": "No scores over 18 at 1st level",
+        "distribute-freely": "Distribute freely",
+        "apply-as-rolled": "Apply as rolled"
+      },
       "difficulty": {
         "label": "Difficulty",
         "level": {
@@ -49,11 +58,30 @@
           "EasyDay": "Easy Day",
           "Yawn": "Yawn"
         }
+      },
+      "results": {
+        "label": "Results"
+      },
+      "bonus": {
+        "label": "Bonus"
+      },
+      "note-from-dm": {
+        "label": "Note from DM",
+        "distribute-freely": "You may distribute these scores among your attributes as you desire. ",
+        "apply-as-rolled": "Each result must be applied to attributes in the order they were rolled. ",
+        "distribute-bonus-points": "The Bonus Point(s) may be distributed among any of your scores. ",
+        "final-scores-may": "Final scores may ",
+        "final-scores-may-not": "Final scores may <b>not</b> ",
+        "above-18": "be above 18 after including ",
+        "bonus-points": "Bonus Point(s) and ",
+        "any-bonuses": "any bonuses at 1st level. "
       }
     },
+    
     "dialog":{
       "confirm-roll":{
         "Title": "Roll Attributes",
+        "Method": "New attributes are rolled using the following method:",
         "Content": "Roll attributes for a new character?"
       }
     }
