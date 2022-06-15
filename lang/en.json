@@ -1,4 +1,61 @@
 {
-    "roll-new-character-stats": {
+  "RNCS": {
+    "settings": {
+      "d6Method": {
+        "Name": "Number of d6's Rolled",
+        "Hint": "How many d6 are rolled and retained?",
+        "choices":{
+          "0": "3d6 - Keep all",
+          "1": "4d6 - Drop lowest",
+          "2": "2d6+6 - Keep all"
+        }        
+      },
+      "ReRollOnes": {
+        "Name": "Reroll Ones?",
+        "Hint": "This setting will cause 1's to be rerolled until a 1 is not rolled."      
+      },
+      "NumberOfSetsRolls": {
+        "Name": "Number of Sets Rolled",
+        "Hint": "How many sets d6 are rolled and retained?",
+        "choices":{
+          "0":"6 Rolls - Keep all",
+          "1":"7 Rolls - Drop lowest"
+        }        
+      },
+      "BonusPoints": {
+        "Name": "Bonus Points",
+        "Hint": "How many bonus points awarded?",
+        "choices":{
+          "0": "0 Bonus Points",
+          "1": "1 Bonus Point",
+          "2": "1d4 Bonus Points"
+        }        
+      },
+      "Over18Allowed": {        
+        "Name": "Scores Over 18 Allowed?",
+        "Hint": "This setting will allow scores over 18 at first level after adding bonuses."    
+      },
+      "DistributeResults": {
+        "Name": "Distribute Results?",
+        "Hint": "This setting will allow distribution of results freely among attributes."      
+      }
+    },
+    "results-text": {
+      "difficulty": {
+        "label": "Difficulty",
+        "level": {
+          "Hardcore": "Hardcore",
+          "Veteran": "Veteran",
+          "EasyDay": "Easy Day",
+          "Yawn": "Yawn"
+        }
+      }
+    },
+    "dialog":{
+      "confirm-roll":{
+        "Title": "Roll Attributes",
+        "Content": "Roll attributes for a new character?"
+      }
     }
   }
+}

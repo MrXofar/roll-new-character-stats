@@ -11,35 +11,10 @@ let namedfields = (...fields) => {
 	};
 };
 
-let num_dice = namedfields('formula', 'die', 'difficulty')
-var num_die = [
-	num_dice('3d6 - Keep All', 3, 0),
-	num_dice('4d6 - Drop Lowest', 4, 2),
-	num_dice('2d6+6 - Keep All', 2, 3)
-];
-
-let num_roll = namedfields('method', 'rolls', 'difficulty')
-var num_rolls = [
-	num_roll('6 Rolls - Keep All', 6, 0),
-	num_roll('7 Rolls - Drop Lowest', 7, 1)
-];
-
-let bonus = namedfields('method', 'difficulty')
-var bonus_points = [
-	bonus('0 Bonus Points', 0),
-	bonus('1 Bonus Point', 1),
-	bonus('1d4 Bonus Points', 3)
-];
-
-let attribute = namedfields('attribute')
-var attributes = [
-	attribute('STR: '),
-	attribute('DEX: '),
-	attribute('CON: '),
-	attribute('INT: '),
-	attribute('WIS: '),
-	attribute('CHA: ')
-];
+let num_dice = namedfields('formula', 'die', 'difficulty');
+let num_roll = namedfields('method', 'rolls', 'difficulty');
+let bonus_point = namedfields('method', 'difficulty');
+let attribute = namedfields('attribute');
 
 Hooks.once("init", () => {
 	console.log(RollNewCharacterStats.ID + " | Initialized")
@@ -56,16 +31,33 @@ Hooks.on('getSceneControlButtons', (controls) => {
 
 export class RollNewCharacterStats {
 	static ID = 'roll-new-character-stats';
-
-	// static TEMPLATES = {
-	// }  
-
-	// static FLAGS = {
-	// }
-
 }
 
 export default async function RollStats() {
+	
+	var num_die = [
+		num_dice(game.i18n.localize("RNCS.settings.d6Method.choices.0"), 3, 0),
+		num_dice(game.i18n.localize("RNCS.settings.d6Method.choices.1"), 4, 2),
+		num_dice(game.i18n.localize("RNCS.settings.d6Method.choices.2"), 2, 3)
+	];
+	var num_rolls = [
+		num_roll(game.i18n.localize("RNCS.settings.NumberOfSetsRolls.choices.0"), 6, 0),
+		num_roll(game.i18n.localize("RNCS.settings.NumberOfSetsRolls.choices.1"), 7, 1)
+	];
+	var bonus_points = [
+		bonus_point(game.i18n.localize("RNCS.settings.BonusPoints.choices.0"), 0),
+		bonus_point(game.i18n.localize("RNCS.settings.BonusPoints.choices.1"), 1),
+		bonus_point(game.i18n.localize("RNCS.settings.BonusPoints.choices.2"), 3)
+	];
+	var attributes = [
+		attribute('STR: '),
+		attribute('DEX: '),
+		attribute('CON: '),
+		attribute('INT: '),
+		attribute('WIS: '),
+		attribute('CHA: ')
+	];
+
 	//console.log("Roll New Character Stats | Attempting to roll new stats!");
 	const dice_so_nice = game.modules.get("dice-so-nice")?.active;
 
@@ -92,7 +84,7 @@ export default async function RollStats() {
 	// Roll them dice!
 	var result_sets = [];
 	var num_sets = rolls;
-	var roll_formula = die + "d6" + (re_roll_ones ? "rr1" : "") + (num_die[num_diceIndex].formula.includes('Drop Lowest') ? "dl" : "")
+	var roll_formula = die + "d6" + (re_roll_ones ? "rr1" : "") + (num_diceIndex === 1 ? "dl" : "") //num_diceIndex === 1 === "4d6 - Drop lowest"
 	roll_formula += die === 2 ? "+6" : "";// 2d6+6 method
 	//console.log("roll_formula = " + roll_formula);
 	for (var rs = 0; rs < num_sets; rs++) {
@@ -107,7 +99,7 @@ export default async function RollStats() {
 
 	// Drop lowest
 	var drop_val_idx = -1;
-	if (num_rolls[num_rollIndex].method.includes('Drop Lowest')) {
+	if (num_rollIndex === 1) { //"7 Rolls - Drop lowest"
 		var results = result_sets.map(function (e) { return e.total; }).join(',').split(',').map(Number);
 		var drop_val = Math.min(...results);
 		drop_val_idx = results.indexOf(drop_val);
@@ -115,15 +107,15 @@ export default async function RollStats() {
 
 	// Bonus Points
 	var bonus_roll;
-	switch (bonus_method) {
-		case "0 Bonus Points":
+	switch (bonus_Index) {
+		case 0://"0 Bonus Points":
 			bonus_roll = 0
 			break;
-		case "1 Bonus Point":
+		case 1://"1 Bonus Point":
 			bonus_roll = 1
 			break;
-		case "1d4 Bonus Points":
-			bonus = await new Roll("1d4");
+		case 2://"1d4 Bonus Points":
+			var bonus = await new Roll("1d4");
 			bonus_roll = await bonus.evaluate({ async: false }).total;
 			if (dice_so_nice) { game.dice3d.showForRoll(bonus); }
 			break;
@@ -141,19 +133,19 @@ export default async function RollStats() {
 	// ...but I chose this way because it requires very little effort or brain power to understand or modify.
 	switch (difficulty) {
 		case 0:
-			difficulty_desc = "HardCore";
+			difficulty_desc = game.i18n.localize("RNCS.results-text.difficulty.level.Hardcore");
 			break;
 		case 1:
 		case 2:
 		case 3:
-			difficulty_desc = "Veteran";
+			difficulty_desc = game.i18n.localize("RNCS.results-text.difficulty.level.Veteran");
 			break;
 		case 4:
 		case 5:
 		case 6:
 		case 7:
 		case 8:
-			difficulty_desc = "Easy Button";
+			difficulty_desc = game.i18n.localize("RNCS.results-text.difficulty.level.EasyDay");
 			break;
 		case 9:
 		case 10:
@@ -162,7 +154,7 @@ export default async function RollStats() {
 		case 13:
 		case 14:
 		case 15:
-			difficulty_desc = "Why do you play?";
+			difficulty_desc = game.i18n.localize("RNCS.results-text.difficulty.level.Yawn");
 			break;
 	}
 
@@ -173,7 +165,7 @@ export default async function RollStats() {
 	results_message += bonus_Index > 0 ? "+" + bonus_method + "</br>" : "";
 	results_message += over_eighteen ? "Over 18 Allowed</br>" : "No scores over 18 at 1st level</br>";
 	results_message += distribute_results ? "Distribute freely</br></br>" : "Apply as rolled</br></br>";
-	results_message += "<b>Dificulty:</b> " + difficulty_desc + "</br></br>";
+	results_message += "<b>" + game.i18n.localize("RNCS.results-text.difficulty.label") + ":</b> " + difficulty_desc + "</br></br>";
 	
 	// Add results to message
 	results_message += "<b>Results:</b></br>";

@@ -18,7 +18,7 @@
       {
         "lang": "en",
         "name": "English",
-        "path": "languages/en.json"
+        "path": "lang/en.json"
       }
     ],
     "manifest": "https://github.com/MrXofar/roll-new-character-stats/blob/master/module.json"

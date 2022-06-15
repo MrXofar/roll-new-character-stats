@@ -32,8 +32,15 @@ import RollStats from './roll-new-character-stats.js';
       };
     }
   
-    _handleRollNewCharacterStatsClick() {
-      RollStats();
+    async _handleRollNewCharacterStatsClick() {
+      const confirmed = await Dialog.confirm({
+        title: game.i18n.localize("RNCS.dialog.confirm-roll.Title"),
+        content: game.i18n.localize("RNCS.dialog.confirm-roll.Content")
+      });
+
+      if (confirmed) {
+        RollStats();
+      }
     }
   }
   
