@@ -12,4 +12,7 @@ Only the DM may edit preferences under **Configure Settings > Module Settings** 
 
 ![image](https://user-images.githubusercontent.com/103948142/173832493-6329ef49-e2a4-4367-b652-689de2201a17.png)
 
+**Roll New Character Stats** also supports Dice so Nice! but is not required.
+![image](https://user-images.githubusercontent.com/103948142/174195277-8af7649b-bfa2-43e1-a737-032048788b3c.png)
+
 Enjoy!
