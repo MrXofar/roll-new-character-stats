@@ -3,28 +3,36 @@
     "settings": {
       "d6Method": {
         "Name": "Number of d6's Rolled",
-        "Hint": "How many d6 are rolled and retained?",
+        "Hint": "Select how many d6 are to be rolled",
         "choices":{
-          "0": "3d6 - Keep all",
-          "1": "4d6 - Drop lowest",
-          "2": "2d6+6 - Keep all"
+          "0": "3d6",
+          "1": "4d6",
+          "2": "2d6+6"
         }        
       },
+      "DropLowestDieRoll": {
+        "Name": "Drop Lowest Die Roll",
+        "Hint": "This setting will drop the lowest die roll."      
+      },
       "ReRollOnes": {
-        "Name": "Reroll Ones?",
+        "Name": "Reroll Ones",
         "Hint": "This setting will cause 1's to be rerolled until a 1 is not rolled."      
       },
       "NumberOfSetsRolls": {
         "Name": "Number of Sets Rolled",
-        "Hint": "How many sets d6 are rolled and retained?",
+        "Hint": "Select how many sets of die are to be rolled",
         "choices":{
-          "0":"6 Rolls - Keep all",
-          "1":"7 Rolls - Drop lowest"
+          "0":"6 Sets",
+          "1":"7 Sets"
         }        
+      },
+      "DropLowestSet": {
+        "Name": "Drop Lowest Set",
+        "Hint": "This setting will drop the lowest set of die rolls."      
       },
       "BonusPoints": {
         "Name": "Bonus Points",
-        "Hint": "How many bonus points awarded?",
+        "Hint": "Select how many bonus points are to be awarded",
         "choices":{
           "0": "0 Bonus Points",
           "1": "1 Bonus Point",
@@ -32,11 +40,11 @@
         }        
       },
       "Over18Allowed": {        
-        "Name": "Scores Over 18 Allowed?",
+        "Name": "Scores Over 18 Allowed",
         "Hint": "This setting will allow scores over 18 at first level after adding bonuses."    
       },
       "DistributeResults": {
-        "Name": "Distribute Results?",
+        "Name": "Distribute Results",
         "Hint": "This setting will allow distribution of results freely among attributes."      
       }
     },
@@ -44,7 +52,9 @@
     "results-text": {
       "methods":{
         "label": "Method",
-        "but-re-roll-ones": "; but reroll ones",
+        "drop-lowest-die": " - drop lowest die",
+        "re-roll-ones": " - reroll ones",
+        "drop-lowest-set": " - drop lowest set",
         "over-18-allowed": "Over 18 Allowed",
         "over-18-not-allowed": "No scores over 18 at 1st level",
         "distribute-freely": "Distribute freely",

@@ -16,6 +16,15 @@ export function registerSettings() {
         default: "0"
     });
 
+    game.settings.register(settingsKey, "DropLowestDieRoll", {
+        name: game.i18n.localize("RNCS.settings.DropLowestDieRoll.Name"),
+        hint: game.i18n.localize("RNCS.settings.DropLowestDieRoll.Hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: false
+    });
+
     game.settings.register(settingsKey, "ReRollOnes", {
         name: game.i18n.localize("RNCS.settings.ReRollOnes.Name"),
         hint: game.i18n.localize("RNCS.settings.ReRollOnes.Hint"),
@@ -36,6 +45,15 @@ export function registerSettings() {
             "1": game.i18n.localize("RNCS.settings.NumberOfSetsRolls.choices.1")
         },
         default: "0"
+    });
+
+    game.settings.register(settingsKey, "DropLowestSet", {
+        name: game.i18n.localize("RNCS.settings.DropLowestSet.Name"),
+        hint: game.i18n.localize("RNCS.settings.DropLowestSet.Hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: false
     });
 
     game.settings.register(settingsKey, "BonusPoints", {
