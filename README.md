@@ -10,7 +10,7 @@ Some folks are okay with this, as it adds to the suspense of creating a new char
 # Module Settings
 Only the DM may edit preferences under **Configure Settings > Module Settings** so that their players always roll new characters using the same methods.
 
-![image](https://user-images.githubusercontent.com/103948142/173832493-6329ef49-e2a4-4367-b652-689de2201a17.png)
+![image](https://user-images.githubusercontent.com/103948142/174496369-3015054b-8146-4be2-a1b1-be7bffd718ae.png)
 
 **Roll New Character Stats** also supports Dice so Nice! but is not required.
 ![image](https://user-images.githubusercontent.com/103948142/174195277-8af7649b-bfa2-43e1-a737-032048788b3c.png)
