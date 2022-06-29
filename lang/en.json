@@ -1,7 +1,7 @@
 {
   "RNCS": {
     "settings": {
-      "d6Method": {
+      "AbilitiesRollMethod": {
         "Name": "Number of d6's Rolled",
         "Hint": "Select how many d6 are to be rolled",
         "choices":{
@@ -18,7 +18,7 @@
         "Name": "Reroll Ones",
         "Hint": "This setting will cause 1's to be rerolled until a 1 is not rolled."      
       },
-      "NumberOfSetsRolls": {
+      "NumberOfRolls": {
         "Name": "Number of Sets Rolled",
         "Hint": "Select how many sets of die are to be rolled",
         "choices":{
@@ -45,7 +45,7 @@
       },
       "DistributeResults": {
         "Name": "Distribute Results",
-        "Hint": "This setting will allow distribution of results freely among attributes."      
+        "Hint": "This setting will allow distribution of results freely among abilities."      
       }
     },
 
@@ -70,15 +70,16 @@
         }
       },
       "results": {
-        "label": "Results"
+        "label": "Results",
+        "abilities": "Abilities"
       },
       "bonus": {
         "label": "Bonus"
       },
       "note-from-dm": {
         "label": "Note from DM",
-        "distribute-freely": "You may distribute these scores among your attributes as you desire. ",
-        "apply-as-rolled": "Each result must be applied to attributes in the order they were rolled. ",
+        "distribute-freely": "You may distribute these scores among your abilities as you desire. ",
+        "apply-as-rolled": "Each result will be applied to abilities in the order they were rolled. ",
         "distribute-bonus-points": "The Bonus Point(s) may be distributed among any of your scores. ",
         "final-scores-may": "Final scores may ",
         "final-scores-may-not": "Final scores may <b>not</b> ",
@@ -90,9 +91,13 @@
     
     "dialog":{
       "confirm-roll":{
-        "Title": "Roll Attributes",
-        "Method": "New attributes are rolled using the following method:",
-        "Content": "Roll attributes for a new character?"
+        "Title": "Roll Abilities",
+        "Method": "New abilities are rolled using the following method:",
+        "Content": "Roll abilities for a new character?"
+      },
+      "results-button":{
+        "distribute-results": "Distribute Ability Scores",
+        "accept-new-actor": "Accept New Character"
       }
     }
   }

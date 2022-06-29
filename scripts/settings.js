@@ -1,17 +1,18 @@
+import { RollNewCharacterStats } from "./main.js";
 export const settingsKey = "roll-new-character-stats";
 
 export function registerSettings() {
 
-    game.settings.register(settingsKey, "d6Method", {
-        name: game.i18n.localize("RNCS.settings.d6Method.Name"),
-        hint: game.i18n.localize("RNCS.settings.d6Method.Hint"),
+    game.settings.register(settingsKey, "AbilitiesRollMethod", {
+        name: game.i18n.localize("RNCS.settings.AbilitiesRollMethod.Name"),
+        hint: game.i18n.localize("RNCS.settings.AbilitiesRollMethod.Hint"),
         scope: "world",
         config: true,
         type: String,
         choices: {
-            "0": game.i18n.localize("RNCS.settings.d6Method.choices.0"),
-            "1": game.i18n.localize("RNCS.settings.d6Method.choices.1"),
-            "2": game.i18n.localize("RNCS.settings.d6Method.choices.2")
+            "0": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.0"),
+            "1": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.1"),
+            "2": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.2")
         },
         default: "0"
     });
@@ -34,15 +35,15 @@ export function registerSettings() {
         default: false
     });
 
-    game.settings.register(settingsKey, "NumberOfSetsRolls", {
-        name: game.i18n.localize("RNCS.settings.NumberOfSetsRolls.Name"),
-        hint: game.i18n.localize("RNCS.settings.NumberOfSetsRolls.Hint"),
+    game.settings.register(settingsKey, "NumberOfRolls", {
+        name: game.i18n.localize("RNCS.settings.NumberOfRolls.Name"),
+        hint: game.i18n.localize("RNCS.settings.NumberOfRolls.Hint"),
         scope: "world",
         config: true,
         type: String,
         choices: {
-            "0": game.i18n.localize("RNCS.settings.NumberOfSetsRolls.choices.0"),
-            "1": game.i18n.localize("RNCS.settings.NumberOfSetsRolls.choices.1")
+            "0": game.i18n.localize("RNCS.settings.NumberOfRolls.choices.0"),
+            "1": game.i18n.localize("RNCS.settings.NumberOfRolls.choices.1")
         },
         default: "0"
     });
@@ -87,5 +88,5 @@ export function registerSettings() {
         type: Boolean,
         default: false
     });
-	//console.log(settingsKey + " | Initialized Settings");
+	console.log(RollNewCharacterStats.ID + " | Registered Settings");
 }

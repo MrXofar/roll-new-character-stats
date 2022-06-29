@@ -1,0 +1,13 @@
+A little house cleaning as always
+Added "character_property" param to RollThemDice() - 
+    This param will indicate which character property will be rolled for. 
+    Currenty, the only property to roll for is "attibutes". 
+    Others, like "currency", "weapons", "armor", "spells", etc. will be added in the future
+Added difficulty value of 1 t_settingDropLowestDieRoll an_settingDropLowestSet and reduced difficulty value by 1 from AbilitiesRollMethod "4d6" and Number of Sets Rolled "7 Sets"
+Minor changes in chat message.
+Changed term 'attributes' to 'abilities'
+Changed term 'attribute' to 'ability'
+Changed term 'd6Method' to 'AbilitiesRollMethod'
+Changed term 'SetMethod' to 'NumberOfRolls' - function names & prefixes
+Changed term 'NumberOfSetsRolls' to 'NumberOfRolls' - setting names
+Chnaged term 'rolls' in const num_roll namedfields to 'roll_count'

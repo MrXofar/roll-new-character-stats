@@ -1,0 +1,187 @@
+<form>
+    <script>
+        function dragover_handler(ev) {
+            ev.preventDefault();
+            ev.dataTransfer.dropEffect = "copy";
+        }
+
+        function drop_handler(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text/plain");
+            const drop_item_id = document.getElementById(data).id            
+            const drop_zone = document.getElementById(ev.target.id);
+            // Drop result in ability_drop_zone or results_drop_zone
+            if((drop_item_id.includes("div_final_result") && (drop_zone.id === "results_drop_zone" || (drop_zone.id.includes("ability_drop_zone") && !drop_zone.querySelector(".ability-drop-item")))))
+            {
+                drop_zone.appendChild(document.getElementById(data));  
+            }
+            RecalcFinalScores();          
+        }
+
+        // Increment or Decrement ability with Bonus Points
+        function BPchange(ev){
+            const bp_button = document.getElementById(ev.target.id);
+            const bp_points = bp_button.parentElement.querySelector(".bp");
+            const bp_points_value = parseInt(bp_points.innerText);
+            const bp_max = parseInt(span_bp_max.innerText);
+            var bp_remaining = parseInt(span_bp_remaining.innerText);
+
+            if(bp_button.id.includes("minus") && bp_points_value > 0){
+
+                bp_points.innerText = Math.max(0, bp_points_value - 1);
+                bp_remaining = (bp_remaining < bp_max ? bp_remaining + 1 : bp_max);
+                span_bp_remaining.innerText = bp_remaining;
+
+            }else if(bp_button.id.includes("plus")){
+
+                bp_points.innerText = (bp_remaining > 0 ? bp_points_value + 1 : bp_points.innerText);
+                bp_remaining = (bp_remaining > 0 ? bp_remaining - 1 : 0);
+                span_bp_remaining.innerText = bp_remaining;
+            }
+            RecalcFinalScores(); 
+        }
+
+        function RecalcFinalScores(){
+            // Get rows from ability scores table
+            const ability_rows = ability_scores.querySelectorAll(".ability-row")
+            var score_over_18 = false;// lame
+            for(var row = 0; row < ability_rows.length; row += 1)
+            {
+                const ability_row = document.getElementById(ability_rows[row].id);
+                const ability_drop_item = ability_row.querySelector(".ability-drop-zone").querySelector(".ability-drop-item");
+                const bonus_points = ability_row.querySelector(".bonus-points").querySelector(".bp");
+                const final_score = ability_row.querySelector(".final-score"); 
+                const modifier = ability_row.querySelector(".modifier"); 
+
+                // Calculate final score
+                final_result = parseInt(ability_drop_item ? ability_drop_item.innerText : 0);
+                bonus_result = parseInt(bonus_points.innerText);
+                // TODO: Add Racial bonus
+                final_score.value = final_result + bonus_result;
+
+                // Calculate dnd5e ability modifier
+                // TODO: Other game systems?
+                const ability_mod = Math.floor((final_score.value - 10)/2)
+                modifier.innerText = (ability_mod > 0 ? "+" : "") + ability_mod;
+
+                // Check for score over 18: This is lame and will be made better in the future
+                score_over_18 = (final_score.value > 18 ? true : score_over_18) 
+            }
+
+            //Enable/Disable submit Button
+            const over18NotAllowed = ability_scores.dataset.over18allowed === "false" && score_over_18;
+            const ability_drop_items = results_drop_zone.querySelectorAll(".ability-drop-item");
+            const bp_remaining = parseInt(span_bp_remaining.innerText);
+            submit.disabled = (ability_drop_items.length > 0 || bp_remaining > 0 || over18NotAllowed);
+        }
+
+        function MoveResult(ev){
+            const result_item = document.getElementById(ev.target.id);
+            if(result_item.parentElement.id === "results_drop_zone")
+            {
+                const next_ability = GetNextAbilityDropZone();
+                next_ability.appendChild(result_item);
+            }
+            else{
+                results_drop_zone.appendChild(result_item);
+            }
+            RecalcFinalScores(); 
+        }
+
+        function GetNextAbilityDropZone(){            
+            const ability_rows = ability_scores.querySelectorAll(".ability-row")
+            for(var row = 0; row < ability_rows.length; row += 1)
+            {
+                const ability_row = document.getElementById(ability_rows[row].id);
+                const ability_drop_zone = ability_row.querySelector(".ability-drop-zone")
+                if(ability_drop_zone.innerText === "")
+                {
+                    return ability_drop_zone;
+                }
+            }
+        }
+
+    </script>
+    <!-- <p>
+        <label for="charactername">Character Name</label>
+        <input type="String" name="charactername" value={{actor.data.name}} />
+    </p> -->
+    <table>
+        <tr>
+            <td class="result-header">
+                <div id="results_drop_zone" class="result-container" ondrop="drop_handler(event)"ondragover="dragover_handler(event)">
+                    {{#each final_results as |final_results id| }}
+                    <div id="div_final_result{{id}}" class="ability-drop-item" ondblclick="MoveResult(event)" draggable="true">
+                        {{final_results}}
+                    </div>
+                    {{/each}}
+                </div>
+            </td>
+            <td class="bonus-header">
+                <span>Bonus Points:&nbsp;</span><span id="span_bp_remaining">{{bonus_points}}</span>/<span id="span_bp_max">{{bonus_points}}</span>
+            </td>
+        </tr>
+    </table>
+    <table id="ability_scores" data-over18allowed={{over18allowed}}>
+        <tr id="header_row" class="header-row">
+            <th>Ability</th>
+            <th>Result</th>
+            <th>Bonus</th>
+            <!-- <th>Racial</th> -->
+            <th>Score<span style="font-size: small;">{{#unless over18allowed}}*{{/unless}}</span></th>
+            <th>Mod</th>
+        </tr>
+        <tr id="str_row" class="ability-row">
+            <td>STR</td>
+            <td id="str_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"></td>
+            <td class="bonus-points"><span id="str_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="str_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
+            <!-- <td id="str_racial_mod" ></td> -->
+            <td id="str_final_score"><input name="str_final_score" class="final-score" value="0" /></td>
+            <td id="str_mod" class="modifier">-5</td>
+        </tr>
+        <tr id="dex_row" class="ability-row">
+            <td>DEX</td>
+            <td id="dex_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"></td>
+            <td class="bonus-points"><span id="dex_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="dex_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
+            <!-- <td id="dex_racial_mod" ></td> -->
+            <td id="dex_final_score" ><input name="dex_final_score" class="final-score" value="0" /></td>
+            <td id="dex_mod" class="modifier">-5</td>
+        </tr>
+        <tr id="con_row" class="ability-row">
+            <td>CON</td>
+            <td id="con_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"></td>
+            <td class="bonus-points"><span id="con_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="con_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
+            <!-- <td id="con_racial_mod" ></td> -->
+            <td id="con_final_score" ><input name="con_final_score" class="final-score" value="0" /></td>
+            <td id="con_mod" class="modifier">-5</td>
+        </tr>
+        <tr id="int_row" class="ability-row">
+            <td>INT</td>
+            <td id="int_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"></td>
+            <td class="bonus-points"><span id="int_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="int_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
+            <!-- <td id="int_racial_mod" ></td> -->
+            <td id="int_final_score" ><input name="int_final_score" class="final-score" value="0" /></td>
+            <td id="int_mod" class="modifier">-5</td>
+        </tr>
+        <tr id="wis_row" class="ability-row">
+            <td>WIS</td>
+            <td id="wis_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"</td>
+            <td class="bonus-points"><span id="wis_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="wis_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
+            <!-- <td id="wis_racial_mod" ></td> -->
+            <td id="wis_final_score" ><input name="wis_final_score" class="final-score" value="0" /></td>
+            <td id="wis_mod" class="modifier">-5</td>
+        </tr>
+        <tr id="cha_row" class="ability-row">
+            <td>CHA</td>
+            <td id="cha_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"></td>
+            <td class="bonus-points"><span id="cha_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="cha_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
+            <!-- <td id="cha_racial_mod" ></td> -->
+            <td id="cha_final_score" ><input name="cha_final_score" class="final-score" value="0" /></td>
+            <td id="cha_mod" class="modifier">-5</td>
+        </tr>
+    </table>
+    <button type="submit" id="submit" disabled>
+        <i class="fa fa-check"></i> Accept New Actor
+    </button>
+    <span style="font-size: small;">{{#unless over18allowed}}* - No scores over 18 allowed at first level.{{/unless}}</span>
+</form>
