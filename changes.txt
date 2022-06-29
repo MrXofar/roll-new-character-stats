@@ -11,3 +11,5 @@ Changed term 'd6Method' to 'AbilitiesRollMethod'
 Changed term 'SetMethod' to 'NumberOfRolls' - function names & prefixes
 Changed term 'NumberOfSetsRolls' to 'NumberOfRolls' - setting names
 Chnaged term 'rolls' in const num_roll namedfields to 'roll_count'
+
+Lots of other stuff I didn't list here.
