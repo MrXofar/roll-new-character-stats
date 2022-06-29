@@ -1,5 +1,6 @@
 <form>
     <script>
+
         function dragover_handler(ev) {
             ev.preventDefault();
             ev.dataTransfer.dropEffect = "copy";
@@ -66,24 +67,36 @@
 
                 // Check for score over 18: This is lame and will be made better in the future
                 score_over_18 = (final_score.value > 18 ? true : score_over_18) 
+                // TODO: This is still lame
+                if(ability_scores.dataset.over18allowed === "false" && final_score.value > 18){
+                    final_score.classList.add("over18");
+                }else{
+                    final_score.classList.remove("over18");
+                }
             }
 
             //Enable/Disable submit Button
-            const over18NotAllowed = ability_scores.dataset.over18allowed === "false" && score_over_18;
-            const ability_drop_items = results_drop_zone.querySelectorAll(".ability-drop-item");
+            const over18NotAllowed = ability_scores.dataset.over18allowed === "false" && score_over_18;// Did I mention... lame?
+            const results_drop_zone = document.getElementById("results_drop_zone");
+            var ability_items_count = 0;
+            if(results_drop_zone){
+                const ability_drop_items = results_drop_zone.querySelectorAll(".ability-drop-item");
+                ability_items_count = ability_drop_items.length
+            }
             const bp_remaining = parseInt(span_bp_remaining.innerText);
-            submit.disabled = (ability_drop_items.length > 0 || bp_remaining > 0 || over18NotAllowed);
+            submit.disabled = (ability_items_count > 0 || bp_remaining > 0 || over18NotAllowed);
         }
 
-        function MoveResult(ev){
+        async function MoveResult(ev){
             const result_item = document.getElementById(ev.target.id);
+            const results_drop_zone = document.getElementById("results_drop_zone");
             if(result_item.parentElement.id === "results_drop_zone")
             {
                 const next_ability = GetNextAbilityDropZone();
-                next_ability.appendChild(result_item);
+                await next_ability.appendChild(result_item);
             }
-            else{
-                results_drop_zone.appendChild(result_item);
+            else if(results_drop_zone){
+                await results_drop_zone.appendChild(result_item);
             }
             RecalcFinalScores(); 
         }
@@ -101,6 +114,17 @@
             }
         }
 
+        function ApplyAsRolled(){            
+            const ability_drop_items = results_drop_zone.querySelectorAll(".ability-drop-item");
+            for(var item = 0; item < ability_drop_items.length; item += 1)
+            {
+                const next_ability = GetNextAbilityDropZone();
+                next_ability.appendChild(ability_drop_items[item]);
+                results_header.innerText = "Results applied as rolled"
+            }
+            RecalcFinalScores();
+        }
+
     </script>
     <!-- <p>
         <label for="charactername">Character Name</label>
@@ -108,8 +132,9 @@
     </p> -->
     <table>
         <tr>
-            <td class="result-header">
-                <div id="results_drop_zone" class="result-container" ondrop="drop_handler(event)"ondragover="dragover_handler(event)">
+            <td id="results_header" class="result-header">
+                <div id="results_drop_zone" class="result-container" ondrop="drop_handler(event)"
+                    ondragover="dragover_handler(event)">
                     {{#each final_results as |final_results id| }}
                     <div id="div_final_result{{id}}" class="ability-drop-item" ondblclick="MoveResult(event)" draggable="true">
                         {{final_results}}
@@ -122,7 +147,7 @@
             </td>
         </tr>
     </table>
-    <table id="ability_scores" data-over18allowed={{over18allowed}}>
+    <table id="ability_scores" data-over18allowed={{over18allowed}} data-distributeResults={{distributeResults}}>
         <tr id="header_row" class="header-row">
             <th>Ability</th>
             <th>Result</th>
@@ -131,57 +156,20 @@
             <th>Score<span style="font-size: small;">{{#unless over18allowed}}*{{/unless}}</span></th>
             <th>Mod</th>
         </tr>
-        <tr id="str_row" class="ability-row">
-            <td>STR</td>
-            <td id="str_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"></td>
-            <td class="bonus-points"><span id="str_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="str_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
-            <!-- <td id="str_racial_mod" ></td> -->
-            <td id="str_final_score"><input name="str_final_score" class="final-score" value="0" /></td>
-            <td id="str_mod" class="modifier">-5</td>
+        {{#each abilities as |abilities id|}}
+        <tr id="{{abilities.ability}}_row" class="ability-row">
+            <td class="ability-text">{{abilities.ability}}</td>
+            <td id="{{abilities.ability}}_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)">                
+            </td>
+            <td class="bonus-points"><span id="{{abilities.ability}}_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="{{abilities.ability}}_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
+            <!-- <td id="{{abilities.ability}}_racial_mod" ></td> -->
+            <td id="{{abilities.ability}}_final_score"><input name="{{abilities.ability}}_final_score" class="final-score" value="0" /></td>
+            <td id="{{abilities.ability}}_mod" class="modifier">-5</td>
         </tr>
-        <tr id="dex_row" class="ability-row">
-            <td>DEX</td>
-            <td id="dex_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"></td>
-            <td class="bonus-points"><span id="dex_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="dex_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
-            <!-- <td id="dex_racial_mod" ></td> -->
-            <td id="dex_final_score" ><input name="dex_final_score" class="final-score" value="0" /></td>
-            <td id="dex_mod" class="modifier">-5</td>
-        </tr>
-        <tr id="con_row" class="ability-row">
-            <td>CON</td>
-            <td id="con_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"></td>
-            <td class="bonus-points"><span id="con_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="con_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
-            <!-- <td id="con_racial_mod" ></td> -->
-            <td id="con_final_score" ><input name="con_final_score" class="final-score" value="0" /></td>
-            <td id="con_mod" class="modifier">-5</td>
-        </tr>
-        <tr id="int_row" class="ability-row">
-            <td>INT</td>
-            <td id="int_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"></td>
-            <td class="bonus-points"><span id="int_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="int_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
-            <!-- <td id="int_racial_mod" ></td> -->
-            <td id="int_final_score" ><input name="int_final_score" class="final-score" value="0" /></td>
-            <td id="int_mod" class="modifier">-5</td>
-        </tr>
-        <tr id="wis_row" class="ability-row">
-            <td>WIS</td>
-            <td id="wis_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"</td>
-            <td class="bonus-points"><span id="wis_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="wis_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
-            <!-- <td id="wis_racial_mod" ></td> -->
-            <td id="wis_final_score" ><input name="wis_final_score" class="final-score" value="0" /></td>
-            <td id="wis_mod" class="modifier">-5</td>
-        </tr>
-        <tr id="cha_row" class="ability-row">
-            <td>CHA</td>
-            <td id="cha_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"></td>
-            <td class="bonus-points"><span id="cha_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="cha_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
-            <!-- <td id="cha_racial_mod" ></td> -->
-            <td id="cha_final_score" ><input name="cha_final_score" class="final-score" value="0" /></td>
-            <td id="cha_mod" class="modifier">-5</td>
-        </tr>
+        {{/each}}        
     </table>
     <button type="submit" id="submit" disabled>
         <i class="fa fa-check"></i> Accept New Actor
     </button>
-    <span style="font-size: small;">{{#unless over18allowed}}* - No scores over 18 allowed at first level.{{/unless}}</span>
+    <span style="font-size: small;">{{#unless over18allowed}}* No scores over 18 allowed at first level.{{/unless}}</span>
 </form>

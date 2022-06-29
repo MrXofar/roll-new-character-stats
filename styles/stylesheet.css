@@ -58,3 +58,12 @@
     font-size: 12px;
     padding-bottom: 3px;
   }
+  .ability-text{
+    font-size: 20px;
+    text-transform: capitalize;
+    font-family: var(--modesto);
+    font-weight: 700;
+  }
+  .over18{
+    color: red;
+  }

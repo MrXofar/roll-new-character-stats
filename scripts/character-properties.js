@@ -2,12 +2,11 @@
 import { namedfields } from "./constants.js";
 
 let ability = namedfields('ability');
-
 export const abilities = [
-    ability('STR: '),
-    ability('DEX: '),
-    ability('CON: '),
-    ability('INT: '),
-    ability('WIS: '),
-    ability('CHA: ')
+    ability('str'),
+    ability('dex'),
+    ability('con'),
+    ability('int'),
+    ability('wis'),
+    ability('cha')
 ]; 

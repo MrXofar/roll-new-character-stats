@@ -96,7 +96,7 @@
         "Content": "Roll abilities for a new character?"
       },
       "results-button":{
-        "distribute-results": "Distribute Ability Scores",
+        "distribute-results": "Distribute Results",
         "accept-new-actor": "Accept New Character"
       }
     }

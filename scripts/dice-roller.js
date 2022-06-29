@@ -248,7 +248,7 @@ export class DiceRoller {
         for (var set = 0; set < this.results_abilities.length; set++) {
             //console.log(this.results_abilities[set].dice[0].results);
             var d6_results = this.results_abilities[set].dice[0].results.map(function (e) { return e.result; }).join(', ');
-            apply_to = !this._settingDistributeResults() && this.drop_val_index !== set ? abilities[att_idx].ability : "Result #" + (set + 1) + ": ";
+            apply_to = !this._settingDistributeResults() && this.drop_val_index !== set ? abilities[att_idx].ability.toUpperCase() + ": " : "Result #" + (set + 1) + ": ";
             results_text += apply_to;
             results_text += this.drop_val_index === set ? "Dropped => " : "";
             results_text += this.results_abilities[set].total + " [" + d6_results + "]";

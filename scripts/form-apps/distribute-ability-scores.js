@@ -1,17 +1,14 @@
 
 Hooks.on('renderDistributeAbilityScores', () => {
   // Add dragstart listeners for each result element
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 6; i++) {// TODO: the 6 here is based on dnd5e having 6 abilities - this may need to be dynamic later
     const div_final_result = document.getElementById("div_final_result" + i);
-    div_final_result.addEventListener("dragstart", dragstart_handler);
-  }
-  // Add dragstart listeners for each bonus point element
-  for (let i = 0; i < 5; i++) {
-    const div_bonus_result = document.getElementById("div_bonus_result" + i);
-    if (div_bonus_result) {
-      div_bonus_result.addEventListener("dragstart", dragstart_handler);
+    if (div_final_result) {
+      div_final_result.addEventListener("dragstart", dragstart_handler);
     }
   }
+  const ability_scores = document.getElementById("ability_scores");
+  if (ability_scores.dataset.distributeresults === "false") { ApplyAsRolled(); }
 });
 
 function dragstart_handler(ev) {
@@ -22,12 +19,14 @@ function dragstart_handler(ev) {
 
 export class DistributeAbilityScores extends FormApplication {
 
-  constructor(final_results, bonus_points, over18allowed, msgId) {
+  constructor(abilities, final_results, bonus_points, over18allowed, distributeResults, msgId) {
     super();
     //this.actor = actor,
+    this.abilities = abilities,
     this.final_results = final_results,
     this.bonus_points = bonus_points,
     this.over18allowed = over18allowed,
+    this.distributeResults = distributeResults,
     this.msgId = msgId
   }
 
@@ -54,9 +53,11 @@ export class DistributeAbilityScores extends FormApplication {
   getData() {
     return {
       //actor: this.actor,
+      abilities: this.abilities,
       final_results: this.final_results,
       bonus_points: this.bonus_points,
       over18allowed: this.over18allowed,
+      distributeResults: this.distributeResults,
       msgId: this.msgId
     };
   }

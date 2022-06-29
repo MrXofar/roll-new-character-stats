@@ -2,6 +2,7 @@ import { registerSettings, settingsKey } from "./settings.js";
 import { DiceRoller}  from './dice-roller.js';
 import { Controls } from './controls.js';
 import { DistributeAbilityScores } from './form-apps/distribute-ability-scores.js';
+import { abilities } from './character-properties.js';
 
 Hooks.once("init", () => {
 	console.log(RollNewCharacterStats.ID + " | Initialized")
@@ -26,14 +27,18 @@ Hooks.on('getSceneControlButtons', (controls) => {
 
 Hooks.on("renderChatLog", (app, [html]) => {
 	html.addEventListener("click", ({ target }) => {
-	const msgId = target.closest(".chat-message[data-message-id]")?.dataset.messageId
-	const msg = game.messages.get(msgId); 
-	const final_results = msg.data.flags.roll_new_character_stats.final_results;
-	const bonus_points = msg.data.flags.roll_new_character_stats.bonus_points;
-	const over18allowed = msg.data.flags.roll_new_character_stats.over18allowed;
-	  if (target.matches(".chat-card button")) FormApp_DistributeAbilityScores(target.dataset.action, final_results, bonus_points, over18allowed, msgId); // removed .dnd5e
+		const msgId = target.closest(".chat-message[data-message-id]")?.dataset.messageId
+		const msg = game.messages.get(msgId);
+		if (msg) {
+			const final_results = msg.data.flags.roll_new_character_stats.final_results;
+			const bonus_points = msg.data.flags.roll_new_character_stats.bonus_points;
+			const over18allowed = msg.data.flags.roll_new_character_stats.over18allowed;
+			const distributeResults = msg.data.flags.roll_new_character_stats.distributeResults
+			console.log("Hooks.on.renderChatLog:distributeResults = " + distributeResults);
+			if (target.matches(".chat-card button")) FormApp_DistributeAbilityScores(abilities, target.dataset.action, final_results, bonus_points, over18allowed, distributeResults, msgId); // removed .dnd5e
+		}
 	});
-  }); 
+}); 
 
 export class RollNewCharacterStats {
 	static ID = 'roll-new-character-stats';
@@ -101,12 +106,14 @@ function ShowResultsInChatMessage(dice_roller) {
 	const final_results = dice_roller.GetFinalResults(dice_roller.result_sets);
 	const drop_val_index = dice_roller.drop_val_index;
 	const bonus_points = dice_roller.bonus_results;
+	const distributeResults = dice_roller._settingDistributeResults();
 	const over18allowed = dice_roller._settingOver18Allowed();
+	console.log("ShowResultsInChatMessage:distributeResults = " + distributeResults);
 	ChatMessage.create({
 		user: game.user.id,
 		content: results_message,
 		speaker: speaker,
-		flags: { roll_new_character_stats: {final_results, drop_val_index, bonus_points, over18allowed} }
+		flags: { roll_new_character_stats: {final_results, drop_val_index, bonus_points, over18allowed, distributeResults} }
 		});
 }
 
@@ -116,8 +123,9 @@ function ShowResultsInChatMessage(dice_roller) {
  * @param {Array} final_results - rolled results for abilitites
  * @param {Integer} drop_val_index - index of dropped value
  */
-async function FormApp_DistributeAbilityScores(action, final_results, bonus_points, over18allowed, msgId) {
+async function FormApp_DistributeAbilityScores(abilities, action, final_results, bonus_points, over18allowed, distributeResults, msgId) {
 
+	console.log("FormApp_DistributeAbilityScores:distributeResults = " + distributeResults);
 	//Update character abilitites with results
 	if (action === "accept_new_actor") {
 		// Create new actor
@@ -133,7 +141,7 @@ async function FormApp_DistributeAbilityScores(action, final_results, bonus_poin
 		// Show ability score distribution form
 		// Reorder final_results based on selections
 		//UpdateAbilities(actor, final_results, -1);
-		new DistributeAbilityScores(final_results, bonus_points, over18allowed, msgId).render(true);
+		new DistributeAbilityScores(abilities, final_results, bonus_points, over18allowed, distributeResults, msgId).render(true);
 	}	
 
 	// TODO: UpdateActor with (other-properties) from results_
@@ -163,6 +171,5 @@ async function UpdateAbilities(actor, scores) {
 		default:
 			console.log(RollNewCharacterStats.ID + " | unable to apply scores to abilitites. Game system not supported yet.");
 	}
-	console.log("after update STR = " + actor.data.data.abilities.str.value);
 }
 
