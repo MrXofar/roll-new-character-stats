@@ -3,7 +3,7 @@
     "title": "Roll New Character Stats",
     "description": "Small mod for rolling new table-top-rpg character stats to get your game rolling!",
     "author": "Richard Fox",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "minimumCoreVersion": "0.8.6",
     "compatibleCoreVersion" : "9",
     "changelog": "",
@@ -25,7 +25,7 @@
       }
     ],
     "manifest": "https://raw.githubusercontent.com/MrXofar/roll-new-character-stats/master/module.json",
-    "download": "https://github.com/MrXofar/roll-new-character-stats/archive/refs/tags/v2.0.0.zip",
+    "download": "https://github.com/MrXofar/roll-new-character-stats/archive/refs/tags/v2.1.0.zip",
     "url": "https://github.com/MrXofar/roll-new-character-stats",
     "readme": "https://github.com/MrXofar/roll-new-character-stats/blob/master/README.md",
     "bugs": "https://github.com/MrXofar/roll-new-character-stats/issues"
