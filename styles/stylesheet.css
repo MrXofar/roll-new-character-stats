@@ -1,20 +1,18 @@
-  .result-header{
-    block-size: auto;
-    display: inline-flex;
-    width:60%;
-  }  
-  .bonus-header{
-    block-size: auto;
-    display: inline-flex;
-    text-align: center;
+  .results-header{
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    height: 3em;
+    font-size: small;
+    font-style: italic;
   }
-  .result-container{
+  .results-drop-zone{
     width: 100%;
-    padding: 4px 3px 3px 3px;
-    min-height: 2.3em;
+    padding: 5px;
+    height: 3em;
+    font-size: small;
+    font-style: italic;
   }
   .ability-drop-item {
-    block-size: auto;
     display: inline-block;
     width: 2.5em;
     height: 2.5em;
@@ -23,7 +21,8 @@
     border-radius: 5px;
     padding: 6px 0px 0px 0px;
     font-size: 11px;
-    margin-right: 1px;
+    font-style: normal !important;
+    margin-right: 3px !important;
   }  
   .final-score{
     border: none;

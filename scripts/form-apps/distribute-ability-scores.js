@@ -1,7 +1,9 @@
+import { DiceRoller } from "../dice-roller.js";
 
 Hooks.on('renderDistributeAbilityScores', () => {
   // Add dragstart listeners for each result element
-  for (let i = 0; i < 6; i++) {// TODO: the 6 here is based on dnd5e having 6 abilities - this may need to be dynamic later
+  const dice_roller = new DiceRoller;
+  for (let i = 0; i < dice_roller._settingNumberOfRollsCount(); i++) {
     const div_final_result = document.getElementById("div_final_result" + i);
     if (div_final_result) {
       div_final_result.addEventListener("dragstart", dragstart_handler);
@@ -12,23 +14,24 @@ Hooks.on('renderDistributeAbilityScores', () => {
 });
 
 function dragstart_handler(ev) {
+  ev.dataTransfer.setData("text/plain", ev.target.parentElement);
   ev.dataTransfer.setData("text/plain", ev.target.innerText); // value of element being dragged
   ev.dataTransfer.setData("text/plain", ev.target.id);        // id of element being dragged
   ev.dataTransfer.dropEffect = "copy";
 }
 
 export class DistributeAbilityScores extends FormApplication {
-
-  constructor(abilities, final_results, bonus_points, over18allowed, distributeResults, msgId) {
+  constructor(abilities, final_results, bonus_points, over18allowed, distributeResults, msgId, races) {
     super();
-    //this.actor = actor,
     this.abilities = abilities,
     this.final_results = final_results,
     this.bonus_points = bonus_points,
     this.over18allowed = over18allowed,
     this.distributeResults = distributeResults,
-    this.msgId = msgId
+    this.msgId = msgId,
+    this.races = races
   }
+
 
   // async close() {
   //   const msg = game.messages.get(this.msgId);
@@ -43,35 +46,45 @@ export class DistributeAbilityScores extends FormApplication {
       id: 'distribute-ability-scores',
       icon: 'fas fa-cogs', // Change?
       template: "./modules/roll-new-character-stats/templates/form-apps/distribute-ability-scores.html",
-      height: 450,
+      height: 470,
       width: 375,
       closeOnSubmit: true,
       submitOnClose: false
     });
   }
 
-  getData() {
+  async getData() {
     return {
-      //actor: this.actor,
       abilities: this.abilities,
       final_results: this.final_results,
       bonus_points: this.bonus_points,
       over18allowed: this.over18allowed,
       distributeResults: this.distributeResults,
-      msgId: this.msgId
+      msgId: this.msgId,
+      races: await this.getSystemRaces()
     };
+  }
+
+  async getSystemRaces() {
+    // TODO-LOW: Farm this out to a helper when other JSON files are implemented
+    const jsonDATA = await fetch("./modules/roll-new-character-stats/data/racial-bonus.json")
+      .then(response => response.json())
+      .then(data => {
+        return data;
+      });
+    // TODO-MEDIUM: Switch Case game system
+    return jsonDATA.game_system[0].dnd5e.races;
   }
 
   async _updateObject(event, formData) {
 
 		let actor = await Actor.create({
-			name: "New Actor",
+			name: "New Actor", // TODO-LOW: use formData.charactername
 			type: "character",
 			img: "icons/svg/mystery-man.svg"
 		});
 
     await actor.update({
-      // 'name': formData.charactername,
       'data.abilities.str.value': formData.str_final_score,
       'data.abilities.dex.value': formData.dex_final_score,
       'data.abilities.con.value': formData.con_final_score,

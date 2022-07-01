@@ -1,0 +1,114 @@
+{
+    "game_system": [
+        {
+            "dnd5e": {
+                "races": [
+                    {
+                        "race": "Human",
+                        "bonus_any": "0",
+                        "str": "1",
+                        "dex": "1",
+                        "con": "1",
+                        "int": "1",
+                        "wis": "1",
+                        "cha": "1"
+                    },
+                    {
+                        "race": "Elf (High)",
+                        "bonus_any": "0",
+                        "str": "0",
+                        "dex": "2",
+                        "con": "0",
+                        "int": "1",
+                        "wis": "0",
+                        "cha": "0"
+                    },
+                    {
+                        "race": "Elf (Wood)",
+                        "bonus_any": "0",
+                        "str": "0",
+                        "dex": "2",
+                        "con": "0",
+                        "int": "0",
+                        "wis": "1",
+                        "cha": "0"
+                    },
+                    {
+                        "race": "Elf (Drow)",
+                        "bonus_any": "0",
+                        "str": "0",
+                        "dex": "2",
+                        "con": "0",
+                        "int": "0",
+                        "wis": "0",
+                        "cha": "1"
+                    },
+                    {
+                        "race": "Dwarf (Hill)",
+                        "bonus_any": "0",
+                        "str": "0",
+                        "dex": "0",
+                        "con": "2",
+                        "int": "0",
+                        "wis": "1",
+                        "cha": "0"
+                    },
+                    {
+                        "race": "Dwarf (Mountain)",
+                        "bonus_any": "0",
+                        "str": "2",
+                        "dex": "0",
+                        "con": "2",
+                        "int": "0",
+                        "wis": "0",
+                        "cha": "0"
+                    },
+                    {
+                        "race": "Undecided",
+                        "bonus_any": "0",
+                        "str": "0",
+                        "dex": "0",
+                        "con": "0",
+                        "int": "0",
+                        "wis": "0",
+                        "cha": "0"
+                    }
+                ]
+            },
+            "pf1e":{
+                "races": [
+                    {
+                        "race": "Human",
+                        "bonus_any": "2",
+                        "str": "0",
+                        "dex": "0",
+                        "con": "0",
+                        "int": "0",
+                        "wis": "0",
+                        "cha": "0"
+                    },
+                    {
+                        "race": "Elf",
+                        "bonus_any": "0",
+                        "str": "0",
+                        "dex": "2",
+                        "con": "-2",
+                        "int": "2",
+                        "wis": "0",
+                        "cha": "0"
+                    },
+                    {
+                        "race": "Dwarf",
+                        "bonus_any": "0",
+                        "str": "0",
+                        "dex": "0",
+                        "con": "2",
+                        "int": "0",
+                        "wis": "2",
+                        "cha": "-2"
+                    }
+                ]
+            }
+        }
+    ]
+}

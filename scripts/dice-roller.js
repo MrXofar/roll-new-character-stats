@@ -52,10 +52,12 @@ export class DiceRoller {
     }
     Formula_Abilities() {
         var formula = this._settingAbilitiesRollMethodNumDie();
-        formula += "d6"; // TODO: Add DieType|Sides setting to roll different sided die for abilities under different game systems
+        // TODO-LOW: Add DieType|Sides setting to roll different sided die for abilities under different game systems
+        formula += "d6"; 
         formula += (this._settingRerollOnes() ? "rr1" : "");
         formula += (this._settingDropLowestDieRoll() ? "dl" : "") 
-        formula += this._settingAbilitiesRollMethodNumDie() === 2 ? "+6" : ""; // 2d6+6 method - TODO: Change these types of "roll modifiers" into a separate setting 
+         // TODO-LOW: Change these types of "roll modifiers" into a separate setting 
+        formula += this._settingAbilitiesRollMethodNumDie() === 2 ? "+6" : "";
         return formula;
     }
     RollAbilities(){
@@ -244,16 +246,18 @@ export class DiceRoller {
         var results_text = "<b>" + game.i18n.localize("RNCS.results-text.results.label") + ":</b> " + game.i18n.localize("RNCS.results-text.results.abilities") + "</br>";
         var apply_to = "";
         var att_idx = 0;
-        // TODO: If more sets than abilities are rolled, and nothing is dropped, there will be an error.
+        // NOTE: If more rolls than needed to fill abilities is selected, and Distrubute results is unchecked without selecting Drop Lowest Set,
+        // the last roll will still be displayed, but not applied to any ability. 
+        // This might look confusing to players - so maybe a way to indicate this in the chat message??
         for (var set = 0; set < this.results_abilities.length; set++) {
             //console.log(this.results_abilities[set].dice[0].results);
             var d6_results = this.results_abilities[set].dice[0].results.map(function (e) { return e.result; }).join(', ');
-            apply_to = !this._settingDistributeResults() && this.drop_val_index !== set ? abilities[att_idx].ability.toUpperCase() + ": " : "Result #" + (set + 1) + ": ";
+            apply_to = att_idx < abilities.length && !this._settingDistributeResults() && this.drop_val_index !== set ? abilities[att_idx]?.ability.toUpperCase() + ": " : "";
             results_text += apply_to;
             results_text += this.drop_val_index === set ? "Dropped => " : "";
             results_text += this.results_abilities[set].total + " [" + d6_results + "]";
             if (this.drop_val_index !== set && this.results_abilities[set].total === 18) { results_text += " - Booyah!"; }
-            if(set < this.results_abilities.length - 1) {results_text += "<br />";}
+            if (set < this.results_abilities.length - 1) {results_text += "<br />";}
             if (this.drop_val_index !== set) { att_idx++; }
         }
         results_text += "</br></br>"

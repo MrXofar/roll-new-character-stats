@@ -25,11 +25,12 @@ Hooks.on('getSceneControlButtons', (controls) => {
 	new Controls().initializeControls(controls);
 });
 
+// TODO-HIGH: Pass in the system races
 Hooks.on("renderChatLog", (app, [html]) => {
 	html.addEventListener("click", ({ target }) => {
-		const msgId = target.closest(".chat-message[data-message-id]")?.dataset.messageId
-		const msg = game.messages.get(msgId);
-		if (msg) {
+		const msgId = target.closest(".chat-message[data-message-id]")?.dataset.messageId;
+		if (msgId) {
+			const msg = game.messages.get(msgId);
 			const final_results = msg.data.flags.roll_new_character_stats.final_results;
 			const bonus_points = msg.data.flags.roll_new_character_stats.bonus_points;
 			const over18allowed = msg.data.flags.roll_new_character_stats.over18allowed;
@@ -40,6 +41,35 @@ Hooks.on("renderChatLog", (app, [html]) => {
 	});
 }); 
 
+/**
+ * 
+ * @param {String} action - action to take with current results when creating new character
+ * @param {Array} final_results - rolled results for abilitites
+ * @param {Integer} drop_val_index - index of dropped value
+ */
+async function FormApp_DistributeAbilityScores(abilities, action, final_results, bonus_points, over18allowed, distributeResults, msgId) {
+
+	console.log("FormApp_DistributeAbilityScores:distributeResults = " + distributeResults);
+	//Update character abilitites with results
+	if (action === "accept_new_actor") {
+		// Create new actor
+		let actor = await Actor.create({
+			name: "New Actor",
+			type: "character",
+			img: "icons/svg/mystery-man.svg"
+		});
+		UpdateAbilities(actor, final_results);
+	}
+	else {
+		// Show ability score distribution form
+		// Reorder final_results based on selections
+		//UpdateAbilities(actor, final_results, -1);
+		new DistributeAbilityScores(abilities, final_results, bonus_points, over18allowed, distributeResults, msgId).render(true);
+	}	
+
+	// TODO-MEDIUM: UpdateActor with (other-properties) from results_
+}
+
 export class RollNewCharacterStats {
 	static ID = 'roll-new-character-stats';
 }
@@ -47,12 +77,10 @@ export class RollNewCharacterStats {
 export async function RollStats() {	
 
 	// Roll them dice!
-	// TODO: Add Race selection to confirmation dialog and pass to chat message (or dice_roller?)
 	var dice_roller = new DiceRoller();	
     const confirmed = await Dialog.confirm({
 		title: game.i18n.localize("RNCS.dialog.confirm-roll.Title"),
-		content: game.i18n.localize("RNCS.dialog.confirm-roll.Method") + "</br>" +
-		dice_roller.GetMethodText() + game.i18n.localize("RNCS.dialog.confirm-roll.Content")
+		content: "<small>" + dice_roller.GetMethodText() + game.i18n.localize("RNCS.dialog.confirm-roll.Content") + "</small>"
 	  });
 
 	if (confirmed) {
@@ -60,7 +88,7 @@ export async function RollStats() {
 		// Roll abilities
 		dice_roller.RollThemDice("abilities");
 
-		// TODO: Implement dice_roller.RollThemDice("other-properties")
+		// TODO-MEDIUM: Implement dice_roller.RollThemDice("other-properties")
 		// dice_roller.RollThemDice("other-properties");
 
 		 // Show results
@@ -85,7 +113,7 @@ function ShowResultsInChatMessage(dice_roller) {
 	// Add Bonus Point(s) to message
 	results_message += dice_roller.GetBonusPointsText();
 
-	// TODO: Add Results (other-properties) to message
+	// TODO-MEDIUM: Add Results (other-properties) to message
 
 	// Add Note from DM to message
 	results_message += dice_roller.GetNoteFromDM();
@@ -115,36 +143,6 @@ function ShowResultsInChatMessage(dice_roller) {
 		speaker: speaker,
 		flags: { roll_new_character_stats: {final_results, drop_val_index, bonus_points, over18allowed, distributeResults} }
 		});
-}
-
-/**
- * 
- * @param {String} action - action to take with current results when creating new character
- * @param {Array} final_results - rolled results for abilitites
- * @param {Integer} drop_val_index - index of dropped value
- */
-async function FormApp_DistributeAbilityScores(abilities, action, final_results, bonus_points, over18allowed, distributeResults, msgId) {
-
-	console.log("FormApp_DistributeAbilityScores:distributeResults = " + distributeResults);
-	//Update character abilitites with results
-	if (action === "accept_new_actor") {
-		// Create new actor
-		let actor = await Actor.create({
-			name: "New Actor",
-			type: "character",
-			img: "icons/svg/mystery-man.svg"
-		});
-		// TODO: Distribute bonus points when allowed with this mode
-		UpdateAbilities(actor, final_results);
-	}
-	else {
-		// Show ability score distribution form
-		// Reorder final_results based on selections
-		//UpdateAbilities(actor, final_results, -1);
-		new DistributeAbilityScores(abilities, final_results, bonus_points, over18allowed, distributeResults, msgId).render(true);
-	}	
-
-	// TODO: UpdateActor with (other-properties) from results_
 }
 
 /**

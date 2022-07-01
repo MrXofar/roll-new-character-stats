@@ -99,6 +99,13 @@
         "distribute-results": "Distribute Results",
         "accept-new-actor": "Accept New Character"
       }
+    },
+    "form-app":{
+      "form-text":{
+        "applied-as-rolled": "Applied as rolled. ",
+        "distribute-bonus-points": "Please distribute Bonus Points. ",
+        "over-18-not-allowed": "* No scores over 18 allowed at first level."
+      }
     }
   }
 }
