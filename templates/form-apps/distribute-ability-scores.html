@@ -89,12 +89,10 @@
             }
 
             //Enable/Disable submit Button
-            // TODO-MEDIUM: What if applied as rolled results in over 18?
+            // Name has nothing to do with scores, I am just being lazy with submit.disable 
+            const charactername = document.getElementById("charactername");
             const bp_remaining = parseInt(span_bp_remaining.innerText);
-            console.log("GetNextAbilityDropZone() = " + GetNextAbilityDropZone());
-            console.log("bp_remaining = " + bp_remaining);
-            console.log("(score_over_18 && over18NotAllowed) = " + (score_over_18 && over18NotAllowed));
-            submit.disabled = (GetNextAbilityDropZone() || bp_remaining > 0 || (score_over_18 && over18NotAllowed));
+            submit.disabled = (charactername.value.length === 0 || GetNextAbilityDropZone() || bp_remaining > 0 || (score_over_18 && over18NotAllowed));
         }
 
         async function MoveResult(ev) {
@@ -177,7 +175,8 @@
     </script>
     <div style="margin-bottom:5px;">
         <div style="width:15%;display: inline-block;">Name:</div>
-        <div style="width:84%;display: inline-block;"><input style="width:100%;" type="String" name="charactername" value="New Actor"" /></div>
+        <!-- Name has nothing to do with scores, I am just being lazy with submit.disable -->
+        <div style="width:84%;display: inline-block;"><input id="charactername" name="charactername" onchange="RecalcFinalScores()" style="width:100%;" type="String" value="New Actor"" /></div>
     </div>
     <div>
         <div style="width:15%;display: inline-block;">Race:</div>
