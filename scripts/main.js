@@ -25,7 +25,6 @@ Hooks.on('getSceneControlButtons', (controls) => {
 	new Controls().initializeControls(controls);
 });
 
-// TODO-HIGH: Pass in the system races
 Hooks.on("renderChatLog", (app, [html]) => {
 	html.addEventListener("click", ({ target }) => {
 		const msgId = target.closest(".chat-message[data-message-id]")?.dataset.messageId;
@@ -35,7 +34,6 @@ Hooks.on("renderChatLog", (app, [html]) => {
 			const bonus_points = msg.data.flags.roll_new_character_stats.bonus_points;
 			const over18allowed = msg.data.flags.roll_new_character_stats.over18allowed;
 			const distributeResults = msg.data.flags.roll_new_character_stats.distributeResults
-			console.log("Hooks.on.renderChatLog:distributeResults = " + distributeResults);
 			if (target.matches(".chat-card button")) FormApp_DistributeAbilityScores(abilities, target.dataset.action, final_results, bonus_points, over18allowed, distributeResults, msgId); // removed .dnd5e
 		}
 	});
@@ -43,29 +41,17 @@ Hooks.on("renderChatLog", (app, [html]) => {
 
 /**
  * 
- * @param {String} action - action to take with current results when creating new character
- * @param {Array} final_results - rolled results for abilitites
- * @param {Integer} drop_val_index - index of dropped value
+ * @param {*} abilities 
+ * @param {*} action 
+ * @param {*} final_results 
+ * @param {*} bonus_points 
+ * @param {*} over18allowed 
+ * @param {*} distributeResults 
+ * @param {*} msgId 
  */
 async function FormApp_DistributeAbilityScores(abilities, action, final_results, bonus_points, over18allowed, distributeResults, msgId) {
 
-	console.log("FormApp_DistributeAbilityScores:distributeResults = " + distributeResults);
-	//Update character abilitites with results
-	if (action === "accept_new_actor") {
-		// Create new actor
-		let actor = await Actor.create({
-			name: "New Actor",
-			type: "character",
-			img: "icons/svg/mystery-man.svg"
-		});
-		UpdateAbilities(actor, final_results);
-	}
-	else {
-		// Show ability score distribution form
-		// Reorder final_results based on selections
-		//UpdateAbilities(actor, final_results, -1);
-		new DistributeAbilityScores(abilities, final_results, bonus_points, over18allowed, distributeResults, msgId).render(true);
-	}	
+	new DistributeAbilityScores(abilities, final_results, bonus_points, over18allowed, distributeResults, msgId).render(true);
 
 	// TODO-MEDIUM: UpdateActor with (other-properties) from results_
 }
@@ -121,9 +107,8 @@ function ShowResultsInChatMessage(dice_roller) {
 	// Add Chat Card Button
 	switch (game.system.id) {
 		case "dnd5e":
-			results_message += "<div class=\"card-buttons\"><button data-action=\"";
-			results_message += (dice_roller._settingDistributeResults() || dice_roller._settingIsBonusPointApplied() ? "distribute_results" : "accept_new_actor") +"\">"
-			results_message += (dice_roller._settingDistributeResults() || dice_roller._settingIsBonusPointApplied() ? game.i18n.localize("RNCS.dialog.results-button.distribute-results") : game.i18n.localize("RNCS.dialog.results-button.accept-new-actor"));
+			results_message += "<div class=\"card-buttons\"><button data-action=\"configure_new_actor\">";
+			results_message += game.i18n.localize("RNCS.dialog.results-button.configure-new-actor");
 			results_message += "</button></div></div>"
 			break;
 		default:
@@ -136,38 +121,11 @@ function ShowResultsInChatMessage(dice_roller) {
 	const bonus_points = dice_roller.bonus_results;
 	const distributeResults = dice_roller._settingDistributeResults();
 	const over18allowed = dice_roller._settingOver18Allowed();
-	console.log("ShowResultsInChatMessage:distributeResults = " + distributeResults);
 	ChatMessage.create({
+		whisper: ChatMessage.getWhisperRecipients("GM"),
 		user: game.user.id,
 		content: results_message,
 		speaker: speaker,
-		flags: { roll_new_character_stats: {final_results, drop_val_index, bonus_points, over18allowed, distributeResults} }
-		});
+		flags: { roll_new_character_stats: { final_results, drop_val_index, bonus_points, over18allowed, distributeResults } }
+	});
 }
-
-/**
- * 
- * @param {Actor} actor - new actor
- * @param {Array} scores - rolled results for abilitites
- * @param {Integer} drop_val_index - index of dropped value
- */
-async function UpdateAbilities(actor, scores) {
-
-	console.log("scores[0] = " + scores[0]);
-	switch (game.system.id) {
-		case "dnd5e":
-			// Apply results as rolled
-			await actor.update({
-				'data.abilities.str.value': scores[0],
-				'data.abilities.dex.value': scores[1],
-				'data.abilities.con.value': scores[2],
-				'data.abilities.int.value': scores[3],
-				'data.abilities.wis.value': scores[4],
-				'data.abilities.cha.value': scores[5]
-			});
-			break;
-		default:
-			console.log(RollNewCharacterStats.ID + " | unable to apply scores to abilitites. Game system not supported yet.");
-	}
-}
-

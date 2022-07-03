@@ -33,6 +33,7 @@
   }
   .header-row, .ability-row{
     text-align: center;
+    font-size: small;
   }
   .bp-button{    
     width: 1.4em;
@@ -65,4 +66,17 @@
   }
   .over18{
     color: red;
+  }
+  input{
+    height: 1.8em;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 1px 3px;
+    margin: 0;
+    color: var(--color-text-dark-primary);
+    font-family: inherit;
+    font-size: inherit;
+    text-align: inherit;
+    line-height: inherit;
+    border: 1px solid var(--color-border-light-tertiary);
+    border-radius: 3px;
   }

@@ -1,6 +1,7 @@
 
 import { namedfields } from "./constants.js";
 
+	// TODO-LOW: Change to JSON data
 let ability = namedfields('ability');
 export const abilities = [
     ability('str'),

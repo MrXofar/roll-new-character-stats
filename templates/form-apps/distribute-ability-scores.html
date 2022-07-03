@@ -1,5 +1,6 @@
 <form>
     <script>
+
         function dragover_handler(ev) {
             ev.preventDefault();
             ev.dataTransfer.dropEffect = "copy";
@@ -8,147 +9,185 @@
         function drop_handler(ev) {
             ev.preventDefault();
             const data = ev.dataTransfer.getData("text/plain");
-            const drop_item_id = document.getElementById(data).id   
-            const drop_item_orig_parent = document.getElementById(data).parentElement;        
+            const drop_item_id = document.getElementById(data).id
+            const drop_item_orig_parent = document.getElementById(data).parentElement;
             const drop_zone = document.getElementById(ev.target.id);
             // Drop result in ability_drop_zone or results_drop_zone or swap results (prevent dropping multiple in one zone)
-            if(drop_item_id.includes("div_final_result")){
+            if (drop_item_id.includes("div_final_result")) {
 
-                if(drop_zone.id === "results_drop_zone" || (drop_zone.id.includes("ability_drop_zone") && !drop_zone.querySelector(".ability-drop-item")))
-                {
-                    drop_zone.appendChild(document.getElementById(data));  
+                if (drop_zone.id === "results_drop_zone" || (drop_zone.id.includes("ability_drop_zone") && !drop_zone.querySelector(".ability-drop-item"))) {
+                    drop_zone.appendChild(document.getElementById(data));
                 }
-                else if(drop_zone.id.includes("div_final_result")){// Dropping onto existing result in any zone
+                else if (drop_zone.id.includes("div_final_result")) {// Dropping onto existing result in any zone
 
                     // Swap Results
                     const ability_item_drop_zone = drop_zone.parentElement;
                     drop_item_orig_parent.appendChild(drop_zone);
                     ability_item_drop_zone.appendChild(document.getElementById(data));
                 }
-                RecalcFinalScores();          
+                RecalcFinalScores();
             }
         }
 
         // Increment or Decrement ability with Bonus Points
-        function BPchange(ev){
+        function BPchange(ev) {
             const bp_button = document.getElementById(ev.target.id);
             const bp_points = bp_button.parentElement.querySelector(".bp");
             const bp_points_value = parseInt(bp_points.innerText);
             const bp_max = parseInt(span_bp_max.innerText);
             var bp_remaining = parseInt(span_bp_remaining.innerText);
 
-            if(bp_button.id.includes("minus") && bp_points_value > 0){
+            if (bp_button.id.includes("minus") && bp_points_value > 0) {
 
                 bp_points.innerText = Math.max(0, bp_points_value - 1);
                 bp_remaining = (bp_remaining < bp_max ? bp_remaining + 1 : bp_max);
                 span_bp_remaining.innerText = bp_remaining;
 
-            }else if(bp_button.id.includes("plus")){
+            } else if (bp_button.id.includes("plus")) {
 
                 bp_points.innerText = (bp_remaining > 0 ? bp_points_value + 1 : bp_points.innerText);
                 bp_remaining = (bp_remaining > 0 ? bp_remaining - 1 : 0);
                 span_bp_remaining.innerText = bp_remaining;
             }
-            RecalcFinalScores(); 
+            RecalcFinalScores();
         }
 
-        function RecalcFinalScores(){
+        function RecalcFinalScores() {
+
             // Get rows from ability scores table
-            const ability_rows = ability_scores.querySelectorAll(".ability-row")
-            var score_over_18 = false;// lame
-            for(var row = 0; row < ability_rows.length; row += 1)
-            {
+            const ability_rows = ability_scores.querySelectorAll(".ability-row");
+            var over18NotAllowed = ability_scores.dataset.over18allowed === "false" && (ability_scores.dataset.distributeresults === "true" || ability_scores.dataset.bonus_points > 0);
+            var score_over_18 = false;
+            for (var row = 0; row < ability_rows.length; row += 1) {
                 const ability_row = document.getElementById(ability_rows[row].id);
                 const ability_drop_item = ability_row.querySelector(".ability-drop-zone").querySelector(".ability-drop-item");
                 const bonus_points = ability_row.querySelector(".bonus-points").querySelector(".bp");
-                const final_score = ability_row.querySelector(".final-score"); 
-                const modifier = ability_row.querySelector(".modifier"); 
+                const racial_mod = ability_row.querySelector(".racial_mod");
+                const final_score = ability_row.querySelector(".final-score");
+                const modifier = ability_row.querySelector(".modifier");
 
                 // Calculate final score
                 final_result = parseInt(ability_drop_item ? ability_drop_item.innerText : 0);
                 bonus_result = parseInt(bonus_points.innerText);
-                // TODO-HIGH: Add Racial bonus
-                final_score.value = final_result + bonus_result;
+                racial_mod_result = parseInt(racial_mod.innerText);
+                final_score.value = final_result + bonus_result + racial_mod_result;
 
                 // Calculate dnd5e ability modifier
                 // TODO-LOW: Other game systems?
-                const ability_mod = Math.floor((final_score.value - 10)/2)
+                const ability_mod = Math.floor((final_score.value - 10) / 2);
                 modifier.innerText = (ability_mod > 0 ? "+" : "") + ability_mod;
 
-                // Check for score over 18: This is lame and will be made better in the future
-                score_over_18 = (final_score.value > 18 ? true : score_over_18) 
-                // TODO-LOW: This is still lame
-                if(ability_scores.dataset.over18allowed === "false" && final_score.value > 18){
+                // Check for score over 18: 
+                // TODO-LOW: This is still kinda sucky
+                score_over_18 = (final_score.value > 18 ? true : score_over_18);
+                over18NotAllowed = (final_score.value > 18 && over18NotAllowed ? true : over18NotAllowed);
+                if (final_score.value > 18 && over18NotAllowed) {
                     final_score.classList.add("over18");
-                }else{
+                } else {
                     final_score.classList.remove("over18");
                 }
             }
 
             //Enable/Disable submit Button
-            const over18NotAllowed = ability_scores.dataset.over18allowed === "false" && score_over_18;// Did I mention... lame?
+            // TODO-MEDIUM: What if applied as rolled results in over 18?
             const bp_remaining = parseInt(span_bp_remaining.innerText);
-            submit.disabled = (GetNextAbilityDropZone() || bp_remaining > 0 || over18NotAllowed);
+            console.log("GetNextAbilityDropZone() = " + GetNextAbilityDropZone());
+            console.log("bp_remaining = " + bp_remaining);
+            console.log("(score_over_18 && over18NotAllowed) = " + (score_over_18 && over18NotAllowed));
+            submit.disabled = (GetNextAbilityDropZone() || bp_remaining > 0 || (score_over_18 && over18NotAllowed));
         }
 
-        async function MoveResult(ev){
+        async function MoveResult(ev) {
             const result_item = document.getElementById(ev.target.id);
             const results_drop_zone = document.getElementById("results_drop_zone");
-            if(result_item.parentElement.id === "results_drop_zone")
-            {
+            if (result_item.parentElement.id === "results_drop_zone") {
                 const next_ability = GetNextAbilityDropZone();
-                if(next_ability){
+                if (next_ability) {
                     await next_ability.appendChild(result_item);
                 }
             }
-            else if(results_drop_zone){
+            else if (results_drop_zone) {
                 await results_drop_zone.appendChild(result_item);
             }
-            RecalcFinalScores(); 
+            RecalcFinalScores();
         }
 
-        function GetNextAbilityDropZone(){            
+        function GetNextAbilityDropZone() {
             const ability_rows = ability_scores.querySelectorAll(".ability-row")
-            for(var row = 0; row < ability_rows.length; row += 1)
-            {
+            for (var row = 0; row < ability_rows.length; row += 1) {
                 const ability_row = document.getElementById(ability_rows[row].id);
                 const ability_drop_zone = ability_row.querySelector(".ability-drop-zone")
-                if(ability_drop_zone.innerText === "")
-                {
+                if (ability_drop_zone.innerText === "") {
                     return ability_drop_zone;
                 }
             }
             return false;
         }
 
-        function ApplyAsRolled(){            
+        function ApplyAsRolled() {
             const ability_drop_items = results_drop_zone.querySelectorAll(".ability-drop-item");
-            for(var item = 0; item < ability_drop_items.length; item += 1)
-            {
+            for (var item = 0; item < ability_drop_items.length; item += 1) {
                 const next_ability = GetNextAbilityDropZone();
-                if(next_ability){
+                if (next_ability) {
                     ability_drop_items[item].removeAttribute("ondblclick");
                     ability_drop_items[item].removeAttribute("draggable");
                     next_ability.appendChild(ability_drop_items[item]);
                 }
             }
-            results_drop_zone.innerHTML = "<small><em>" + game.i18n.localize("RNCS.form-app.form-text.applied-as-rolled") + "</em></small>"; 
+            results_drop_zone.innerHTML = "<small><em>" + game.i18n.localize("RNCS.form-app.form-text.applied-as-rolled") + "</em></small>";
             RecalcFinalScores();
         }
 
+        async function UpdateRaceBonus(ev) {
+            // Get racial bonuses
+            const select = document.getElementById(ev.target.id);
+            // const selected = select.options[select.selectedIndex];
+            const jsonDATA = await getJSONData("./modules/roll-new-character-stats/data/racial-bonus.json");
+            var race_bonuses;
+            switch (game.system.id) {
+                case "dnd5e":
+                    race_bonuses = jsonDATA.game_system[0].dnd5e.races[select.selectedIndex]
+                    break;
+                case "pf1e":
+                    race_bonuses = jsonDATA.game_system[0].pf1e.races[select.selectedIndexe]
+                    break;
+                default:// Default to dnd5e for now
+                    race_bonuses = jsonDATA.game_system[0].dnd5e.races[select.selectedIndex]
+            }
+            // Update Race Bonus column
+            const ability_rows = ability_scores.querySelectorAll(".ability-row")
+            for (var row = 0; row < ability_rows.length; row += 1) {
+                const ability_row = document.getElementById(ability_rows[row].id);
+                const ability_text = ability_row.querySelector(".ability-text").innerText.toLowerCase();
+                const racial_mod = ability_row.querySelector(".racial_mod")
+                racial_mod.innerText = race_bonuses[ability_text];
+            }
+            RecalcFinalScores();
+        }
+
+        async function getJSONData(filename) {
+            const jsonDATA = await fetch(filename)
+                .then(response => response.json())
+                .then(data => {
+                    return data;
+                });
+            return jsonDATA;
+        }
+
     </script>
-    
-	<!-- TODO-HIGH: Add Race selection -->
-    <!-- <p>
-        <label for="charactername">Character Name</label>
-        <input type="String" name="charactername" value={{actor.data.name}} />
-    </p> -->
-    <span>Race:</span>
-    <span><select id="select_race">
-        {{#each races as |races id|}}
-            <option value="{{id}}">{{races.race}}</option>
-        {{/each}}
-    </select></span>
+    <div style="margin-bottom:5px;">
+        <div style="width:15%;display: inline-block;">Name:</div>
+        <div style="width:84%;display: inline-block;"><input style="width:100%;" type="String" name="charactername" value="New Actor"" /></div>
+    </div>
+    <div>
+        <div style="width:15%;display: inline-block;">Race:</div>
+        <div style="width:84%;display: inline-block;">
+            <select style="width:100%;" id="select_race" name="select_race" onchange="UpdateRaceBonus(event)">
+            {{#each races as |races id|}}
+                <option id="race{{id}}" value="{{races.race}}">{{races.race}}</option>
+            {{/each}}
+        </select></div>
+    </div>
     <table>
         <tr>
             <td class="results-header">Results:</td>
@@ -161,13 +200,20 @@
             </td>
         </tr>
     </table>
-    <table id="ability_scores" data-over18allowed={{over18allowed}} data-distributeResults={{distributeResults}}>
+    <table id="ability_scores" data-over18allowed={{over18allowed}} data-distributeresults={{distributeResults}} data-bonus_points={{bonus_points}}>
         <tr id="header_row" class="header-row">
             <th>Ability</th>
             <th>Result</th>
             <th>Bonus&nbsp;</span><span id="span_bp_remaining">{{bonus_points}}</span>/<span id="span_bp_max">{{bonus_points}}</span></th>
-            <!-- <th>Racial</th> -->
-            <th>Score<span style="font-size: small;">{{#unless over18allowed}}*{{/unless}}</span></th>
+            <th>Race Bonus</th>
+            <th>Score<span style="font-size: small;">
+                {{#if distributeResults}}
+                    <!-- {{#unless bonus_points}} -->
+                        {{#unless over18allowed}}
+                            *
+                        {{/unless}}
+                    <!-- {{/unless}} -->
+                {{/if}}</span></th>
             <th>Mod</th>
         </tr>
         {{#each abilities as |abilities id|}}
@@ -176,7 +222,7 @@
             <td id="{{abilities.ability}}_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)">                
             </td>
             <td class="bonus-points"><span id="{{abilities.ability}}_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="{{abilities.ability}}_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
-            <!-- <td id="{{abilities.ability}}_racial_mod" ></td> -->
+            <td id="{{abilities.ability}}_racial_mod" class="racial_mod">0</td>
             <td id="{{abilities.ability}}_final_score"><input name="{{abilities.ability}}_final_score" class="final-score" value="0" /></td>
             <td id="{{abilities.ability}}_mod" class="modifier">-5</td>
         </tr>
@@ -185,5 +231,12 @@
     <button type="submit" id="submit" disabled>
         <i class="fa fa-check"></i> Accept New Actor
     </button>
-    <span style="font-size: small;">{{#unless over18allowed}}{{localize "RNCS.form-app.form-text.over-18-not-allowed"}}{{/unless}}</span>
+    <span style="font-size: small;">
+        {{#if distributeResults}}
+            <!-- {{#unless bonus_points}} -->
+                {{#unless over18allowed}}
+                    {{localize "RNCS.form-app.form-text.over-18-not-allowed"}}
+                {{/unless}}
+            <!-- {{/unless}} -->
+        {{/if}}</span>
 </form>

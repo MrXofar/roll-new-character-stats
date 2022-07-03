@@ -1,4 +1,5 @@
 import { DiceRoller } from "../dice-roller.js";
+import JSON_Helper from "../../data/json-helper.js";
 
 Hooks.on('renderDistributeAbilityScores', () => {
   // Add dragstart listeners for each result element
@@ -42,11 +43,11 @@ export class DistributeAbilityScores extends FormApplication {
 
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      title: game.i18n.localize("RNCS.dialog.results-button.distribute-results"),
+      title: game.i18n.localize("RNCS.dialog.results-button.configure-new-actor"),
       id: 'distribute-ability-scores',
       icon: 'fas fa-cogs', // Change?
       template: "./modules/roll-new-character-stats/templates/form-apps/distribute-ability-scores.html",
-      height: 470,
+      height: 475,
       width: 375,
       closeOnSubmit: true,
       submitOnClose: false
@@ -66,32 +67,59 @@ export class DistributeAbilityScores extends FormApplication {
   }
 
   async getSystemRaces() {
-    // TODO-LOW: Farm this out to a helper when other JSON files are implemented
-    const jsonDATA = await fetch("./modules/roll-new-character-stats/data/racial-bonus.json")
-      .then(response => response.json())
-      .then(data => {
-        return data;
-      });
-    // TODO-MEDIUM: Switch Case game system
-    return jsonDATA.game_system[0].dnd5e.races;
+    const jh = new JSON_Helper();
+    const jsonDATA = await jh.getJSONData("./modules/roll-new-character-stats/data/racial-bonus.json");
+    switch (game.system.id) {
+      case "dnd5e":
+        return jsonDATA.game_system[0].dnd5e.races;
+      case "pf1e":
+        return jsonDATA.game_system[0].pf1e.races;
+      default:// Default to dnd5e for now
+        return jsonDATA.game_system[0].dnd5e.races;
+    }
   }
 
   async _updateObject(event, formData) {
 
-		let actor = await Actor.create({
-			name: "New Actor", // TODO-LOW: use formData.charactername
-			type: "character",
-			img: "icons/svg/mystery-man.svg"
-		});
-
-    await actor.update({
-      'data.abilities.str.value': formData.str_final_score,
-      'data.abilities.dex.value': formData.dex_final_score,
-      'data.abilities.con.value': formData.con_final_score,
-      'data.abilities.int.value': formData.int_final_score,
-      'data.abilities.wis.value': formData.wis_final_score,
-      'data.abilities.cha.value': formData.cha_final_score
+    let actor = await Actor.create({
+      name: formData.charactername, // TODO-LOW: use formData.charactername
+      type: "character",
+      img: "icons/svg/mystery-man.svg"
     });
+    switch (game.system.id) {
+      case "dnd5e":
+        // dnd5e Racial bonus source used for ./data/racial-bonus.json: https://docs.google.com/document/d/1PhQ933l3svEnqREAYwPKwJOlxPFK5R4s1TwwZ4Xem8Y
+        await actor.update({
+          'data.details.race': formData.select_race,
+          'data.abilities.str.value': formData.str_final_score,
+          'data.abilities.dex.value': formData.dex_final_score,
+          'data.abilities.con.value': formData.con_final_score,
+          'data.abilities.int.value': formData.int_final_score,
+          'data.abilities.wis.value': formData.wis_final_score,
+          'data.abilities.cha.value': formData.cha_final_score
+        });
+        break;
+      case "pf1e":// TODO-HIGH: Verify attribute paths
+        await actor.update({
+          'data.abilities.str.value': formData.str_final_score,
+          'data.abilities.dex.value': formData.dex_final_score,
+          'data.abilities.con.value': formData.con_final_score,
+          'data.abilities.int.value': formData.int_final_score,
+          'data.abilities.wis.value': formData.wis_final_score,
+          'data.abilities.cha.value': formData.cha_final_score
+        });
+        break;
+      default:// default to dnd5e for now
+        await actor.update({
+          'data.abilities.str.value': formData.str_final_score,
+          'data.abilities.dex.value': formData.dex_final_score,
+          'data.abilities.con.value': formData.con_final_score,
+          'data.abilities.int.value': formData.int_final_score,
+          'data.abilities.wis.value': formData.wis_final_score,
+          'data.abilities.cha.value': formData.cha_final_score
+        });
+        break;
+    }
   }
 }
 

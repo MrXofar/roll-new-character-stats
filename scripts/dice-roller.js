@@ -15,7 +15,7 @@ const bonus_points = namedfields('description', 'difficulty');
 
 export class DiceRoller {
     constructor(
-        results_abilities = [],       // Results of rolled dice
+        results_abilities = [], // Results of dice rolled for abilities
         drop_val_index = -1,    // Index of roll to be displayed as "Dropped =>" from [results_abilities] 
         bonus_results = 0       // Result of RollBonusPoints()
     ) {
@@ -184,7 +184,10 @@ export class DiceRoller {
         method_text += game.i18n.localize("RNCS.settings.NumberOfRolls.choices." + game.settings.get(settingsKey, "NumberOfRolls"));
         method_text += (game.settings.get(settingsKey, "DropLowestSet") ? game.i18n.localize("RNCS.results-text.methods.drop-lowest-set") : "") + "</br>";
         method_text += (game.settings.get(settingsKey, "BonusPoints") > 0 ? "+" + game.i18n.localize("RNCS.settings.BonusPoints.choices." + game.settings.get(settingsKey, "BonusPoints")) + "</br>" : "");
-        method_text += (game.settings.get(settingsKey, "Over18Allowed") ? game.i18n.localize("RNCS.results-text.methods.over-18-allowed") : game.i18n.localize("RNCS.results-text.methods.over-18-not-allowed")) + "</br>";
+        if(!game.settings.get(settingsKey, "Over18Allowed") && (game.settings.get(settingsKey, "DistributeResults") || game.settings.get(settingsKey, "BonusPoints") > 0))
+        {
+            method_text += game.i18n.localize("RNCS.results-text.methods.over-18-not-allowed") + "</br>"
+        }
         method_text += (game.settings.get(settingsKey, "DistributeResults") ? game.i18n.localize("RNCS.results-text.methods.distribute-freely") : game.i18n.localize("RNCS.results-text.methods.apply-as-rolled")) + "</em>"
         method_text += "</br></br>"
         return method_text;
@@ -272,8 +275,13 @@ export class DiceRoller {
         note_from_dm += "<em>" + (this._settingDistributeResults() ? game.i18n.localize("RNCS.results-text.note-from-dm.distribute-freely") : game.i18n.localize("RNCS.results-text.note-from-dm.apply-as-rolled"));
         // Bonus Point distribution - if any
         if (this._settingIsBonusPointApplied()) { note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.distribute-bonus-points"); }
-        // Mention final score limit - if any
-        note_from_dm += (this._settingOver18Allowed() ? game.i18n.localize("RNCS.results-text.note-from-dm.final-scores-may") : game.i18n.localize("RNCS.results-text.note-from-dm.final-scores-may-not")) + game.i18n.localize("RNCS.results-text.note-from-dm.above-18");
+        
+        // TODO: Mention final score limit - if any
+        if(!game.settings.get(settingsKey, "Over18Allowed") && (game.settings.get(settingsKey, "DistributeResults") || game.settings.get(settingsKey, "BonusPoints") > 0))
+        {
+            note_from_dm += (this._settingOver18Allowed() ? game.i18n.localize("RNCS.results-text.note-from-dm.final-scores-may") : game.i18n.localize("RNCS.results-text.note-from-dm.final-scores-may-not")) + game.i18n.localize("RNCS.results-text.note-from-dm.above-18");
+        }
+
         // Mention bonus points - if any - and any other bonuses
         if (this._settingIsBonusPointApplied()) { note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.bonus-points"); }
         note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.any-bonuses") + "</em>";
