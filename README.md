@@ -11,7 +11,7 @@ Get results in chat message along with some rules set by DM
 ![image](https://user-images.githubusercontent.com/103948142/177383108-2612ae4d-3b1b-4a14-a391-71ceffe7f971.png)
 
 # Configure Actor
-Move results around - if allowed, add bonus points - if any, select race and name new character!
+Move results around - if allowed, add bonus points - if any, select race and name new character before accepting new actor!
 
 ![image](https://user-images.githubusercontent.com/103948142/177382844-e38ed426-98e6-440c-8e9c-57d11cc2e0b7.png)
 
