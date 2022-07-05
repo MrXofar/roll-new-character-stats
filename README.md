@@ -6,7 +6,7 @@ Some folks are okay with this, as it adds to the suspense of creating a new char
 ![image](https://user-images.githubusercontent.com/103948142/173837545-8920f058-480e-401c-8ea4-77edd4939e66.png)
 
 # Chat Message
-Get results in chat message along with some rules set by DM
+Get results in private chat message along with some rules set by DM
 
 ![image](https://user-images.githubusercontent.com/103948142/177383108-2612ae4d-3b1b-4a14-a391-71ceffe7f971.png)
 
