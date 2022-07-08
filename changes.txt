@@ -1,4 +1,4 @@
-Coming in v2.2.0
+Coming in v2.2.0 
 ----------------------------------------------
 A little house cleaning as always.
 Removed "dnd4e" from module.json - it has issues with my module creating New Actor at the moment. Says "type" is not in the array of allowed types.
@@ -16,6 +16,11 @@ Made changes to /scripts/dice-roller.js.getResultsAbilitiesText(), main.js, /scr
 Enabled [Configure Actor] button in chat message results for Pathfinder 1 "pf1".
 Added some classes to /templates/form-apps/distribute-ability-scores.html
 
-Racial Bonus support for "pf1" still needs more work.
+Racial Bonus support for "pf1" still needs more work. (just kidding, no it doesn't - this is working fine now)
 
 See /todo-list.txt for other items of interest
+
+Changed 'Undecided' to 'Race Unknown'
+Character name will default to selected Race when left blank or as "New Actor".
+Added some more localization.
+Made some changes to [abl]_final_score on /templates/form-apps/distribute-ability-scores.html to work better with game systems using race items (i.e. pf1)

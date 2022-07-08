@@ -18,7 +18,7 @@
                 if (drop_zone.id === "results_drop_zone" || (drop_zone.id.includes("ability_drop_zone") && !drop_zone.querySelector(".ability-drop-item"))) {
                     drop_zone.appendChild(document.getElementById(data));
                 }
-                else if (drop_zone.id.includes("div_final_result")) {// Dropping onto existing result in any zone
+                else if (drop_zone.id.includes("div_final_result")) {// Dropping onto existing result in any zone will swap values
 
                     // Swap Results
                     const ability_item_drop_zone = drop_zone.parentElement;
@@ -63,29 +63,31 @@
                 const ability_drop_item = ability_row.querySelector(".ability-drop-zone").querySelector(".ability-drop-item");
                 const bonus_points = ability_row.querySelector(".bonus-points").querySelector(".bp");
                 const racial_mod = ability_row.querySelector(".racial_mod");
-                const final_score = ability_row.querySelector(".final-score");
+                const final_score_unmod = ability_row.querySelector(".final-score-unmod");
+                const final_score_display = ability_row.querySelector(".final-score-display");
                 const modifier = ability_row.querySelector(".modifier");
 
                 // Calculate final score
                 final_result = parseInt(ability_drop_item ? ability_drop_item.innerText : 0);
                 bonus_result = parseInt(bonus_points.innerText);
                 racial_mod_result = parseInt(racial_mod.innerText);
-                final_score.value = final_result + bonus_result + racial_mod_result;
+                final_score_unmod.value = final_result + bonus_result;// Exclude racial modifiers
+                final_score_display.value = final_result + bonus_result + racial_mod_result;
 
 // TODO-LOW: ability_mod formula for other game systems? Currently using Math.floor((final_score.value - 10) / 2) for all
 
-                // Calculate dnd5e ability modifier
-                const ability_mod = Math.floor((final_score.value - 10) / 2);
+                // Calculate ability modifier
+                const ability_mod = Math.floor((final_score_display.value - 10) / 2);
                 modifier.innerText = (ability_mod > 0 ? "+" : "") + ability_mod;
 
 // TODO-LOW: Validation for score over 18 is still kinda sucky
 
-                score_over_18 = (final_score.value > 18 ? true : score_over_18);
-                over18NotAllowed = (final_score.value > 18 && over18NotAllowed ? true : over18NotAllowed);
-                if (final_score.value > 18 && over18NotAllowed) {
-                    final_score.classList.add("over18");
+                score_over_18 = (final_score_display.value > 18 ? true : score_over_18);
+                over18NotAllowed = (final_score_display.value > 18 && over18NotAllowed ? true : over18NotAllowed);
+                if (final_score_display.value > 18 && over18NotAllowed) {
+                    final_score_display.classList.add("over18");
                 } else {
-                    final_score.classList.remove("over18");
+                    final_score_display.classList.remove("over18");
                 }
             }
 
@@ -229,14 +231,17 @@
             </td>
             <td class="bonus-points"><span id="{{abilities}}_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="{{abilities}}_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
             <td id="{{abilities}}_racial_mod" class="racial_mod">0</td>
-            <td id="{{abilities}}_final_score"><input name="{{abilities}}_final_score" class="final-score" value="0" /></td>
+            <td id="{{abilities}}_final_score">
+                <input name="{{abilities}}_final_score_unmod" class="final-score-unmod" value="0" />
+                <input name="{{abilities}}_final_score_display" class="final-score-display" value="0" />
+            </td>
             <td id="{{abilities}}_mod" class="modifier">-5</td>
         </tr>
         {{/each}}        
     </table>
 
     <button type="submit" id="submit" disabled>
-        <i class="fa fa-check"></i> Accept New Actor
+        <i class="fa fa-check"></i> {{localize "RNCS.form-app.form-text.accept-new-actor"}}
     </button>
 
     {{#if_AorB distributeResults bonus_points}}

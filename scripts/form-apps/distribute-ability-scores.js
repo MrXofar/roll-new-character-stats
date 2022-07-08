@@ -80,43 +80,48 @@ export class DistributeAbilityScores extends FormApplication {
 
     switch (game.system.id) {
       case "dnd5e":
+        // _final_score_display includes Racial Mod - will revisit this when dnd5e implements race items (see pf1).
         await actor.update({
           'data.details.race': formData.select_race,
-          'data.abilities.str.value': formData.str_final_score,
-          'data.abilities.dex.value': formData.dex_final_score,
-          'data.abilities.con.value': formData.con_final_score,
-          'data.abilities.int.value': formData.int_final_score,
-          'data.abilities.wis.value': formData.wis_final_score,
-          'data.abilities.cha.value': formData.cha_final_score
+          'data.abilities.str.value': formData.str_final_score_display, 
+          'data.abilities.dex.value': formData.dex_final_score_display,
+          'data.abilities.con.value': formData.con_final_score_display,
+          'data.abilities.int.value': formData.int_final_score_display,
+          'data.abilities.wis.value': formData.wis_final_score_display,
+          'data.abilities.cha.value': formData.cha_final_score_display
         });
         break;
+
       case "pf1":
-
-// TODO-MEDIUM: Add Race as an Item for pf1 - may need to adjust formData.[abil]_final_score before update
-
-      // const pack = game.packs.get("pf1.races");
-      // const itemId = pack.index.getName(formData.select_race)._id;
-      // const race_item = await pack.getDocument(itemId);
-      // console.log(race_item);
-
+        // _final_score_unmod does not include Racial Mod as that value is added by embedded obj_race_item
         await actor.update({
-          //items: race_item,
-          'data.abilities.str.value': formData.str_final_score,
-          'data.abilities.dex.value': formData.dex_final_score,
-          'data.abilities.con.value': formData.con_final_score,
-          'data.abilities.int.value': formData.int_final_score,
-          'data.abilities.wis.value': formData.wis_final_score,
-          'data.abilities.cha.value': formData.cha_final_score
+          'data.abilities.str.value': formData.str_final_score_unmod, 
+          'data.abilities.dex.value': formData.dex_final_score_unmod,
+          'data.abilities.con.value': formData.con_final_score_unmod,
+          'data.abilities.int.value': formData.int_final_score_unmod,
+          'data.abilities.wis.value': formData.wis_final_score_unmod,
+          'data.abilities.cha.value': formData.cha_final_score_unmod
         });
+
+        // Add race item
+        const pack = game.packs.get("pf1.races");
+        const itemId = pack.index.getName(formData.select_race)?._id;
+        if (itemId) {
+          const race_item = await pack.getDocument(itemId);
+          const obj_race_item = race_item.data.toObject();
+          await actor.createEmbeddedDocuments("Item", [obj_race_item]);
+        }
         break;
+
       default:// default to dnd5e for now
         await actor.update({
-          'data.abilities.str.value': formData.str_final_score,
-          'data.abilities.dex.value': formData.dex_final_score,
-          'data.abilities.con.value': formData.con_final_score,
-          'data.abilities.int.value': formData.int_final_score,
-          'data.abilities.wis.value': formData.wis_final_score,
-          'data.abilities.cha.value': formData.cha_final_score
+          'data.details.race': formData.select_race,
+          'data.abilities.str.value': formData.str_final_score_display,
+          'data.abilities.dex.value': formData.dex_final_score_display,
+          'data.abilities.con.value': formData.con_final_score_display,
+          'data.abilities.int.value': formData.int_final_score_display,
+          'data.abilities.wis.value': formData.wis_final_score_display,
+          'data.abilities.cha.value': formData.cha_final_score_display
         });
         break;
     }

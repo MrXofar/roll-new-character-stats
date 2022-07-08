@@ -102,7 +102,8 @@
     "form-app":{
       "form-text":{
         "applied-as-rolled": "Applied as rolled. ",
-        "over-18-not-allowed": "* No scores over 18 allowed at first level."
+        "over-18-not-allowed": "* No scores over 18 allowed at first level.",
+        "accept-new-actor": "Accept New Actor"
       }
     }
   }

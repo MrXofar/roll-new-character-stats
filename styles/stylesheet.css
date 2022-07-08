@@ -24,13 +24,16 @@
     font-style: normal !important;
     margin-right: 3px !important;
   }  
-  .final-score{
+  .final-score-display{
     border: none;
     background-color: transparent;
     height: 2.5em; 
     width: 2.5em;
     text-align: center;
     font-size: medium;
+  }
+  .final-score-unmod{
+    display: none;
   }
   .header-row, .ability-row{
     text-align: center;

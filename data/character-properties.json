@@ -12,7 +12,7 @@
                 ],
                 "races": [
                     {
-                        "race": "Undecided",
+                        "race": "Race Unknown",
                         "bonus_any": "0",
                         "str": "0",
                         "dex": "0",
@@ -924,7 +924,7 @@
                 ],
                 "races": [
                     {
-                        "race": "Undecided",
+                        "race": "Race Unknown",
                         "bonus_any": "0",
                         "str": "0",
                         "dex": "0",

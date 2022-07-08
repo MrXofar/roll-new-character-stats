@@ -24,10 +24,6 @@ scripts\form-apps\distribute-ability-scores.js:
   78: // TODO-MEDIUM: Include other racial skills/features/bonuses/languages
   79  
 
-  93  
-  94: // TODO-MEDIUM: Add Race as an Item for pf1 - may need to adjust formData.[abil]_final_score before update
-  95  
-
 templates\form-apps\distribute-ability-scores.html:
   74  
   75: // TODO-LOW: ability_mod formula for other game systems? Currently using Math.floor((final_score.value - 10) / 2) for all
