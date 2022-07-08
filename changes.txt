@@ -1,15 +1,21 @@
-A little house cleaning as always
-Added "character_property" param to RollThemDice() - 
-    This param will indicate which character property will be rolled for. 
-    Currenty, the only property to roll for is "attibutes". 
-    Others, like "currency", "weapons", "armor", "spells", etc. will be added in the future
-Added difficulty value of 1 t_settingDropLowestDieRoll an_settingDropLowestSet and reduced difficulty value by 1 from AbilitiesRollMethod "4d6" and Number of Sets Rolled "7 Sets"
-Minor changes in chat message.
-Changed term 'attributes' to 'abilities'
-Changed term 'attribute' to 'ability'
-Changed term 'd6Method' to 'AbilitiesRollMethod'
-Changed term 'SetMethod' to 'NumberOfRolls' - function names & prefixes
-Changed term 'NumberOfSetsRolls' to 'NumberOfRolls' - setting names
-Chnaged term 'rolls' in const num_roll namedfields to 'roll_count'
+Coming in v2.2.0
+----------------------------------------------
+A little house cleaning as always.
+Removed "dnd4e" from module.json - it has issues with my module creating New Actor at the moment. Says "type" is not in the array of allowed types.
+Modified "pf1e" to the correct value "pf1".
+Added todo-list.txt to show at a glance what is marked up as TODO-PRIORITY in the code.
+Changed /data/racial-bonus.json to /data/character-properties.json and expanded the json text.
+Removed /scripts/character-properties.js.
+Added vanilla pf1 races to /data/character-properties.json.
+Added /data/pf1-flavored-races(not used).json - just to keep some of the "pf1 flavored race" entries handy.
+Added /data/system-helper.js for getting game system specific data from json files. 
+Modified DM Note to NOT display "over 18" rules when they don't apply* - even if "Allow Over 18" is not selected in settings.
+*Over 18 setting/rules are ignored when scores are applied as rolled (not distributed) and there are no Bonus Points awarded.
+Moved "abilities" (i.e. "str", "dex", etc.) to /data/character-properties.json under each game system.
+Made changes to /scripts/dice-roller.js.getResultsAbilitiesText(), main.js, /scripts/form-apps/distribute-ability-scores.js and /templates/form-apps/distribute-ability-scores.html to accomodate "abilities" change.
+Enabled [Configure Actor] button in chat message results for Pathfinder 1 "pf1".
+Added some classes to /templates/form-apps/distribute-ability-scores.html
 
-Lots of other stuff I didn't list here.
+Racial Bonus support for "pf1" still needs more work.
+
+See /todo-list.txt for other items of interest

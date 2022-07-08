@@ -7,7 +7,7 @@
 import { settingsKey } from "./settings.js";
 import { namedfields } from "./constants.js";
 import { RollNewCharacterStats } from "./main.js";
-import { abilities } from './character-properties.js';
+import SYSTEM_Helper from "../data/system-helper.js";
 
 const num_dice = namedfields('description', 'die', 'difficulty');
 const num_roll = namedfields('description', 'roll_count', 'difficulty');
@@ -51,12 +51,14 @@ export class DiceRoller {
         }
     }
     Formula_Abilities() {
+
+// TODO-LOW: Add DieType|Sides setting to roll different sided die for abilities under different game systems
+// TODO-LOW: Change "roll +modifiers" into a separate setting 
+
         var formula = this._settingAbilitiesRollMethodNumDie();
-        // TODO-LOW: Add DieType|Sides setting to roll different sided die for abilities under different game systems
         formula += "d6"; 
         formula += (this._settingRerollOnes() ? "rr1" : "");
         formula += (this._settingDropLowestDieRoll() ? "dl" : "") 
-         // TODO-LOW: Change these types of "roll modifiers" into a separate setting 
         formula += this._settingAbilitiesRollMethodNumDie() === 2 ? "+6" : "";
         return formula;
     }
@@ -243,19 +245,20 @@ export class DiceRoller {
         difficulty_desc += "</br></br>"
         return difficulty_desc;
     }
-    GetResultsAbilitiesText() {
-        
+    async GetResultsAbilitiesText() {
         // Abilities
         var results_text = "<b>" + game.i18n.localize("RNCS.results-text.results.label") + ":</b> " + game.i18n.localize("RNCS.results-text.results.abilities") + "</br>";
         var apply_to = "";
+        const system_helper = new SYSTEM_Helper();
+        const abilities = await system_helper.getSystemAbilities();
         var att_idx = 0;
+
         // NOTE: If more rolls than needed to fill abilities is selected, and Distrubute results is unchecked without selecting Drop Lowest Set,
         // the last roll will still be displayed, but not applied to any ability. 
         // This might look confusing to players - so maybe a way to indicate this in the chat message??
         for (var set = 0; set < this.results_abilities.length; set++) {
-            //console.log(this.results_abilities[set].dice[0].results);
             var d6_results = this.results_abilities[set].dice[0].results.map(function (e) { return e.result; }).join(', ');
-            apply_to = att_idx < abilities.length && !this._settingDistributeResults() && this.drop_val_index !== set ? abilities[att_idx]?.ability.toUpperCase() + ": " : "";
+            apply_to = att_idx < abilities.length && !this._settingDistributeResults() && this.drop_val_index !== set ? "<label class=\"ability-text\">" + abilities[att_idx] + "</label>: " : "";
             results_text += apply_to;
             results_text += this.drop_val_index === set ? "Dropped => " : "";
             results_text += this.results_abilities[set].total + " [" + d6_results + "]";
@@ -275,16 +278,16 @@ export class DiceRoller {
         note_from_dm += "<em>" + (this._settingDistributeResults() ? game.i18n.localize("RNCS.results-text.note-from-dm.distribute-freely") : game.i18n.localize("RNCS.results-text.note-from-dm.apply-as-rolled"));
         // Bonus Point distribution - if any
         if (this._settingIsBonusPointApplied()) { note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.distribute-bonus-points"); }
-        
-        // TODO: Mention final score limit - if any
-        if(!game.settings.get(settingsKey, "Over18Allowed") && (game.settings.get(settingsKey, "DistributeResults") || game.settings.get(settingsKey, "BonusPoints") > 0))
+
+        // Mention final score limit - if any
+        if(!this._settingOver18Allowed() && (this._settingDistributeResults() || this._settingIsBonusPointApplied()))
         {
             note_from_dm += (this._settingOver18Allowed() ? game.i18n.localize("RNCS.results-text.note-from-dm.final-scores-may") : game.i18n.localize("RNCS.results-text.note-from-dm.final-scores-may-not")) + game.i18n.localize("RNCS.results-text.note-from-dm.above-18");
+            // Mention bonus points - if any - and any other bonuses
+            if (this._settingIsBonusPointApplied()) { note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.bonus-points"); }
+            note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.any-bonuses") + "</em>";
         }
 
-        // Mention bonus points - if any - and any other bonuses
-        if (this._settingIsBonusPointApplied()) { note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.bonus-points"); }
-        note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.any-bonuses") + "</em>";
         return note_from_dm;
     }
 }

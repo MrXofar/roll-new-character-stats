@@ -1,5 +1,6 @@
 import { DiceRoller } from "../dice-roller.js";
-import JSON_Helper from "../../data/json-helper.js";
+// import JSON_Helper from "../../data/json-helper.js";
+import SYSTEM_Helper from "../../data/system-helper.js";
 
 Hooks.on('renderDistributeAbilityScores', () => {
   // Add dragstart listeners for each result element
@@ -22,17 +23,16 @@ function dragstart_handler(ev) {
 }
 
 export class DistributeAbilityScores extends FormApplication {
-  constructor(abilities, final_results, bonus_points, over18allowed, distributeResults, msgId, races) {
+  constructor(final_results, bonus_points, over18allowed, distributeResults, msgId, abilities, races) {
     super();
-    this.abilities = abilities,
     this.final_results = final_results,
     this.bonus_points = bonus_points,
     this.over18allowed = over18allowed,
     this.distributeResults = distributeResults,
     this.msgId = msgId,
+    this.abilities = abilities,
     this.races = races
   }
-
 
   // async close() {
   //   const msg = game.messages.get(this.msgId);
@@ -47,7 +47,7 @@ export class DistributeAbilityScores extends FormApplication {
       id: 'distribute-ability-scores',
       icon: 'fas fa-cogs', // Change?
       template: "./modules/roll-new-character-stats/templates/form-apps/distribute-ability-scores.html",
-      height: 475,
+      height: 525,
       width: 375,
       closeOnSubmit: true,
       submitOnClose: false
@@ -55,40 +55,31 @@ export class DistributeAbilityScores extends FormApplication {
   }
 
   async getData() {
-    return {
-      abilities: this.abilities,
+    const system_helpler = new SYSTEM_Helper();
+    return {      
       final_results: this.final_results,
       bonus_points: this.bonus_points,
       over18allowed: this.over18allowed,
       distributeResults: this.distributeResults,
       msgId: this.msgId,
-      races: await this.getSystemRaces()
+      abilities: await system_helpler.getSystemAbilities(),
+      races: await system_helpler.getSystemRaces()
     };
-  }
-
-  async getSystemRaces() {
-    const jh = new JSON_Helper();
-    const jsonDATA = await jh.getJSONData("./modules/roll-new-character-stats/data/racial-bonus.json");
-    switch (game.system.id) {
-      case "dnd5e":
-        return jsonDATA.game_system[0].dnd5e.races;
-      case "pf1e":
-        return jsonDATA.game_system[0].pf1e.races;
-      default:// Default to dnd5e for now
-        return jsonDATA.game_system[0].dnd5e.races;
-    }
   }
 
   async _updateObject(event, formData) {
 
     let actor = await Actor.create({
-      name: formData.charactername, // TODO-LOW: use formData.charactername
+      name: (formData.charactername === "New Actor" || formData.charactername === "" ? formData.select_race : formData.charactername),
       type: "character",
       img: "icons/svg/mystery-man.svg"
     });
+
+
+// TODO-MEDIUM: Include other racial skills/features/bonuses/languages
+
     switch (game.system.id) {
       case "dnd5e":
-        // dnd5e Racial bonus source used for ./data/racial-bonus.json: https://docs.google.com/document/d/1PhQ933l3svEnqREAYwPKwJOlxPFK5R4s1TwwZ4Xem8Y
         await actor.update({
           'data.details.race': formData.select_race,
           'data.abilities.str.value': formData.str_final_score,
@@ -99,8 +90,17 @@ export class DistributeAbilityScores extends FormApplication {
           'data.abilities.cha.value': formData.cha_final_score
         });
         break;
-      case "pf1e":// TODO-HIGH: Verify attribute paths
+      case "pf1":
+
+// TODO-MEDIUM: Add Race as an Item for pf1 - may need to adjust formData.[abil]_final_score before update
+
+      // const pack = game.packs.get("pf1.races");
+      // const itemId = pack.index.getName(formData.select_race)._id;
+      // const race_item = await pack.getDocument(itemId);
+      // console.log(race_item);
+
         await actor.update({
+          //items: race_item,
           'data.abilities.str.value': formData.str_final_score,
           'data.abilities.dex.value': formData.dex_final_score,
           'data.abilities.con.value': formData.con_final_score,

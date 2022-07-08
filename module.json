@@ -10,8 +10,7 @@
     "styles":["styles/stylesheet.css"],
     "systems": [
       "dnd5e",
-      "dnd4e",
-      "pf1e",
+      "pf1",
       "ose",
       "archmage"
     ], 

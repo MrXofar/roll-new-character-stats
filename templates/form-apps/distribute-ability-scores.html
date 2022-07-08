@@ -72,13 +72,14 @@
                 racial_mod_result = parseInt(racial_mod.innerText);
                 final_score.value = final_result + bonus_result + racial_mod_result;
 
+// TODO-LOW: ability_mod formula for other game systems? Currently using Math.floor((final_score.value - 10) / 2) for all
+
                 // Calculate dnd5e ability modifier
-                // TODO-LOW: Other game systems?
                 const ability_mod = Math.floor((final_score.value - 10) / 2);
                 modifier.innerText = (ability_mod > 0 ? "+" : "") + ability_mod;
 
-                // Check for score over 18: 
-                // TODO-LOW: This is still kinda sucky
+// TODO-LOW: Validation for score over 18 is still kinda sucky
+
                 score_over_18 = (final_score.value > 18 ? true : score_over_18);
                 over18NotAllowed = (final_score.value > 18 && over18NotAllowed ? true : over18NotAllowed);
                 if (final_score.value > 18 && over18NotAllowed) {
@@ -88,8 +89,8 @@
                 }
             }
 
-            //Enable/Disable submit Button
-            // Name has nothing to do with scores, I am just being lazy with submit.disable 
+            // Enable/Disable submit Button
+            // charactername has nothing to do with scores, I am just being lazy with submit.disable 
             const charactername = document.getElementById("charactername");
             const bp_remaining = parseInt(span_bp_remaining.innerText);
             submit.disabled = (charactername.value.length === 0 || GetNextAbilityDropZone() || bp_remaining > 0 || (score_over_18 && over18NotAllowed));
@@ -122,7 +123,7 @@
             return false;
         }
 
-        function ApplyAsRolled() {
+        function ApplyAsRolled() { // Fires from Hooks.on renderDistributeAbilityScores if ability_scores.dataset.distributeresults === "false"
             const ability_drop_items = results_drop_zone.querySelectorAll(".ability-drop-item");
             for (var item = 0; item < ability_drop_items.length; item += 1) {
                 const next_ability = GetNextAbilityDropZone();
@@ -139,15 +140,14 @@
         async function UpdateRaceBonus(ev) {
             // Get racial bonuses
             const select = document.getElementById(ev.target.id);
-            // const selected = select.options[select.selectedIndex];
-            const jsonDATA = await getJSONData("./modules/roll-new-character-stats/data/racial-bonus.json");
+            const jsonDATA = await getJSONData("./modules/roll-new-character-stats/data/character-properties.json");
             var race_bonuses;
             switch (game.system.id) {
                 case "dnd5e":
                     race_bonuses = jsonDATA.game_system[0].dnd5e.races[select.selectedIndex]
                     break;
-                case "pf1e":
-                    race_bonuses = jsonDATA.game_system[0].pf1e.races[select.selectedIndexe]
+                case "pf1":
+                    race_bonuses = jsonDATA.game_system[0].pf1.races[select.selectedIndex]
                     break;
                 default:// Default to dnd5e for now
                     race_bonuses = jsonDATA.game_system[0].dnd5e.races[select.selectedIndex]
@@ -163,6 +163,7 @@
             RecalcFinalScores();
         }
 
+        // Had trouble importing json-helper.js to template.
         async function getJSONData(filename) {
             const jsonDATA = await fetch(filename)
                 .then(response => response.json())
@@ -173,20 +174,24 @@
         }
 
     </script>
+
     <div style="margin-bottom:5px;">
-        <div style="width:15%;display: inline-block;">Name:</div>
+        <div class="div_lable">Name:</div>
         <!-- Name has nothing to do with scores, I am just being lazy with submit.disable -->
-        <div style="width:84%;display: inline-block;"><input id="charactername" name="charactername" onchange="RecalcFinalScores()" style="width:100%;" type="String" value="New Actor"" /></div>
+        <div class="div_user_input">
+            <input id="charactername" name="charactername" onchange="RecalcFinalScores()" type="String" value="New Actor"" />
+        </div>
     </div>
+
     <div>
-        <div style="width:15%;display: inline-block;">Race:</div>
-        <div style="width:84%;display: inline-block;">
-            <select style="width:100%;" id="select_race" name="select_race" onchange="UpdateRaceBonus(event)">
-            {{#each races as |races id|}}
-                <option id="race{{id}}" value="{{races.race}}">{{races.race}}</option>
-            {{/each}}
-        </select></div>
+        <div class="div_lable">Race:</div>
+        <div class="div_user_input">
+            <select id="select_race" name="select_race" onchange="UpdateRaceBonus(event)" style="width:100%;">
+                {{selectOptions races selected=value nameAttr="race" labelAttr="race"}}
+            </select>
+        </div>
     </div>
+
     <table>
         <tr>
             <td class="results-header">Results:</td>
@@ -199,43 +204,47 @@
             </td>
         </tr>
     </table>
+
     <table id="ability_scores" data-over18allowed={{over18allowed}} data-distributeresults={{distributeResults}} data-bonus_points={{bonus_points}}>
         <tr id="header_row" class="header-row">
             <th>Ability</th>
             <th>Result</th>
             <th>Bonus&nbsp;</span><span id="span_bp_remaining">{{bonus_points}}</span>/<span id="span_bp_max">{{bonus_points}}</span></th>
             <th>Race Bonus</th>
-            <th>Score<span style="font-size: small;">
-                {{#if distributeResults}}
-                    <!-- {{#unless bonus_points}} -->
-                        {{#unless over18allowed}}
-                            *
-                        {{/unless}}
-                    <!-- {{/unless}} -->
-                {{/if}}</span></th>
+            <th>Score
+                {{#if_AorB distributeResults bonus_points}}
+                    {{#unless over18allowed}}
+                    <span style="font-size: small;">
+                        *
+                    </span>
+                    {{/unless}}
+                {{/if_AorB}}
+            </th>
             <th>Mod</th>
         </tr>
         {{#each abilities as |abilities id|}}
-        <tr id="{{abilities.ability}}_row" class="ability-row">
-            <td class="ability-text">{{abilities.ability}}</td>
-            <td id="{{abilities.ability}}_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)">                
+        <tr id="{{abilities}}_row" class="ability-row">
+            <td class="ability-text">{{abilities}}</td>
+            <td id="{{abilities}}_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)">                
             </td>
-            <td class="bonus-points"><span id="{{abilities.ability}}_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="{{abilities.ability}}_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
-            <td id="{{abilities.ability}}_racial_mod" class="racial_mod">0</td>
-            <td id="{{abilities.ability}}_final_score"><input name="{{abilities.ability}}_final_score" class="final-score" value="0" /></td>
-            <td id="{{abilities.ability}}_mod" class="modifier">-5</td>
+            <td class="bonus-points"><span id="{{abilities}}_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="{{abilities}}_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
+            <td id="{{abilities}}_racial_mod" class="racial_mod">0</td>
+            <td id="{{abilities}}_final_score"><input name="{{abilities}}_final_score" class="final-score" value="0" /></td>
+            <td id="{{abilities}}_mod" class="modifier">-5</td>
         </tr>
         {{/each}}        
     </table>
+
     <button type="submit" id="submit" disabled>
         <i class="fa fa-check"></i> Accept New Actor
     </button>
-    <span style="font-size: small;">
-        {{#if distributeResults}}
-            <!-- {{#unless bonus_points}} -->
-                {{#unless over18allowed}}
-                    {{localize "RNCS.form-app.form-text.over-18-not-allowed"}}
-                {{/unless}}
-            <!-- {{/unless}} -->
-        {{/if}}</span>
+
+    {{#if_AorB distributeResults bonus_points}}
+        {{#unless over18allowed}}
+        <span style="font-size: small;">
+            {{localize "RNCS.form-app.form-text.over-18-not-allowed"}}
+        </span>
+        {{/unless}}
+    {{/if_AorB}}
+
 </form>
