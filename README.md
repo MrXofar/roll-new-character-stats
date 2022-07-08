@@ -5,7 +5,15 @@ Some folks are okay with this, as it adds to the suspense of creating a new char
 
 ![image](https://user-images.githubusercontent.com/103948142/173837545-8920f058-480e-401c-8ea4-77edd4939e66.png)
 
-![image](https://user-images.githubusercontent.com/103948142/173837815-c62e6ef4-fa78-49b6-b4b8-43d7f3bb88a1.png)
+# Chat Message
+Get results in private chat message along with some rules set by DM
+
+![image](https://user-images.githubusercontent.com/103948142/177383108-2612ae4d-3b1b-4a14-a391-71ceffe7f971.png)
+
+# Configure Actor
+Move results around - if allowed, add bonus points - if any, select race and name new character before accepting new actor!
+
+![image](https://user-images.githubusercontent.com/103948142/177382844-e38ed426-98e6-440c-8e9c-57d11cc2e0b7.png)
 
 # Module Settings
 Only the DM may edit preferences under **Configure Settings > Module Settings** so that their players always roll new characters using the same methods.
