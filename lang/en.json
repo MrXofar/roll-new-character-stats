@@ -46,6 +46,26 @@
       "DistributeResults": {
         "Name": "Distribute Results",
         "Hint": "This setting will allow distribution of results freely among abilities."      
+      },
+      "ChatShowMethodText":{
+        "Name": "Show Method Text",
+        "Hint": "Hide/Show Method text in chat message"
+      },
+      "ChatShowResultsText":{
+        "Name": "Show Results Text",
+        "Hint": "Hide/Show Results text in chat message"
+      },
+      "ChatShowBonusPointsText":{
+        "Name": "Show Bonus Points Text",
+        "Hint": "Hide/Show Bonus Points text in chat message"
+      },
+      "ChatShowDifficultyText":{
+        "Name": "Show Difficulty Text",
+        "Hint": "Hide/Show Difficulty text in chat message"
+      },
+      "ChatShowNoteFromDM":{
+        "Name": "Show Note From DM",
+        "Hint": "Hide/Show Note From DM in chat message"
       }
     },
 

@@ -1726,6 +1726,17 @@
                     "cha"
                 ],
                 "races": []
+            },
+            "dcc": {
+                "abilities": [
+                    "str",
+                    "agl",
+                    "sta",
+                    "per",
+                    "int",
+                    "lck"
+                ],
+                "races": []
             }
         }
     ]

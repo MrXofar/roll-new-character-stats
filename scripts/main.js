@@ -92,21 +92,31 @@ async function ShowResultsInChatMessage(dice_roller) {
 	var results_message = "<div class=\"dnd5e dnd4e chat-card\"><header class=\"card-header\"><h3>Rolling New Actor</h3></header>"
 	
 	// Add Method to message
-	results_message += dice_roller.GetMethodText();
+	if(game.settings.get(settingsKey, "ChatShowMethodText")){
+		results_message += dice_roller.GetMethodText();
+	}
 
 	// Add Dificulty to message
-	results_message += dice_roller.GetDifficultyDesc();
+	if(game.settings.get(settingsKey, "ChatShowDifficultyText")){
+		results_message += dice_roller.GetDifficultyDesc();
+	}
 
 	// Add Results (Abilitites) to message
-	results_message += await dice_roller.GetResultsAbilitiesText();
+	if(game.settings.get(settingsKey, "ChatShowResultsText")){
+		results_message += await dice_roller.GetResultsAbilitiesText();
+	}
 
 	// Add Bonus Point(s) to message
-	results_message += dice_roller.GetBonusPointsText();
+	if(game.settings.get(settingsKey, "ChatShowBonusPointsText")){
+		results_message += dice_roller.GetBonusPointsText();
+	}
 
 // TODO-MEDIUM: Add Results (other-properties) to message
 
 	// Add Note from DM to message
-	results_message += dice_roller.GetNoteFromDM();
+	if(game.settings.get(settingsKey, "ChatShowNoteFromDM")){
+		results_message += dice_roller.GetNoteFromDM();
+	}
 
 	// Add Chat Card Button
 	console.log("game.system.id = " + game.system.id);
@@ -115,6 +125,7 @@ async function ShowResultsInChatMessage(dice_roller) {
 		case "pf1":
 		case "ose":
 		case "archmage":
+		case "dcc": 
 			results_message += "<div class=\"card-buttons\"><button data-action=\"configure_new_actor\">";
 			results_message += game.i18n.localize("RNCS.dialog.results-button.configure-new-actor");
 			results_message += "</button></div></div>"

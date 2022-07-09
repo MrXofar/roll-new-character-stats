@@ -16,6 +16,8 @@ export default class SYSTEM_Helper {
                 return jsonDATA.game_system[0].ose.races;
             case "archmage":
                 return jsonDATA.game_system[0].archmage.races;
+            case "dcc":
+                return jsonDATA.game_system[0].dcc.races;
             default:// Default to dnd5e for now
                 return jsonDATA.game_system[0].dnd5e.races;
         }
@@ -34,6 +36,8 @@ export default class SYSTEM_Helper {
                 return jsonDATA.game_system[0].ose.abilities;
             case "archmage":
                 return jsonDATA.game_system[0].archmage.abilities;
+            case "dcc":
+                return jsonDATA.game_system[0].dcc.abilities;
             default:// Default to dnd5e for now
                 return jsonDATA.game_system[0].dnd5e.abilities;
         }

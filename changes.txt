@@ -1,3 +1,9 @@
+v2.2.2
+----------------------------------------------
+Implemented support for Dungeon Crawl Classics - "dcc". Purple Scorcerer Games has this stuff covered - but why not, right?
+Added settings to hide/show method, difficulty, results, bonus and/or dm note in chat message.
+
+
 v2.2.1 - 7/9/2022
 ----------------------------------------------
 Fixed Hooks.on("renderChatLog", (app, [html]) to prevent console error when any other message is clicked.

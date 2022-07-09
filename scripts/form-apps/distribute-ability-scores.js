@@ -1,3 +1,5 @@
+/* global CONFIG */
+
 import { DiceRoller } from "../dice-roller.js";
 // import JSON_Helper from "../../data/json-helper.js";
 import SYSTEM_Helper from "../../data/system-helper.js";
@@ -61,9 +63,24 @@ export class DistributeAbilityScores extends FormApplication {
 
   async _updateObject(event, formData) {
 
+    var actor_type;
+    switch(game.system.id){
+      case "dnd5e":
+      case "pf1":
+      case "ose":
+      case "archmage":
+        actor_type = "character"
+        break;
+      case "dcc":
+        actor_type = "Player"
+        break;
+      default:
+        actor_type = "character"
+    }
+
     let actor = await Actor.create({
       name: ((formData.charactername === "New Actor" || formData.charactername === "") && formData.select_race !== "" ? formData.select_race : formData.charactername),
-      type: "character", // "dnd4e" does not like this type
+      type: actor_type, 
       img: "icons/svg/mystery-man.svg"
     });
 
@@ -132,6 +149,23 @@ export class DistributeAbilityScores extends FormApplication {
 
         // "archmage" does have race items in a compendium, but they are named weirdly and don't seem to have ability bonuses.
 
+        break;
+
+      case "dcc":
+        await actor.update({
+          'data.abilities.str.value': formData.str_final_score_display,
+          'data.abilities.agl.value': formData.agl_final_score_display,
+          'data.abilities.sta.value': formData.sta_final_score_display,
+          'data.abilities.per.value': formData.per_final_score_display,
+          'data.abilities.int.value': formData.int_final_score_display,
+          'data.abilities.lck.value': formData.lck_final_score_display,
+          'data.abilities.str.max': formData.str_final_score_display,
+          'data.abilities.agl.max': formData.agl_final_score_display,
+          'data.abilities.sta.max': formData.sta_final_score_display,
+          'data.abilities.per.max': formData.per_final_score_display,
+          'data.abilities.int.max': formData.int_final_score_display,
+          'data.abilities.lck.max': formData.lck_final_score_display
+        });
         break;
 
       default:// default to dnd5e for now

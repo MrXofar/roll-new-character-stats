@@ -1,8 +1,8 @@
 <form>
     <script>
-
+        /* global CONFIG */
         function Intitialize() {
-            
+
             // Apply as Rolled?
             const ability_scores = document.getElementById("ability_scores");
             if (ability_scores.dataset.distributeresults === "false") { ApplyAsRolled(); }
@@ -12,18 +12,32 @@
 
                 case "ose":
                 case "archmage":
-                    // Hide Race selector and Race Bonus column            
-                    document.getElementById("race-selector")?.classList.add("display_none");
-                    ability_scores.querySelector(".header-row").querySelector(".race-mod-header")?.classList.add("display_none");
-                    const ability_rows = ability_scores.querySelectorAll(".ability-row")
-                    for (var row = 0; row < ability_rows.length; row += 1) {
-                        const ability_row = document.getElementById(ability_rows[row].id);
-                        ability_row.querySelector(".racial-mod")?.classList.add("display_none");
-                    }
+                case "dcc":
+                    HideRaceOptions();
                     break;
 
                 default:
                     break;
+            }
+        }
+
+        function HideRaceOptions() {
+            // Hide Race selector and Race Bonus column            
+            document.getElementById("race-selector")?.classList.add("display_none");
+            ability_scores.querySelector(".header-row").querySelector(".race-mod-header")?.classList.add("display_none");
+            const ability_rows = ability_scores.querySelectorAll(".ability-row")
+            for (var row = 0; row < ability_rows.length; row += 1) {
+                const ability_row = document.getElementById(ability_rows[row].id);
+                ability_row.querySelector(".racial-mod")?.classList.add("display_none");
+            }
+        }
+
+        function HideAbilityModifierColumn() {
+            ability_scores.querySelector(".header-row").querySelector(".modifier-header")?.classList.add("display_none");
+            const ability_rows = ability_scores.querySelectorAll(".ability-row")
+            for (var row = 0; row < ability_rows.length; row += 1) {
+                const ability_row = document.getElementById(ability_rows[row].id);
+                ability_row.querySelector(".modifier")?.classList.add("display_none");
             }
         }
 
@@ -100,13 +114,24 @@
                 final_score_unmod.value = final_result + bonus_result;// Exclude racial modifiers
                 final_score_display.value = final_result + bonus_result + racial_mod_result;
 
-// TODO-LOW: ability_mod formula for other game systems? Currently using Math.floor((final_score.value - 10) / 2) for all
-
                 // Calculate ability modifier
-                const ability_mod = Math.floor((final_score_display.value - 10) / 2);
+                var ability_mod = 0;
+                switch (game.system.id) {
+                    case "dnd5e":
+                    case "pf1":
+                    case "archmage":
+                    case "ose":
+                        ability_mod = Math.floor((final_score_display.value - 10) / 2);
+                        break;
+                    case "dcc":
+                        ability_mod = CONFIG.DCC.abilities.modifiers[final_score_display.value];
+                        break;
+                    default:
+                        ability_mod = Math.floor((final_score_display.value - 10) / 2);
+                }
                 modifier.value = (ability_mod > 0 ? "+" : "") + ability_mod;
 
-// TODO-LOW: Validation for score over 18 is still kinda sucky
+                // TODO-LOW: Validation for score over 18 is still kinda sucky
 
                 score_over_18 = (final_score_display.value > 18 ? true : score_over_18);
                 over18NotAllowed = (final_score_display.value > 18 && over18NotAllowed ? true : over18NotAllowed);
@@ -183,6 +208,9 @@
                 // case "archmage":
                 //     race_bonuses = jsonDATA.game_system[0].archmage.races[select.selectedIndex]
                 //     break;
+                // case "dcc":
+                //     race_bonuses = jsonDATA.game_system[0].dcc.races[select.selectedIndex]
+                //     break;
                 default:// Default to dnd5e for now
                     race_bonuses = jsonDATA.game_system[0].dnd5e.races[select.selectedIndex]
             }
@@ -190,7 +218,7 @@
             const ability_rows = ability_scores.querySelectorAll(".ability-row")
             for (var row = 0; row < ability_rows.length; row += 1) {
                 const ability_row = document.getElementById(ability_rows[row].id);
-                const ability_text = ability_row.querySelector(".ability-text").innerText.toLowerCase();                
+                const ability_text = ability_row.querySelector(".ability-text").innerText.toLowerCase();
                 const racial_mod = ability_row.querySelector(".racial-mod");
                 racial_mod.innerText = race_bonuses[ability_text];
             }
@@ -213,7 +241,7 @@
         <div class="div_lable">Name:</div>
         <!-- Name has nothing to do with scores, I am just being lazy with submit.disable -->
         <div class="div_user_input">
-            <input id="charactername" name="charactername" onchange="RecalcFinalScores()" type="String" value="New Actor"" />
+            <input id="charactername" name="charactername" onchange="RecalcFinalScores()" type="String" value="New Actor" />
         </div>
     </div>
 
@@ -226,62 +254,69 @@
         </div>
     </div>
 
-    <table>
-        <tr>
-            <td class="results-header">Results:</td>
-            <td id="results_drop_zone" class="results-drop-zone" ondrop="drop_handler(event)" ondragover="dragover_handler(event)">
-                {{#each final_results as |final_results id| }}
-                <div id="div_final_result{{id}}" class="ability-drop-item" ondblclick="MoveResult(event)" draggable="true">
-                    {{final_results}}
-                </div>
-                {{/each}}
-            </td>
-        </tr>
-    </table>
+        <table>
+            <tr>
+                <td class="results-header">Results:</td>
+                <td id="results_drop_zone" class="results-drop-zone" ondrop="drop_handler(event)"
+                    ondragover="dragover_handler(event)">
+                    {{#each final_results as |final_results id| }}
+                    <div id="div_final_result{{id}}" class="ability-drop-item" ondblclick="MoveResult(event)"
+                        draggable="true">
+                        {{final_results}}
+                    </div>
+                    {{/each}}
+                </td>
+            </tr>
+        </table>
 
-    <table id="ability_scores" data-over18allowed={{over18allowed}} data-distributeresults={{distributeResults}} data-bonus_points={{bonus_points}}>
-        <tr id="header_row" class="header-row">
-            <th>Ability</th>
-            <th>Result</th>
-            <th>Bonus&nbsp;</span><span id="span_bp_remaining">{{bonus_points}}</span>/<span id="span_bp_max">{{bonus_points}}</span></th>
-            <th class="race-mod-header">Race Bonus</th>
-            <th>Score
-                {{#if_AorB distributeResults bonus_points}}
+        <table id="ability_scores" data-over18allowed={{over18allowed}} data-distributeresults={{distributeResults}}
+            data-bonus_points={{bonus_points}}>
+            <tr id="header_row" class="header-row">
+                <th>Ability</th>
+                <th>Result</th>
+                <th>Bonus&nbsp;</span><span id="span_bp_remaining">{{bonus_points}}</span>/<span
+                        id="span_bp_max">{{bonus_points}}</span></th>
+                <th class="race-mod-header">Race Bonus</th>
+                <th>Score
+                    {{#if_AorB distributeResults bonus_points}}
                     {{#unless over18allowed}}
                     <span style="font-size: small;">
                         *
                     </span>
                     {{/unless}}
-                {{/if_AorB}}
-            </th>
-            <th>Mod</th>
-        </tr>
-        {{#each abilities as |abilities id|}}
-        <tr id="{{abilities}}_row" class="ability-row">
-            <td class="ability-text">{{abilities}}</td>
-            <td id="{{abilities}}_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)">                
-            </td>
-            <td class="bonus-points"><span id="{{abilities}}_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="{{abilities}}_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
-            <td id="{{abilities}}_racial_mod" class="racial-mod">0</td>
-            <td id="{{abilities}}_final_score">
-                <input name="{{abilities}}_final_score_unmod" class="final-score-unmod" value="0" />
-                <input name="{{abilities}}_final_score_display" class="final-score-display" value="0" />
-            </td>
-            <td id="{{abilities}}_mod"><input name="{{abilities}}_modifier" class="modifier" value="-5"/></td>
-        </tr>
-        {{/each}}        
-    </table>
+                    {{/if_AorB}}
+                </th>
+                <th class="modifier-header">Mod</th>
+            </tr>
+            {{#each abilities as |abilities id|}}
+            <tr id="{{abilities}}_row" class="ability-row">
+                <td class="ability-text">{{abilities}}</td>
+                <td id="{{abilities}}_ability_drop_zone" class="ability-drop-zone" title="drop result here"
+                    ondrop="drop_handler(event)" ondragover="dragover_handler(event)">
+                </td>
+                <td class="bonus-points"><span id="{{abilities}}_bp_minus" class="bp-button bp-button-minus"
+                        onclick="BPchange(event)">-</span><span class="bp">0</span><span id="{{abilities}}_bp_plus"
+                        class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
+                <td id="{{abilities}}_racial_mod" class="racial-mod">0</td>
+                <td id="{{abilities}}_final_score">
+                    <input name="{{abilities}}_final_score_unmod" class="final-score-unmod" value="0" />
+                    <input name="{{abilities}}_final_score_display" class="final-score-display" value="0" />
+                </td>
+                <td id="{{abilities}}_mod"><input name="{{abilities}}_modifier" class="modifier" value="-5" /></td>
+            </tr>
+            {{/each}}
+        </table>
 
-    <button type="submit" id="submit" disabled>
-        <i class="fa fa-check"></i> {{localize "RNCS.form-app.form-text.accept-new-actor"}}
-    </button>
+        <button type="submit" id="submit" disabled>
+            <i class="fa fa-check"></i> {{localize "RNCS.form-app.form-text.accept-new-actor"}}
+        </button>
 
-    {{#if_AorB distributeResults bonus_points}}
+        {{#if_AorB distributeResults bonus_points}}
         {{#unless over18allowed}}
         <span style="font-size: small;">
             {{localize "RNCS.form-app.form-text.over-18-not-allowed"}}
         </span>
         {{/unless}}
-    {{/if_AorB}}
+        {{/if_AorB}}
 
 </form>

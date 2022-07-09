@@ -88,5 +88,74 @@ export function registerSettings() {
         type: Boolean,
         default: false
     });
+
+    game.settings.register(settingsKey, "ChatShowMethodText", {
+        name: game.i18n.localize("RNCS.settings.ChatShowMethodText.Name"),
+        hint: game.i18n.localize("RNCS.settings.ChatShowMethodText.Hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: true
+    });
+
+    game.settings.register(settingsKey, "ChatShowResultsText", {
+        name: game.i18n.localize("RNCS.settings.ChatShowResultsText.Name"),
+        hint: game.i18n.localize("RNCS.settings.ChatShowResultsText.Hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: true
+    });
+    
+    game.settings.register(settingsKey, "ChatShowBonusPointsText", {
+        name: game.i18n.localize("RNCS.settings.ChatShowBonusPointsText.Name"),
+        hint: game.i18n.localize("RNCS.settings.ChatShowBonusPointsText.Hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: true
+    });
+
+    game.settings.register(settingsKey, "ChatShowDifficultyText", {
+        name: game.i18n.localize("RNCS.settings.ChatShowDifficultyText.Name"),
+        hint: game.i18n.localize("RNCS.settings.ChatShowDifficultyText.Hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: true
+    });
+
+    game.settings.register(settingsKey, "ChatShowNoteFromDM", {
+        name: game.i18n.localize("RNCS.settings.ChatShowNoteFromDM.Name"),
+        hint: game.i18n.localize("RNCS.settings.ChatShowNoteFromDM.Hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: true
+    });
+    
+    // game.settings.register(settingsKey, "setting_name", {
+    //     name: game.i18n.localize("RNCS.settings.setting_name.Name"),
+    //     hint: game.i18n.localize("RNCS.settings.setting_name.Hint"),
+    //     scope: "world",
+    //     config: true,
+    //     type: Boolean,
+    //     default: false
+    // });
+
+    // game.settings.register(settingsKey, "setting_name", {
+    //     name: game.i18n.localize("RNCS.settings.setting_name.Name"),
+    //     hint: game.i18n.localize("RNCS.settings.setting_name.Hint"),
+    //     scope: "world",
+    //     config: true,
+    //     type: String,
+    //     choices: {
+    //         "0": game.i18n.localize("RNCS.settings.setting_name.choices.0"),
+    //         "1": game.i18n.localize("RNCS.settings.setting_name.choices.1"),
+    //         "2": game.i18n.localize("RNCS.settings.setting_name.choices.2")
+    //     },
+    //     default: "0"
+    // });
+
 	console.log(RollNewCharacterStats.ID + " | Registered Settings");
 }
