@@ -1,34 +1,16 @@
-10 results - 4 files
-
 scripts\dice-roller.js:
-   54  
-   55: // TODO-LOW: Add DieType|Sides setting to roll different sided die for abilities under different game systems
-   56: // TODO-LOW: Change "roll +modifiers" into a separate setting 
-   57  
+  55: // TODO-LOW: Add DieType|Sides setting to roll different sided die for abilities under different game systems
+  56: // TODO-LOW: Change "roll +modifiers" into a separate setting 
 
 scripts\main.js:
-   59  
    60: // TODO-MEDIUM: UpdateActor with (other-properties) from results_
-   61  
-
-   81  
    82: // TODO-MEDIUM: Implement dice_roller.RollThemDice("other-properties")
-   83  
-
-  105  
   106: // TODO-MEDIUM: Add Results (other-properties) to message
-  107  
 
 scripts\form-apps\distribute-ability-scores.js:
-  77  
-  78: // TODO-MEDIUM: Include other racial skills/features/bonuses/languages
-  79  
+  71: // TODO-MEDIUM: Include other racial skills/features/bonuses/languages
+  98: // TODO-LOW: Figure out how to include "flavored" pf1 races
 
 templates\form-apps\distribute-ability-scores.html:
-  74  
-  75: // TODO-LOW: ability_mod formula for other game systems? Currently using Math.floor((final_score.value - 10) / 2) for all
-  76  
-
-  80  
-  81: // TODO-LOW: Validation for score over 18 is still kinda sucky
-  82  
+  103: // TODO-LOW: ability_mod formula for other game systems? Currently using Math.floor((final_score.value - 10) / 2) for all
+  109: // TODO-LOW: Validation for score over 18 is still kinda sucky

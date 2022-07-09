@@ -1,4 +1,12 @@
-Coming in v2.2.0 
+v2.2.1 - 7/9/2022
+----------------------------------------------
+Fixed Hooks.on("renderChatLog", (app, [html]) to prevent console error when any other message is clicked.
+Implemented support for Old School Essentials - "ose". Races do not exist in OSE - only classes. 
+Implemented support for ToolKit13 Character Sheet (13th Age Compatible) - "archmage". Has weirdly named races in "Races" compendium. More research on this system required.
+Hide Race drop down and Race Bonus columns for "ose" and "archmage" game systems.
+
+
+v2.2.0 - 7/8/2022 
 ----------------------------------------------
 A little house cleaning as always.
 Removed "dnd4e" from module.json - it has issues with my module creating New Actor at the moment. Says "type" is not in the array of allowed types.

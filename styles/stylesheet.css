@@ -11,6 +11,7 @@
     height: 3em;
     font-size: small;
     font-style: italic;
+    text-align: left;
   }
   .ability-drop-item {
     display: inline-block;
@@ -34,6 +35,17 @@
   }
   .final-score-unmod{
     display: none;
+  }
+  .display_none{    
+    display: none;
+  }
+  .modifier{
+    border: none;
+    background-color: transparent;
+    height: 2.5em; 
+    width: 2.5em;
+    text-align: center;
+    font-size: small;
   }
   .header-row, .ability-row{
     text-align: center;

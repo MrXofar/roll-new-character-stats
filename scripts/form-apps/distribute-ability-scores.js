@@ -11,8 +11,7 @@ Hooks.on('renderDistributeAbilityScores', () => {
       div_final_result.addEventListener("dragstart", dragstart_handler);
     }
   }
-  const ability_scores = document.getElementById("ability_scores");
-  if (ability_scores.dataset.distributeresults === "false") { ApplyAsRolled(); }
+  Intitialize();
 });
 
 function dragstart_handler(ev) {
@@ -34,20 +33,13 @@ export class DistributeAbilityScores extends FormApplication {
     this.races = races
   }
 
-  // async close() {
-  //   const msg = game.messages.get(this.msgId);
-  //   let content = duplicate(msg.data.content);
-  //   await msg.update({content: content});
-  //   super.close();
-  // }
-
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       title: game.i18n.localize("RNCS.dialog.results-button.configure-new-actor"),
       id: 'distribute-ability-scores',
       icon: 'fas fa-cogs', // Change?
       template: "./modules/roll-new-character-stats/templates/form-apps/distribute-ability-scores.html",
-      height: 525,
+      height: 540,
       width: 375,
       closeOnSubmit: true,
       submitOnClose: false
@@ -70,8 +62,8 @@ export class DistributeAbilityScores extends FormApplication {
   async _updateObject(event, formData) {
 
     let actor = await Actor.create({
-      name: (formData.charactername === "New Actor" || formData.charactername === "" ? formData.select_race : formData.charactername),
-      type: "character",
+      name: ((formData.charactername === "New Actor" || formData.charactername === "") && formData.select_race !== "" ? formData.select_race : formData.charactername),
+      type: "character", // "dnd4e" does not like this type
       img: "icons/svg/mystery-man.svg"
     });
 
@@ -103,14 +95,43 @@ export class DistributeAbilityScores extends FormApplication {
           'data.abilities.cha.value': formData.cha_final_score_unmod
         });
 
-        // Add race item
-        const pack = game.packs.get("pf1.races");
-        const itemId = pack.index.getName(formData.select_race)?._id;
-        if (itemId) {
-          const race_item = await pack.getDocument(itemId);
-          const obj_race_item = race_item.data.toObject();
-          await actor.createEmbeddedDocuments("Item", [obj_race_item]);
-        }
+        // TODO-LOW: Figure out how to include "flavored" pf1 races
+        
+        // Embed race item document
+        this.EmbedItem(actor, "pf1.races", formData.select_race);
+
+        break;
+
+      case "ose":
+        // Ose does not automatically calculate .bonus
+        await actor.update({
+          'data.scores.str.value': formData.str_final_score_display,
+          'data.scores.dex.value': formData.dex_final_score_display,
+          'data.scores.con.value': formData.con_final_score_display,
+          'data.scores.int.value': formData.int_final_score_display,
+          'data.scores.wis.value': formData.wis_final_score_display,
+          'data.scores.cha.value': formData.cha_final_score_display,
+          'data.scores.str.bonus': formData.str_modifier,
+          'data.scores.dex.bonus': formData.dex_modifier,
+          'data.scores.con.bonus': formData.con_modifier,
+          'data.scores.int.bonus': formData.int_modifier,
+          'data.scores.wis.bonus': formData.wis_modifier,
+          'data.scores.cha.bonus': formData.cha_modifier
+        });
+        break;
+
+      case "archmage":
+        await actor.update({
+          'data.abilities.str.value': formData.str_final_score_display,
+          'data.abilities.dex.value': formData.dex_final_score_display,
+          'data.abilities.con.value': formData.con_final_score_display,
+          'data.abilities.int.value': formData.int_final_score_display,
+          'data.abilities.wis.value': formData.wis_final_score_display,
+          'data.abilities.cha.value': formData.cha_final_score_display
+        });
+
+        // "archmage" does have race items in a compendium, but they are named weirdly and don't seem to have ability bonuses.
+
         break;
 
       default:// default to dnd5e for now
@@ -124,6 +145,16 @@ export class DistributeAbilityScores extends FormApplication {
           'data.abilities.cha.value': formData.cha_final_score_display
         });
         break;
+    }
+  }  
+
+  async EmbedItem(actor, pack_id, item_name) {
+    const pack = game.packs.get(pack_id);
+    const itemId = pack.index.getName(item_name)?._id;
+    if (itemId) {
+      const _item = await pack.getDocument(itemId);
+      const obj_item = _item.data.toObject();
+      await actor.createEmbeddedDocuments("Item", [obj_item]);
     }
   }
 }

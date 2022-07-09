@@ -1,6 +1,32 @@
 <form>
     <script>
 
+        function Intitialize() {
+            
+            // Apply as Rolled?
+            const ability_scores = document.getElementById("ability_scores");
+            if (ability_scores.dataset.distributeresults === "false") { ApplyAsRolled(); }
+
+            // Game System Specific Configuration
+            switch (game.system.id) {
+
+                case "ose":
+                case "archmage":
+                    // Hide Race selector and Race Bonus column            
+                    document.getElementById("race-selector")?.classList.add("display_none");
+                    ability_scores.querySelector(".header-row").querySelector(".race-mod-header")?.classList.add("display_none");
+                    const ability_rows = ability_scores.querySelectorAll(".ability-row")
+                    for (var row = 0; row < ability_rows.length; row += 1) {
+                        const ability_row = document.getElementById(ability_rows[row].id);
+                        ability_row.querySelector(".racial-mod")?.classList.add("display_none");
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
         function dragover_handler(ev) {
             ev.preventDefault();
             ev.dataTransfer.dropEffect = "copy";
@@ -62,7 +88,7 @@
                 const ability_row = document.getElementById(ability_rows[row].id);
                 const ability_drop_item = ability_row.querySelector(".ability-drop-zone").querySelector(".ability-drop-item");
                 const bonus_points = ability_row.querySelector(".bonus-points").querySelector(".bp");
-                const racial_mod = ability_row.querySelector(".racial_mod");
+                const racial_mod = ability_row.querySelector(".racial-mod");
                 const final_score_unmod = ability_row.querySelector(".final-score-unmod");
                 const final_score_display = ability_row.querySelector(".final-score-display");
                 const modifier = ability_row.querySelector(".modifier");
@@ -78,7 +104,7 @@
 
                 // Calculate ability modifier
                 const ability_mod = Math.floor((final_score_display.value - 10) / 2);
-                modifier.innerText = (ability_mod > 0 ? "+" : "") + ability_mod;
+                modifier.value = (ability_mod > 0 ? "+" : "") + ability_mod;
 
 // TODO-LOW: Validation for score over 18 is still kinda sucky
 
@@ -151,6 +177,12 @@
                 case "pf1":
                     race_bonuses = jsonDATA.game_system[0].pf1.races[select.selectedIndex]
                     break;
+                // case "ose":
+                //     race_bonuses = jsonDATA.game_system[0].ose.races[select.selectedIndex]
+                //     break;
+                // case "archmage":
+                //     race_bonuses = jsonDATA.game_system[0].archmage.races[select.selectedIndex]
+                //     break;
                 default:// Default to dnd5e for now
                     race_bonuses = jsonDATA.game_system[0].dnd5e.races[select.selectedIndex]
             }
@@ -158,8 +190,8 @@
             const ability_rows = ability_scores.querySelectorAll(".ability-row")
             for (var row = 0; row < ability_rows.length; row += 1) {
                 const ability_row = document.getElementById(ability_rows[row].id);
-                const ability_text = ability_row.querySelector(".ability-text").innerText.toLowerCase();
-                const racial_mod = ability_row.querySelector(".racial_mod")
+                const ability_text = ability_row.querySelector(".ability-text").innerText.toLowerCase();                
+                const racial_mod = ability_row.querySelector(".racial-mod");
                 racial_mod.innerText = race_bonuses[ability_text];
             }
             RecalcFinalScores();
@@ -185,7 +217,7 @@
         </div>
     </div>
 
-    <div>
+    <div id="race-selector">
         <div class="div_lable">Race:</div>
         <div class="div_user_input">
             <select id="select_race" name="select_race" onchange="UpdateRaceBonus(event)" style="width:100%;">
@@ -212,7 +244,7 @@
             <th>Ability</th>
             <th>Result</th>
             <th>Bonus&nbsp;</span><span id="span_bp_remaining">{{bonus_points}}</span>/<span id="span_bp_max">{{bonus_points}}</span></th>
-            <th>Race Bonus</th>
+            <th class="race-mod-header">Race Bonus</th>
             <th>Score
                 {{#if_AorB distributeResults bonus_points}}
                     {{#unless over18allowed}}
@@ -230,12 +262,12 @@
             <td id="{{abilities}}_ability_drop_zone" class="ability-drop-zone" title="drop result here" ondrop="drop_handler(event)" ondragover="dragover_handler(event)">                
             </td>
             <td class="bonus-points"><span id="{{abilities}}_bp_minus" class="bp-button bp-button-minus" onclick="BPchange(event)">-</span><span class="bp">0</span><span id="{{abilities}}_bp_plus" class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
-            <td id="{{abilities}}_racial_mod" class="racial_mod">0</td>
+            <td id="{{abilities}}_racial_mod" class="racial-mod">0</td>
             <td id="{{abilities}}_final_score">
                 <input name="{{abilities}}_final_score_unmod" class="final-score-unmod" value="0" />
                 <input name="{{abilities}}_final_score_display" class="final-score-display" value="0" />
             </td>
-            <td id="{{abilities}}_mod" class="modifier">-5</td>
+            <td id="{{abilities}}_mod"><input name="{{abilities}}_modifier" class="modifier" value="-5"/></td>
         </tr>
         {{/each}}        
     </table>

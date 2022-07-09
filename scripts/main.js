@@ -33,13 +33,13 @@ Hooks.on('getSceneControlButtons', (controls) => {
 Hooks.on("renderChatLog", (app, [html]) => {
 	html.addEventListener("click", ({ target }) => {
 		const msgId = target.closest(".chat-message[data-message-id]")?.dataset.messageId;
-		if (msgId) {
+		if (msgId && target.matches(".chat-card button") && target.dataset.action === "configure_new_actor") {
 			const msg = game.messages.get(msgId);
 			const final_results = msg.data.flags.roll_new_character_stats.final_results;
 			const bonus_points = msg.data.flags.roll_new_character_stats.bonus_points;
 			const distributeResults = msg.data.flags.roll_new_character_stats.distributeResults
 			const over18allowed = msg.data.flags.roll_new_character_stats.over18allowed || (bonus_points === 0 && !distributeResults); 
-			if (target.matches(".chat-card button")) FormApp_DistributeAbilityScores(target, final_results, bonus_points, over18allowed, distributeResults, msgId); // removed .dnd5e
+			FormApp_DistributeAbilityScores(target, final_results, bonus_points, over18allowed, distributeResults, msgId);
 		}
 	});
 }); 
@@ -113,6 +113,8 @@ async function ShowResultsInChatMessage(dice_roller) {
 	switch (game.system.id) {
 		case "dnd5e":
 		case "pf1":
+		case "ose":
+		case "archmage":
 			results_message += "<div class=\"card-buttons\"><button data-action=\"configure_new_actor\">";
 			results_message += game.i18n.localize("RNCS.dialog.results-button.configure-new-actor");
 			results_message += "</button></div></div>"

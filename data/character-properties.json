@@ -1704,6 +1704,28 @@
                         "cha": "0"
                     }
                 ]
+            },
+            "ose": {
+                "abilities": [
+                    "str",
+                    "int",
+                    "wis",
+                    "dex",
+                    "con",
+                    "cha"
+                ],
+                "races": []
+            },
+            "archmage": {
+                "abilities": [
+                    "str",
+                    "dex",
+                    "con",
+                    "int",
+                    "wis",
+                    "cha"
+                ],
+                "races": []
             }
         }
     ]
