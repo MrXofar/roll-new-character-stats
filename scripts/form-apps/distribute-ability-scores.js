@@ -178,6 +178,7 @@ export class DistributeAbilityScores extends FormApplication {
                 this.EmbedItem(actor, "dcc-core-book.dcc-core-occupation-items", occupation_details[1]); //Weapon - Premium Pack
               }
           }else{
+            this.EmbedItem(actor, "dcc-core-book.dcc-core-occupation-items", occupation_details[1]); // Weapon - Premium Pack}
             this.EmbedItem(actor, "dcc-core-book.dcc-core-ammunition", "Sling stones", rolled_results); // Ammunition - Premium Pack
           }
         }else{
