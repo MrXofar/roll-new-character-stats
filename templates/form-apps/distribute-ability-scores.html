@@ -12,8 +12,13 @@
 
                 case "ose":
                 case "archmage":
+                    HideRaceOptions();
+                    break;
                 case "dcc":
                     HideRaceOptions();
+                    // document.getElementById("results-table")?.classList.add("display_none");
+                    const occupation = document.getElementById("occupation");
+                    occupation.innerHTML = occupation.dataset.occupation;
                     break;
 
                 default:
@@ -208,9 +213,6 @@
                 // case "archmage":
                 //     race_bonuses = jsonDATA.game_system[0].archmage.races[select.selectedIndex]
                 //     break;
-                // case "dcc":
-                //     race_bonuses = jsonDATA.game_system[0].dcc.races[select.selectedIndex]
-                //     break;
                 default:// Default to dnd5e for now
                     race_bonuses = jsonDATA.game_system[0].dnd5e.races[select.selectedIndex]
             }
@@ -254,7 +256,17 @@
         </div>
     </div>
 
-        <table>
+    {{#if occupation}}
+    <p style="font-size: small;">
+        <span id="occupation" data-occupation="{{occupation}}"></span>
+        {{#each equipment_list as |equipment_list id|}}
+        <span>Equipment:&nbsp;</span><span>{{equipment_list}}<br></span>
+        {{/each}}
+        <span>Birth Augur:&nbsp;</span><span>{{luck}}</span>            
+    </p>
+    {{/if}}
+
+        <table id="results-table">
             <tr>
                 <td class="results-header">Results:</td>
                 <td id="results_drop_zone" class="results-drop-zone" ondrop="drop_handler(event)"

@@ -17,19 +17,55 @@ export class DiceRoller {
     constructor(
         results_abilities = [], // Results of dice rolled for abilities
         drop_val_index = -1,    // Index of roll to be displayed as "Dropped =>" from [results_abilities] 
-        bonus_results = 0       // Result of RollBonusPoints()
+        bonus_results = 0,       // Result of RollBonusPoints()
+        occupation,
+        equipment = [],
+        luck
     ) {
         this.results_abilities = results_abilities,
         this.drop_val_index = drop_val_index,
-        this.bonus_results = bonus_results
+        this.bonus_results = bonus_results,
+        this.occupation = occupation,
+        this.equipment = equipment,
+        this.luck = luck
     }
 
     // Roll Them Dice!
-    RollThemDice(character_property) {
+    async RollThemDice(character_property) {
 
         switch (character_property) {
             case "abilities":
                 this.RollAbilities();
+                break;                
+
+            case "occupation":
+                switch(game.system.id)
+                {
+                    case "dcc":
+                        await this.RollOccupation();
+                        break;
+                    default:
+                }
+                break;
+
+            case "equipment":
+                switch(game.system.id)
+                {
+                    case "dcc":
+                        await this.RollEquipment(1);
+                        break;
+                    default:
+                }
+                break;
+
+            case "luck":
+                switch(game.system.id)
+                {
+                    case "dcc":
+                        await this.RollLuck();
+                        break;
+                    default:
+                }
                 break;
 
             case "race":
@@ -37,7 +73,6 @@ export class DiceRoller {
             case "subclass":
             case "armor":
             case "weapons":
-            case "equipment":
             case "tools":
             case "currency":
             case "spells":
@@ -50,6 +85,7 @@ export class DiceRoller {
                 console.log(RollNewCharacterStats.ID + " | RollThemDice does not recognize the character_property \"" + character_property + "\"");
         }
     }
+
     Formula_Abilities() {
 
 // TODO-LOW: Add DieType|Sides setting to roll different sided die for abilities under different game systems
@@ -62,12 +98,13 @@ export class DiceRoller {
         formula += this._settingAbilitiesRollMethodNumDie() === 2 ? "+6" : "";
         return formula;
     }
+
     RollAbilities(){
         // Ability Rolls
         for (var rs = 0; rs < this._settingNumberOfRollsCount(); rs++) {
             var roll = new Roll(this.Formula_Abilities());
             var rolled_results = roll.evaluate({ async: false });
-            game.dice3d?.showForRoll(roll);
+            if(game.settings.get(settingsKey, "DiceSoNiceEnabled")){game.dice3d?.showForRoll(roll);}            
             this.results_abilities.push(rolled_results)
         }
 
@@ -89,9 +126,68 @@ export class DiceRoller {
             case 2: //"1d4 Bonus Points":
                 var bonus = new Roll("1d4");
                 this.bonus_results = bonus.evaluate({ async: false }).total;
-                game.dice3d?.showForRoll(bonus);
+                if(game.settings.get(settingsKey, "DiceSoNiceEnabled")){game.dice3d?.showForRoll(bonus);} 
                 break;
             default:
+        }
+    }
+
+    async RollOccupation(){
+        var pack;
+        var entry;
+        switch (game.system.id) {
+            case "dcc":
+                pack = game.packs.get("dcc-core-book.dcc-core-tables")// Premium Pack
+                entry = pack?.index.getName("Table 1-3: Occupation");
+                break;
+            default:
+        }
+        var table = await pack?.getDocument(entry._id)
+        var result = await table?.roll()
+        const rolled_occupation = result?.results[0]
+        if(rolled_occupation){
+            if(game.settings.get(settingsKey, "DiceSoNiceEnabled")){game.dice3d?.showForRoll(result?.roll);}  
+            this.occupation = rolled_occupation.data.text;
+        }
+    }
+
+    async RollEquipment(num_items) {
+        var pack;
+        var entry;
+        switch (game.system.id) {
+            case "dcc":
+                pack = game.packs.get("dcc-core-book.dcc-core-tables")// Premium Pack
+                entry = pack?.index.getName("Table 3-4: Equipment");
+                break;
+            default:
+        }
+        for (var count = 0; count < num_items; count += 1) {
+            var table = await pack?.getDocument(entry._id)
+            var result = await table?.roll()
+            const rolled_equipment = result?.results[0]
+            if(rolled_equipment){
+                if(game.settings.get(settingsKey, "DiceSoNiceEnabled")){game.dice3d?.showForRoll(result?.roll);}  
+                this.equipment.push(rolled_equipment.data.text);
+            }
+        }
+    }
+
+    async RollLuck(){
+        var pack;
+        var entry;
+        switch (game.system.id) {
+            case "dcc":
+                pack = game.packs.get("dcc-core-book.dcc-core-tables")// Premium Pack
+                entry = pack?.index.getName("Table 1-2: Luck Score");
+                break;
+            default:
+        }
+        var table = await pack?.getDocument(entry._id)
+        var result = await table?.roll()
+        const rolled_luck = result?.results[0]
+        if(rolled_luck){
+            if(game.settings.get(settingsKey, "DiceSoNiceEnabled")){game.dice3d?.showForRoll(result?.roll);}  
+            this.luck = rolled_luck.data.text;
         }
     }
 
@@ -107,6 +203,9 @@ export class DiceRoller {
         return _ability_scores;
     }
 
+    NumberOfActors() {
+        return (game.system.id === "dcc" ? parseInt(game.settings.get(settingsKey, "NumberOfActors")) : 1);
+    }
     // Roll method details for Abilities (3d6, 4d6, 2d6+6, etc...)
     AbilitiesRollMethod() {
         return [
@@ -179,7 +278,7 @@ export class DiceRoller {
 
     // Get results text
     GetMethodText() {
-        var method_text = "<b>" + game.i18n.localize("RNCS.results-text.methods.label") + ":</b></br>";
+        var method_text = "<p><b>" + game.i18n.localize("RNCS.results-text.methods.label") + ":</b></br>";
         method_text += "<em>" + game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices." + game.settings.get(settingsKey, "AbilitiesRollMethod"));
         method_text += (game.settings.get(settingsKey, "DropLowestDieRoll") ? game.i18n.localize("RNCS.results-text.methods.drop-lowest-die") : "");
         method_text += (game.settings.get(settingsKey, "ReRollOnes") ? game.i18n.localize("RNCS.results-text.methods.re-roll-ones") : "") + "</br>";
@@ -191,7 +290,7 @@ export class DiceRoller {
             method_text += game.i18n.localize("RNCS.results-text.methods.over-18-not-allowed") + "</br>"
         }
         method_text += (game.settings.get(settingsKey, "DistributeResults") ? game.i18n.localize("RNCS.results-text.methods.distribute-freely") : game.i18n.localize("RNCS.results-text.methods.apply-as-rolled")) + "</em>"
-        method_text += "</br></br>"
+        method_text += "</p>"
         return method_text;
     }
     GetDifficultyDesc() {
@@ -210,7 +309,7 @@ export class DiceRoller {
         difficulty += this._settingOver18Allowed() ? 2 : 0;
         difficulty += this._settingDistributeResults() ? 3 : 0;
 
-        var difficulty_desc = "<b>" + game.i18n.localize("RNCS.results-text.difficulty.label") + ":</b> ";
+        var difficulty_desc = "<p><b>" + game.i18n.localize("RNCS.results-text.difficulty.label") + ":</b> ";
         // There are so many other ways to skin this cat,... 
         // ...but I chose this way because it requires very little effort or brain power to understand or modify.
         switch (difficulty) {
@@ -242,7 +341,7 @@ export class DiceRoller {
                 difficulty_desc += "I really don't know";
 
         }
-        difficulty_desc += "</br></br>"
+        difficulty_desc += "</p>"
         return difficulty_desc;
     }
     async GetResultsAbilitiesText() {
@@ -266,11 +365,10 @@ export class DiceRoller {
             if (set < this.results_abilities.length - 1) {results_text += "<br />";}
             if (this.drop_val_index !== set) { att_idx++; }
         }
-        results_text += "</br></br>"
         return results_text;
     }
     GetBonusPointsText(){
-        return (this._settingIsBonusPointApplied() ? "<b>" + game.i18n.localize("RNCS.results-text.bonus.label") + ":</b> " + this.bonus_results + "</br></br>" : "</br>");
+        return (this._settingIsBonusPointApplied() ? "<p><b>" + game.i18n.localize("RNCS.results-text.bonus.label") + ":</b> " + this.bonus_results + "</p>" : "</br>");
     }
     GetNoteFromDM(){
         var note_from_dm = "<b>" + game.i18n.localize("RNCS.results-text.note-from-dm.label") + ":</b></br>";
@@ -288,6 +386,6 @@ export class DiceRoller {
             note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.any-bonuses") + "</em>";
         }
 
-        return note_from_dm;
+        return "<p>" + note_from_dm + "</p>";
     }
 }

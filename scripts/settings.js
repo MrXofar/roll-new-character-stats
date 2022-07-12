@@ -3,6 +3,38 @@ export const settingsKey = "roll-new-character-stats";
 
 export function registerSettings() {
 
+    game.settings.register(settingsKey, "NumberOfActors", {
+        name: game.i18n.localize("RNCS.settings.NumberOfActors.Name"),
+        hint: game.i18n.localize("RNCS.settings.NumberOfActors.Hint"),
+        scope: "client",
+        config: game.system.id === "dcc",
+        type: Number,
+        default: "1"
+    });
+
+    game.settings.register(settingsKey, "DiceSoNiceEnabled", {
+        name: game.i18n.localize("RNCS.settings.DiceSoNiceEnabled.Name"),
+        hint: game.i18n.localize("RNCS.settings.DiceSoNiceEnabled.Hint"),
+        scope: "client",
+        config: true,
+        type: Boolean,
+        default: "1"
+    });
+
+    game.settings.register(settingsKey, "NameFormat", {
+        name: game.i18n.localize("RNCS.settings.NameFormat.Name"),
+        hint: game.i18n.localize("RNCS.settings.NameFormat.Hint"),
+        scope: "world",
+        config: game.system.id === "dcc",
+        type: String,
+        choices: {
+            "0": game.i18n.localize("RNCS.settings.NameFormat.choices.0"),
+            "1": game.i18n.localize("RNCS.settings.NameFormat.choices.1"),
+            "2": game.i18n.localize("RNCS.settings.NameFormat.choices.2")
+        },
+        default: "0"
+    });
+
     game.settings.register(settingsKey, "AbilitiesRollMethod", {
         name: game.i18n.localize("RNCS.settings.AbilitiesRollMethod.Name"),
         hint: game.i18n.localize("RNCS.settings.AbilitiesRollMethod.Hint"),

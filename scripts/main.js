@@ -35,11 +35,15 @@ Hooks.on("renderChatLog", (app, [html]) => {
 		const msgId = target.closest(".chat-message[data-message-id]")?.dataset.messageId;
 		if (msgId && target.matches(".chat-card button") && target.dataset.action === "configure_new_actor") {
 			const msg = game.messages.get(msgId);
+			const owner_id = msg.data.flags.roll_new_character_stats.owner_id;
 			const final_results = msg.data.flags.roll_new_character_stats.final_results;
 			const bonus_points = msg.data.flags.roll_new_character_stats.bonus_points;
 			const distributeResults = msg.data.flags.roll_new_character_stats.distributeResults
-			const over18allowed = msg.data.flags.roll_new_character_stats.over18allowed || (bonus_points === 0 && !distributeResults); 
-			FormApp_DistributeAbilityScores(target, final_results, bonus_points, over18allowed, distributeResults, msgId);
+			const over18allowed = msg.data.flags.roll_new_character_stats.over18allowed || (bonus_points === 0 && !distributeResults);  
+			const occupation = msg.data.flags.roll_new_character_stats.occupation
+			const equipment_list = msg.data.flags.roll_new_character_stats.equipment_list
+			const luck = msg.data.flags.roll_new_character_stats.luck
+			FormApp_DistributeAbilityScores(target, owner_id, final_results, bonus_points, over18allowed, distributeResults, msgId, occupation, equipment_list, luck);
 		}
 	});
 }); 
@@ -53,9 +57,9 @@ Hooks.on("renderChatLog", (app, [html]) => {
  * @param {*} distributeResults 
  * @param {*} msgId 
  */
-async function FormApp_DistributeAbilityScores(button, final_results, bonus_points, over18allowed, distributeResults, msgId) {
+async function FormApp_DistributeAbilityScores(button, owner_id, final_results, bonus_points, over18allowed, distributeResults, msgId, occupation, equipment_list, luck) {
 	button.disabled = false; // Keep Configure Actor button enabled
-	new DistributeAbilityScores(final_results, bonus_points, over18allowed, distributeResults, msgId).render(true);
+	new DistributeAbilityScores(owner_id, final_results, bonus_points, over18allowed, distributeResults, msgId, occupation, equipment_list, luck).render(true);
 
 // TODO-MEDIUM: UpdateActor with (other-properties) from results_
 
@@ -76,22 +80,46 @@ export async function RollStats() {
 
 	if (confirmed) {
 
-		// Roll abilities
-		dice_roller.RollThemDice("abilities");
+		for (var _actor = 0; _actor < dice_roller.NumberOfActors(); _actor += 1) {
+			// Roll abilities
+			dice_roller = new DiceRoller()
+			await dice_roller.RollThemDice("abilities");
 
-// TODO-MEDIUM: Implement dice_roller.RollThemDice("other-properties")
+			if (game.system.id === "dcc") {
+				// Roll Equipment, Occupation and Luck
+				await dice_roller.RollThemDice("occupation");
+				await dice_roller.RollThemDice("equipment");
+				await dice_roller.RollThemDice("luck");
+			}
 
-		 // Show results
-		ShowResultsInChatMessage(dice_roller);
+			// TODO-MEDIUM: Implement dice_roller.RollThemDice("other-properties")
+
+			// Show results
+			ShowResultsInChatMessage(dice_roller);
+		}
 	}
 }
 
 async function ShowResultsInChatMessage(dice_roller) {
 
 	// Results message header
-	var results_message = "<div class=\"dnd5e dnd4e chat-card\"><header class=\"card-header\"><h3>Rolling New Actor</h3></header>"
+	var results_message = "<div class=\"dnd5e chat-card\"><header class=\"card-header\"><h3>Rolling New Actor</h3></header>"
+	
+	// Dungeon Crawler Classics stuff
+	if (game.system.id === "dcc") {
+		// Display equipment
+		results_message += "<div style=\"font-size: small !important;\">"
+		results_message += dice_roller.occupation;
+		for (var i = 0; i < dice_roller.equipment.length; i += 1) {
+			results_message += dice_roller.equipment[i] + "<br>";
+		}
+		results_message += dice_roller.luck + "<br>";
+		results_message += "</div>"
+	}
 	
 	// Add Method to message
+	
+	results_message += "<div style=\"font-size: small !important;\">"
 	if(game.settings.get(settingsKey, "ChatShowMethodText")){
 		results_message += dice_roller.GetMethodText();
 	}
@@ -117,9 +145,11 @@ async function ShowResultsInChatMessage(dice_roller) {
 	if(game.settings.get(settingsKey, "ChatShowNoteFromDM")){
 		results_message += dice_roller.GetNoteFromDM();
 	}
+	
+	results_message += "<div style=\"font-size: small !important;\">"
+
 
 	// Add Chat Card Button
-	console.log("game.system.id = " + game.system.id);
 	switch (game.system.id) {
 		case "dnd5e":
 		case "pf1":
@@ -140,11 +170,15 @@ async function ShowResultsInChatMessage(dice_roller) {
 	const bonus_points = dice_roller.bonus_results;
 	const distributeResults = dice_roller._settingDistributeResults();
 	const over18allowed = dice_roller._settingOver18Allowed();
+	const occupation = dice_roller.occupation;
+	const equipment_list = dice_roller.equipment;
+	const luck = dice_roller.luck;
+	const owner_id = game.user.id;
 	ChatMessage.create({
 		whisper: ChatMessage.getWhisperRecipients("GM"),
-		user: game.user.id,
+		user: owner_id,
 		content: results_message,
 		speaker: speaker,
-		flags: { roll_new_character_stats: {final_results, drop_val_index, bonus_points, over18allowed, distributeResults } }
+		flags: { roll_new_character_stats: {owner_id, final_results, drop_val_index, bonus_points, over18allowed, distributeResults, occupation, equipment_list, luck } }
 	});
 }
