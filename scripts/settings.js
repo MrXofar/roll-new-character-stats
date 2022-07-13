@@ -121,6 +121,15 @@ export function registerSettings() {
         default: false
     });
 
+    game.settings.register(settingsKey, "HideResultsZone", {
+        name: game.i18n.localize("RNCS.settings.HideResultsZone.Name"),
+        hint: game.i18n.localize("RNCS.settings.HideResultsZone.Hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: false
+    });
+
     game.settings.register(settingsKey, "ChatShowMethodText", {
         name: game.i18n.localize("RNCS.settings.ChatShowMethodText.Name"),
         hint: game.i18n.localize("RNCS.settings.ChatShowMethodText.Hint"),

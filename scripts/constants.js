@@ -1,6 +1,6 @@
 export const namedfields = (...fields) => {
     return (...arr) => {
-        var obj = {};
+        let obj = {};
         fields.forEach((field, index) => {
             obj[field] = arr[index];
         });

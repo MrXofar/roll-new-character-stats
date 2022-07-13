@@ -25,13 +25,17 @@ function dragstart_handler(ev) {
 }
 
 export class DistributeAbilityScores extends FormApplication {
-  constructor(owner_id, final_results, bonus_points, over18allowed, distributeResults, msgId, occupation, equipment_list, luck, abilities, races) {
+
+  // Properties
+  Over18Allowed = game.settings.get(settingsKey, "Over18Allowed");
+  DistributeResults = game.settings.get(settingsKey, "DistributeResults");
+  HideResultsZone = game.settings.get(settingsKey, "HideResultsZone");
+
+  constructor(owner_id, final_results, bonus_points, msgId, occupation, equipment_list, luck, abilities, races) {
     super();
     this.owner_id = owner_id,
     this.final_results = final_results,
     this.bonus_points = bonus_points,
-    this.over18allowed = over18allowed,
-    this.distributeResults = distributeResults,
     this.msgId = msgId,
     this.occupation = occupation,
     this.equipment_list = equipment_list,
@@ -58,8 +62,9 @@ export class DistributeAbilityScores extends FormApplication {
     return {      
       final_results: this.final_results,
       bonus_points: this.bonus_points,
-      over18allowed: this.over18allowed,
-      distributeResults: this.distributeResults,
+      Over18Allowed: this.Over18Allowed,
+      DistributeResults: this.DistributeResults,
+      HideResultsZone: this.HideResultsZone,
       msgId: this.msgId,
       occupation: this.occupation,
       equipment_list: this.equipment_list,
@@ -71,7 +76,7 @@ export class DistributeAbilityScores extends FormApplication {
 
   async _updateObject(event, formData) {
 
-    var actor_type;
+    let actor_type;
     switch(game.system.id){
       case "dnd5e":
       case "pf1":
@@ -156,49 +161,67 @@ export class DistributeAbilityScores extends FormApplication {
         // "archmage" does have race items in a compendium, but they are named weirdly and don't seem to have ability bonuses.
 
         break;
-      case "dcc":
-        
-        var pattern = /(?<=<td>)(.+?)(?=<\/td>)/g;
-        const occupation_details = this.occupation.match(pattern);
-        const playerOwners = Object.entries(actor.data.permission).filter(([id, level]) => level === 3).map(([id, level])=> id); //(!game.users.get(id)?.isGM && game.users.get(id)?.active) && 
-        var note = "";
+
+      case "dcc":        
         
         // Check for other required rolls on occupation before embedding, such as farm animals, ammunition, etc.
+        let pattern = /(?<=<td>)(.+?)(?=<\/td>)/g;
+        const occupation_details = this.occupation.match(pattern);
 
-        // † If a missile fre weapon (such as sling or dart), roll 1d6 to determine number of sling stones or darts.
-        pattern = /dart|sling/i;
-        if(occupation_details[1].match(pattern)) // Ranged Weapon† 
-        {
-          var roll = new Roll("1d6");
-          var rolled_results = roll.evaluate({ async: false }).total;
-          if(game.settings.get(settingsKey, "DiceSoNiceEnabled")){game.dice3d?.showForRoll(roll);}   
-          if(occupation_details[1].includes("dart")){
-              for(var i = 0; i < rolled_results; i += 1)
-              {                
-                this.EmbedItem(actor, "dcc-core-book.dcc-core-occupation-items", occupation_details[1]); //Weapon - Premium Pack
-              }
-          }else{
-            this.EmbedItem(actor, "dcc-core-book.dcc-core-occupation-items", occupation_details[1]); // Weapon - Premium Pack}
-            this.EmbedItem(actor, "dcc-core-book.dcc-core-ammunition", "Sling stones", rolled_results); // Ammunition - Premium Pack
-          }
-        }else{
-          this.EmbedItem(actor, "dcc-core-book.dcc-core-occupation-items", occupation_details[1]); // Weapon - Premium Pack}
-        }
+        // Begin note
+        let note = "";
 
         // * Roll 1d8 to determine farmer type: (1) potato, (2) wheat, (3) turnip, (4) corn, (5) rice, (6) parsnip, (7) radish, (8) rutabaga.
-        var trade_good = occupation_details[2];
-        var farmer_type = "";
+        let trade_good = occupation_details[2];
+        let farmer_type = "";
         pattern = /\*/g;
         if(occupation_details[0].match(pattern)) // Occupation*
         {
           const farmer_types = ["Potato", "Wheat", "Turnip", "Corn", "Rice", "Parsnip", "Radish", "Rutabaga"]
-          var roll = new Roll("1d8");
-          var rolled_results = roll.evaluate({ async: false }).total;
+          const roll = new Roll("1d8");
+          const rolled_results = roll.evaluate({ async: false }).total;
           if(game.settings.get(settingsKey, "DiceSoNiceEnabled")){game.dice3d?.showForRoll(roll);}   
           farmer_type = farmer_types[rolled_results - 1];
         }
+        // Append Note
+        note += "<p>Occupation: " + farmer_type + " " + occupation_details[0] + "<br>";
+
+        // † If a missile fire weapon (such as sling or dart), roll 1d6 to determine number of sling stones or darts.
+        pattern = /dart|sling|Shortbow/i;
+        // Append Note
+        note += "Weapon: ";
+        if(occupation_details[1].match(pattern)) // Ranged Weapon† 
+        {
+          const roll = new Roll("1d6");
+          const rolled_results = roll.evaluate({ async: false }).total;
+          if(game.settings.get(settingsKey, "DiceSoNiceEnabled")){game.dice3d?.showForRoll(roll);}   
+          if(occupation_details[1].toLowerCase().includes("dart")){
+              for(let i = 0; i < rolled_results; i += 1)
+              {                
+                this.EmbedItem(actor, "dcc-core-book.dcc-core-occupation-items", occupation_details[1]); //Weapon - Premium Pack
+              }
+              // Append Note
+              note += rolled_results + "x " + occupation_details[1] + "<br>";
+          }else if(occupation_details[1] === "Shortbow"){
+            this.EmbedItem(actor, "dcc-core-book.dcc-core-occupation-items", occupation_details[1]); // Weapon - Premium Pack
+            this.EmbedItem(actor, "dcc-core-book.dcc-core-ammunition", "Arrows", rolled_results); // Ammunition - Premium Pack
+            // Append Note
+            note += occupation_details[1] + " with " + rolled_results + "x Arrows<br>";
+          }else{
+            this.EmbedItem(actor, "dcc-core-book.dcc-core-occupation-items", occupation_details[1]); // Weapon - Premium Pack
+            this.EmbedItem(actor, "dcc-core-book.dcc-core-ammunition", "Sling stones", rolled_results); // Ammunition - Premium Pack
+            // Append Note
+            note += occupation_details[1] + " with " + rolled_results + "x Sling stones<br>";
+          }
+        }else{// Weapon is not dart|sling|Shortbow
+          this.EmbedItem(actor, "dcc-core-book.dcc-core-occupation-items", occupation_details[1]); // Weapon - Premium Pack
+          // Append Note
+          note += occupation_details[1] + "<br>";
+        }
+
         // Update name
-        var character_name = "";
+        const playerOwners = Object.entries(actor.data.permission).filter(([id, level]) => level === 3).map(([id, level])=> id); //(!game.users.get(id)?.isGM && game.users.get(id)?.active) && 
+        let character_name = "";
         switch(game.settings.get(settingsKey, "NameFormat")){
           case "0":
             character_name = game.users.get(playerOwners[0])?.name + " (" + (farmer_type !== "" ? farmer_type + " " : "") + occupation_details[0] + ")"
@@ -211,8 +234,7 @@ export class DistributeAbilityScores extends FormApplication {
             break;
           default:
         }
-        character_name = character_name.replace("*","");
-        
+        character_name = character_name.replace("*","");       
 
 
         // ** Why did the chicken cross the hallway? To check for traps! In all seriousness, if the party includes more than one farmer or herder, randomly determine the 
@@ -222,41 +244,45 @@ export class DistributeAbilityScores extends FormApplication {
         {
           // First check to see if there are other farmers || herders
           // NOTE: Checking for herders here is kinda sucky, deffinitely refactor this
-          var farmers = game.actors.filter(i => i.data.data.details.occupation.value === "Farmer*");
-          var herders = game.actors.filter(i => i.data.data.details.occupation.value === "Herder")
-          var dwarven_herders = game.actors.filter(i =>  i.data.data.details.occupation.value === "Dwarven herder");
+          const farmers = game.actors.filter(i => i.data.data.details.occupation.value === "Farmer*");
+          const herders = game.actors.filter(i => i.data.data.details.occupation.value === "Herder")
+          const dwarven_herders = game.actors.filter(i =>  i.data.data.details.occupation.value === "Dwarven herder");
           if((farmers.length > 0 && occupation_details[0] === "Farmer*") || 
              (herders.length > 0 && occupation_details[0] === "Herder") || 
              (dwarven_herders.length > 0 && occupation_details[0] === "Dwarven herder")) {
             const farm_animal = ["Sheep", "Goat", "Cow", "Duck", "Goose", "Mule"]
-            var roll = new Roll("1d6");
-            var rolled_results = roll.evaluate({ async: false }).total;
+            const roll = new Roll("1d6");
+            const rolled_results = roll.evaluate({ async: false }).total;
             if(game.settings.get(settingsKey, "DiceSoNiceEnabled")){game.dice3d?.showForRoll(roll);}   
             trade_good = farm_animal[rolled_results - 1];
           }
         }    
+        // Append Note
+        note += "Trade Good: " + trade_good + "<br>";
         
         // *** Roll 1d6 to determine what’s in the cart: (1) tomatoes, (2) nothing, (3) straw, (4) your dead, (5) dirt, (6) rocks 
         pattern = /\*{3}/g;
         if(occupation_details[2].match(pattern)) // Trade Good***
         {
           const cart_contents = ["Tomatoes", "nothing", "Straw", "Your dead", "Dirt", "Rocks"]
-          var roll = new Roll("1d6");
-          var rolled_results = roll.evaluate({ async: false }).total;
+          const roll = new Roll("1d6");
+          const rolled_results = roll.evaluate({ async: false }).total;
           if(game.settings.get(settingsKey, "DiceSoNiceEnabled")){game.dice3d?.showForRoll(roll);}   
           if(rolled_results !== 2){
             this.EmbedItem(actor, "dcc-core-book.dcc-core-occupation-items", cart_contents[rolled_results - 1]); // Trade Good - Premium Pack
           }
         }
 
-        //Trade Good
+        // Trade Good
         this.EmbedItem(actor, "dcc-core-book.dcc-core-occupation-items", trade_good); // Trade Good - Premium Pack
 
         // Embed Equipment
-        this.EmbedItem(actor, "dcc-core-book.dcc-core-equipment", this.equipment_list[0]); // Premium Pack
+        this.EmbedItem(actor, "dcc-core-book.dcc-core-equipment", this.equipment_list[0].replace("&amp;", "&")); // Premium Pack
+        // Append Note
+        note += "Equipment: " + this.equipment_list[0] + "</p>";
 
-        // Build Note
-        note += this.luck !== "" ? this.luck + " (" + formData.lck_modifier + ")" : "";
+        // Append Note
+        note += "Birth Augur: " + (this.luck !== "" ? this.luck + " (" + formData.lck_modifier + ")" : "");
 
         // Finally update actor
         await actor.update({
@@ -298,6 +324,7 @@ export class DistributeAbilityScores extends FormApplication {
     qty = (qty > 1 ? qty : 1);
     const pack = game.packs.get(pack_id);
     const itemId = pack?.index.getName(item_name)?._id;
+    // Nothing will become embedded if the pack is not present
     if (itemId) {
       const _item = await pack.getDocument(itemId);
       const obj_item = _item.data.toObject();
@@ -306,6 +333,35 @@ export class DistributeAbilityScores extends FormApplication {
       await actor.createEmbeddedDocuments("Item", [obj_item]);
     }
   }
+
+  async CompareRollTableToItemTable(){
+
+    // const pack_name = "dcc-core-book.dcc-core-tables";
+    // const roll_table_name = "Table 1-3: Occupation";
+    // const pack = game.packs.get(pack_name)
+    // const entry = pack?.index.getName(roll_table_name);
+    // const roll_table = await pack?.getDocument(entry._id)
+    // for(i = 0; i < roll_table.data._source.results.length; i += 1)
+    // {
+    //   console.log(roll_table.data._source.results[i].text);
+    // }
+
+    var pack = game.packs.get("dcc-core-book.dcc-core-equipment")// Premium Pack
+    console.log(pack._source.results);
+    // var entry = pack?.index.getName("Table 1-3: Occupation");
+    // var roll_table = await pack?.getDocument(entry._id)
+    // const item_table_pack = game.packs.get("dcc-core-book.dcc-core-occupation-items");
+    // for(i = 0; i < roll_table.data._source.results.length; i += 1)
+    // {
+    //   const itemId = item_table_pack?.index.getName(occupation_details[1])?._id
+    //   if(itemId === undefined){console.log(occupation_details[1]);}     
+    // }
+
+    // const item_table_pack = game.packs.get("dcc-core-book.dcc-core-occupation-items");
+    // const itemId = pack?.index.getName(item_name)?._id;
+
+  }
+
   // Found this on discord, but can't remember from whom or from what
   // static firstOwner(doc){
   //   /* null docs could mean an empty lookup, null docs are not owned by anyone */

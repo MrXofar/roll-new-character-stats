@@ -91,7 +91,7 @@ export class DiceRoller {
 // TODO-LOW: Add DieType|Sides setting to roll different sided die for abilities under different game systems
 // TODO-LOW: Change "roll +modifiers" into a separate setting 
 
-        var formula = this._settingAbilitiesRollMethodNumDie();
+        let formula = this._settingAbilitiesRollMethodNumDie();
         formula += "d6"; 
         formula += (this._settingRerollOnes() ? "rr1" : "");
         formula += (this._settingDropLowestDieRoll() ? "dl" : "") 
@@ -101,17 +101,17 @@ export class DiceRoller {
 
     RollAbilities(){
         // Ability Rolls
-        for (var rs = 0; rs < this._settingNumberOfRollsCount(); rs++) {
-            var roll = new Roll(this.Formula_Abilities());
-            var rolled_results = roll.evaluate({ async: false });
+        for (let rs = 0; rs < this._settingNumberOfRollsCount(); rs++) {
+            const roll = new Roll(this.Formula_Abilities());
+            const rolled_results = roll.evaluate({ async: false });
             if(game.settings.get(settingsKey, "DiceSoNiceEnabled")){game.dice3d?.showForRoll(roll);}            
             this.results_abilities.push(rolled_results)
         }
 
         // Drop Lowest Set
         if (this._settingDropLowestSet()) {
-            var results = this.results_abilities.map(function (e) { return e.total; }).join(',').split(',').map(Number);
-            var drop_val = Math.min(...results);
+            const results = this.results_abilities.map(function (e) { return e.total; }).join(',').split(',').map(Number);
+            const drop_val = Math.min(...results);
             this.drop_val_index = results.indexOf(drop_val);
         }
 
@@ -124,7 +124,7 @@ export class DiceRoller {
                 this.bonus_results = 1;
                 break;
             case 2: //"1d4 Bonus Points":
-                var bonus = new Roll("1d4");
+                const bonus = new Roll("1d4");
                 this.bonus_results = bonus.evaluate({ async: false }).total;
                 if(game.settings.get(settingsKey, "DiceSoNiceEnabled")){game.dice3d?.showForRoll(bonus);} 
                 break;
@@ -132,9 +132,10 @@ export class DiceRoller {
         }
     }
 
+    // DCC Properties BEGIN
     async RollOccupation(){
-        var pack;
-        var entry;
+        let pack = null;
+        let entry = null;
         switch (game.system.id) {
             case "dcc":
                 pack = game.packs.get("dcc-core-book.dcc-core-tables")// Premium Pack
@@ -142,8 +143,8 @@ export class DiceRoller {
                 break;
             default:
         }
-        var table = await pack?.getDocument(entry._id)
-        var result = await table?.roll()
+        const table = await pack?.getDocument(entry._id)
+        const result = await table?.roll()
         const rolled_occupation = result?.results[0]
         if(rolled_occupation){
             if(game.settings.get(settingsKey, "DiceSoNiceEnabled")){game.dice3d?.showForRoll(result?.roll);}  
@@ -152,8 +153,8 @@ export class DiceRoller {
     }
 
     async RollEquipment(num_items) {
-        var pack;
-        var entry;
+        let pack = null;
+        let entry = null;
         switch (game.system.id) {
             case "dcc":
                 pack = game.packs.get("dcc-core-book.dcc-core-tables")// Premium Pack
@@ -161,9 +162,9 @@ export class DiceRoller {
                 break;
             default:
         }
-        for (var count = 0; count < num_items; count += 1) {
-            var table = await pack?.getDocument(entry._id)
-            var result = await table?.roll()
+        for (let count = 0; count < num_items; count += 1) {
+            const table = await pack?.getDocument(entry._id)
+            const result = await table?.roll()
             const rolled_equipment = result?.results[0]
             if(rolled_equipment){
                 if(game.settings.get(settingsKey, "DiceSoNiceEnabled")){game.dice3d?.showForRoll(result?.roll);}  
@@ -173,8 +174,8 @@ export class DiceRoller {
     }
 
     async RollLuck(){
-        var pack;
-        var entry;
+        let pack = null;
+        let entry = null;
         switch (game.system.id) {
             case "dcc":
                 pack = game.packs.get("dcc-core-book.dcc-core-tables")// Premium Pack
@@ -182,20 +183,21 @@ export class DiceRoller {
                 break;
             default:
         }
-        var table = await pack?.getDocument(entry._id)
-        var result = await table?.roll()
+        const table = await pack?.getDocument(entry._id)
+        const result = await table?.roll()
         const rolled_luck = result?.results[0]
         if(rolled_luck){
             if(game.settings.get(settingsKey, "DiceSoNiceEnabled")){game.dice3d?.showForRoll(result?.roll);}  
             this.luck = rolled_luck.data.text;
         }
     }
+    // DCC Properties END
 
     GetFinalResults() {
         // Get ability scores from results_abilities[] and ignore dropped val if one exists
-        var _ability_scores = [];
+        let _ability_scores = [];
         this.results_abilities.forEach(score => {
-            var score_index = this.results_abilities.indexOf(score);
+            const score_index = this.results_abilities.indexOf(score);
             if (score_index !== this.drop_val_index) {
                 _ability_scores.push(this.results_abilities[score_index].total);
             }
@@ -278,7 +280,7 @@ export class DiceRoller {
 
     // Get results text
     GetMethodText() {
-        var method_text = "<p><b>" + game.i18n.localize("RNCS.results-text.methods.label") + ":</b></br>";
+        let method_text = "<p><b>" + game.i18n.localize("RNCS.results-text.methods.label") + ":</b></br>";
         method_text += "<em>" + game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices." + game.settings.get(settingsKey, "AbilitiesRollMethod"));
         method_text += (game.settings.get(settingsKey, "DropLowestDieRoll") ? game.i18n.localize("RNCS.results-text.methods.drop-lowest-die") : "");
         method_text += (game.settings.get(settingsKey, "ReRollOnes") ? game.i18n.localize("RNCS.results-text.methods.re-roll-ones") : "") + "</br>";
@@ -295,7 +297,7 @@ export class DiceRoller {
     }
     GetDifficultyDesc() {
 
-        var difficulty = 0;
+        let difficulty = 0;
         
         // Drop down selections with namedfields
         difficulty += this.AbilitiesRollMethodDifficulty();
@@ -309,7 +311,7 @@ export class DiceRoller {
         difficulty += this._settingOver18Allowed() ? 2 : 0;
         difficulty += this._settingDistributeResults() ? 3 : 0;
 
-        var difficulty_desc = "<p><b>" + game.i18n.localize("RNCS.results-text.difficulty.label") + ":</b> ";
+        let difficulty_desc = "<p><b>" + game.i18n.localize("RNCS.results-text.difficulty.label") + ":</b> ";
         // There are so many other ways to skin this cat,... 
         // ...but I chose this way because it requires very little effort or brain power to understand or modify.
         switch (difficulty) {
@@ -346,17 +348,17 @@ export class DiceRoller {
     }
     async GetResultsAbilitiesText() {
         // Abilities
-        var results_text = "<b>" + game.i18n.localize("RNCS.results-text.results.label") + ":</b> " + game.i18n.localize("RNCS.results-text.results.abilities") + "</br>";
-        var apply_to = "";
+        let results_text = "<b>" + game.i18n.localize("RNCS.results-text.results.label") + ":</b> " + game.i18n.localize("RNCS.results-text.results.abilities") + "</br>";
+        let apply_to = "";
         const system_helper = new SYSTEM_Helper();
         const abilities = await system_helper.getSystemAbilities();
-        var att_idx = 0;
+        let att_idx = 0;
 
         // NOTE: If more rolls than needed to fill abilities is selected, and Distrubute results is unchecked without selecting Drop Lowest Set,
         // the last roll will still be displayed, but not applied to any ability. 
         // This might look confusing to players - so maybe a way to indicate this in the chat message??
-        for (var set = 0; set < this.results_abilities.length; set++) {
-            var d6_results = this.results_abilities[set].dice[0].results.map(function (e) { return e.result; }).join(', ');
+        for (let set = 0; set < this.results_abilities.length; set++) {
+            const d6_results = this.results_abilities[set].dice[0].results.map(function (e) { return e.result; }).join(', ');
             apply_to = att_idx < abilities.length && !this._settingDistributeResults() && this.drop_val_index !== set ? "<label class=\"ability-text\">" + abilities[att_idx] + "</label>: " : "";
             results_text += apply_to;
             results_text += this.drop_val_index === set ? "Dropped => " : "";
@@ -371,7 +373,7 @@ export class DiceRoller {
         return (this._settingIsBonusPointApplied() ? "<p><b>" + game.i18n.localize("RNCS.results-text.bonus.label") + ":</b> " + this.bonus_results + "</p>" : "</br>");
     }
     GetNoteFromDM(){
-        var note_from_dm = "<b>" + game.i18n.localize("RNCS.results-text.note-from-dm.label") + ":</b></br>";
+        let note_from_dm = "<b>" + game.i18n.localize("RNCS.results-text.note-from-dm.label") + ":</b></br>";
         // Score distribution
         note_from_dm += "<em>" + (this._settingDistributeResults() ? game.i18n.localize("RNCS.results-text.note-from-dm.distribute-freely") : game.i18n.localize("RNCS.results-text.note-from-dm.apply-as-rolled"));
         // Bonus Point distribution - if any

@@ -1,5 +1,38 @@
-vx.x.x - d/m/yyyy
+v2.2.32 - 7/13/2022
 ----------------------------------------------
+Enhanced DCC Support - fixed some things
+Add Shortbow ammo (Arrows) to character sheet - Missed adding Arrows for Shortbow Trade Weapon.
+Flint & Steel was not beeing added to character sheet.
+
+New Setting: (All Supported Game Systems)
+Hide Results Zone (World) - This setting will hide Results Zone when DistributeResults is unchecked.
+
+
+v2.2.31 - 7/12/2022
+----------------------------------------------
+Enhanced DCC Support - fix slings 
+Slings were not being added to character sheet
+
+
+v2.2.3 - 7/12/2022
+----------------------------------------------
+Enhanced DCC Support
+This release brings a couple new settings unique to Dungeon Crawl Classics (DCC)
+Number of Actors (Client) - Enter how many actors do you want rolled. Use with caution if Dice So Nice! is enabled.
+Name Format (World) - Character Name format if no name is provided. (This will be opened up to other game systems in the future)
+
+All Game Systems:
+Dice So Nice! (Client) - If checked, and Dice So Nice! is installed and enabled, 3D dice will be rolled across your screen only.
+
+DCC Enhanced Support:
+Roll New Character Stats (RNCS) will now fully roll 0-Level DCC characters! Occupation, Equipment and Luck are all rolled when 
+the Actor is accepted by the player. RNCS follows the rules for farmers, herders, slings, darts, etc.
+
+Roll them Dice! > Configure > Accept > Play!
+
+NOTE: As I was writing this release, I just remembered I did not set up a test for user permissions for Create New Actor or 
+hide the Configure New Actor button. Please note, players will not be able to Configure > Accept New Actor if Create New Actor 
+is off for the user type as set in Permissions. This is not a big priority at the moment and will be addressed in a future release.
 
 
 v2.2.2 - 7/9/2022

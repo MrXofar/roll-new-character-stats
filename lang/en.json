@@ -13,8 +13,8 @@
         "Name": "Name Format",
         "Hint": "Character Name format if no name is provided." ,
         "choices":{
-          "0": "Playername (Occupation)",
-          "1": "Occupation (Playername)",
+          "0": "Player (Occupation)",
+          "1": "Occupation (Player)",
           "2": "Occupation"
         }     
       },
@@ -63,6 +63,10 @@
       "DistributeResults": {
         "Name": "Distribute Results",
         "Hint": "This setting will allow distribution of results freely among abilities."      
+      },
+      "HideResultsZone": {
+        "Name": "Hide Results Zone",
+        "Hint": "This setting will hide Results Zone when DistributeResults is unchecked."      
       },
       "ChatShowMethodText":{
         "Name": "Show Method Text",
