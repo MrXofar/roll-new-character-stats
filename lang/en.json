@@ -58,7 +58,7 @@
       },
       "Over18Allowed": {        
         "Name": "Scores Over 18 Allowed",
-        "Hint": "Checking this setting will allow scores over 18 at first level when distributing rolled scores and/or bonuses. Setting is ignored when Distribute Results is unchecked - and no Bonus Points are awarded."    
+        "Hint": "Checking this setting will allow scores over 18 when distributing rolled scores and/or bonuses. Setting is ignored when Distribute Results is unchecked - and no Bonus Points are awarded."    
       },
       "DistributeResults": {
         "Name": "Distribute Results",
@@ -143,7 +143,7 @@
     "form-app":{
       "form-text":{
         "applied-as-rolled": "Applied as rolled. ",
-        "over-18-not-allowed": "* No scores over 18 allowed at first level.",
+        "over-18-not-allowed": "* No scores over 18 allowed.",
         "accept-new-actor": "Accept New Actor"
       }
     }

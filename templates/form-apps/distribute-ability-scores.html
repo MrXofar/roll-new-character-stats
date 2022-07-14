@@ -6,7 +6,9 @@
             // Apply as Rolled?
             const ability_scores = document.getElementById("ability_scores");
             if (ability_scores.dataset.hideresultszone === "true") { document.getElementById("results-table")?.classList.add("display_none"); }
+            if (ability_scores.dataset.bonus_points === "0") { HideBonusPointColumn(); }
             if (ability_scores.dataset.distributeresults === "false") { ApplyAsRolled(); }
+            if (ability_scores.dataset.bonus_points === "0" && ability_scores.dataset.distributeresults === "false"){ HideScoreColumn();}
 
             // Game System Specific Configuration
             switch (game.system.id) {
@@ -29,20 +31,27 @@
         function HideRaceOptions() {
             // Hide Race selector and Race Bonus column            
             document.getElementById("race-selector")?.classList.add("display_none");
-            ability_scores.querySelector(".header-row").querySelector(".race-mod-header")?.classList.add("display_none");
-            const ability_rows = ability_scores.querySelectorAll(".ability-row")
-            for (let row = 0; row < ability_rows.length; row += 1) {
-                const ability_row = document.getElementById(ability_rows[row].id);
-                ability_row.querySelector(".racial-mod")?.classList.add("display_none");
-            }
+            HideColumn(".race-mod-header", ".racial-mod");
+        }
+
+        function HideBonusPointColumn() {
+            HideColumn(".bonus-header", ".bonus-points")    
+        }
+
+        function HideScoreColumn() {
+            HideColumn(".score-header", ".final-score")    
         }
 
         function HideAbilityModifierColumn() {
-            ability_scores.querySelector(".header-row").querySelector(".modifier-header")?.classList.add("display_none");
+            HideColumn(".modifier-header", ".modifier")
+        }
+
+        function HideColumn(table_header_class, table_data_class){
+            ability_scores.querySelector(".header-row").querySelector(table_header_class)?.classList.add("display_none");
             const ability_rows = ability_scores.querySelectorAll(".ability-row")
             for (let row = 0; row < ability_rows.length; row += 1) {
                 const ability_row = document.getElementById(ability_rows[row].id);
-                ability_row.querySelector(".modifier")?.classList.add("display_none");
+                ability_row.querySelector(table_data_class)?.classList.add("display_none");
             }
         }
 
@@ -101,7 +110,12 @@
 
             // Get rows from ability scores table
             const ability_rows = ability_scores.querySelectorAll(".ability-row");
-            let over18NotAllowed = ability_scores.dataset.Over18Allowed === "false" && (ability_scores.dataset.distributeresults === "true" || ability_scores.dataset.bonus_points > 0);
+            let over18NotAllowed = ability_scores.dataset.over18allowed === "false" && (ability_scores.dataset.distributeresults === "true" || ability_scores.dataset.bonus_points > 0);
+            
+            console.log("ability_scores.dataset.over18allowed " + ability_scores.dataset.over18allowed);
+            console.log("ability_scores.dataset.distributeresults " + ability_scores.dataset.distributeresults);
+            console.log("ability_scores.dataset.bonus_points " + ability_scores.dataset.bonus_points);
+            console.log("over18NotAllowed " + over18NotAllowed);
             let score_over_18 = false;
             for (let row = 0; row < ability_rows.length; row += 1) {
                 const ability_row = document.getElementById(ability_rows[row].id);
@@ -139,8 +153,8 @@
                 // TODO-LOW: Validation for score over 18 is still kinda sucky
 
                 score_over_18 = (final_score_display.value > 18 ? true : score_over_18);
-                over18NotAllowed = (final_score_display.value > 18 && over18NotAllowed ? true : over18NotAllowed);
-                if (final_score_display.value > 18 && over18NotAllowed) {
+                over18NotAllowed = (score_over_18 && over18NotAllowed ? true : over18NotAllowed);
+                if (score_over_18 && over18NotAllowed) {
                     final_score_display.classList.add("over18");
                 } else {
                     final_score_display.classList.remove("over18");
@@ -151,6 +165,8 @@
             // charactername has nothing to do with scores, I am just being lazy with submit.disable 
             const charactername = document.getElementById("charactername");
             const bp_remaining = parseInt(span_bp_remaining.innerText);
+            console.log("score_over_18 " + score_over_18);
+            console.log("over18NotAllowed " + over18NotAllowed);
             submit.disabled = (charactername.value.length === 0 || GetNextAbilityDropZone() || bp_remaining > 0 || (score_over_18 && over18NotAllowed));
         }
 
@@ -281,17 +297,17 @@
             </tr>
         </table>
 
-        <table id="ability_scores" data-Over18Allowed={{Over18Allowed}} data-distributeresults={{DistributeResults}}
+        <table id="ability_scores" data-over18allowed={{Over18Allowed}} data-distributeresults={{DistributeResults}}
             data-bonus_points={{bonus_points}} data-hideresultszone={{HideResultsZone}}>
             <tr id="header_row" class="header-row">
                 <th>Ability</th>
                 <th>Result</th>
-                <th>Bonus&nbsp;</span><span id="span_bp_remaining">{{bonus_points}}</span>/<span
+                <th class="bonus-header">Bonus&nbsp;</span><span id="span_bp_remaining">{{bonus_points}}</span>/<span
                         id="span_bp_max">{{bonus_points}}</span></th>
                 <th class="race-mod-header">Race Bonus</th>
-                <th>Score
+                <th class="score-header">Score
                     {{#if_AorB DistributeResults bonus_points}}
-                    {{#unless Over18Allowed}}
+                    {{#unless over18allowed}}
                     <span style="font-size: small;">
                         *
                     </span>
@@ -310,7 +326,7 @@
                         onclick="BPchange(event)">-</span><span class="bp">0</span><span id="{{abilities}}_bp_plus"
                         class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
                 <td id="{{abilities}}_racial_mod" class="racial-mod">0</td>
-                <td id="{{abilities}}_final_score">
+                <td class="final-score" id="{{abilities}}_final_score">
                     <input name="{{abilities}}_final_score_unmod" class="final-score-unmod" value="0" />
                     <input name="{{abilities}}_final_score_display" class="final-score-display" value="0" />
                 </td>
@@ -324,7 +340,7 @@
         </button>
 
         {{#if_AorB DistributeResults bonus_points}}
-        {{#unless Over18Allowed}}
+        {{#unless over18allowed}}
         <span style="font-size: small;">
             {{localize "RNCS.form-app.form-text.over-18-not-allowed"}}
         </span>

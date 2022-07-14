@@ -31,26 +31,24 @@ export class DistributeAbilityScores extends FormApplication {
   DistributeResults = game.settings.get(settingsKey, "DistributeResults");
   HideResultsZone = game.settings.get(settingsKey, "HideResultsZone");
 
-  constructor(owner_id, final_results, bonus_points, msgId, occupation, equipment_list, luck, abilities, races) {
+  constructor(owner_id, final_results, bonus_points, msgId, occupation, equipment_list, luck) {
     super();
     this.owner_id = owner_id,
     this.final_results = final_results,
     this.bonus_points = bonus_points,
     this.msgId = msgId,
+
     this.occupation = occupation,
     this.equipment_list = equipment_list,
-    this.luck = luck,
-    this.abilities = abilities,
-    this.races = races
+    this.luck = luck
   }
 
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       title: game.i18n.localize("RNCS.dialog.results-button.configure-new-actor"),
       id: 'distribute-ability-scores',
-      icon: 'fas fa-cogs', // Change?
       template: "./modules/roll-new-character-stats/templates/form-apps/distribute-ability-scores.html",
-      height: 570,
+      height: (game.system.id === "dcc" ? 510 : 570), // TODO-MEDIUM: make height a little more dynamic based on content and not game.system.id.
       width: 375,
       closeOnSubmit: true,
       submitOnClose: false
@@ -164,6 +162,7 @@ export class DistributeAbilityScores extends FormApplication {
 
       case "dcc":        
         
+
         // Check for other required rolls on occupation before embedding, such as farm animals, ammunition, etc.
         let pattern = /(?<=<td>)(.+?)(?=<\/td>)/g;
         const occupation_details = this.occupation.match(pattern);
@@ -279,7 +278,22 @@ export class DistributeAbilityScores extends FormApplication {
         // Embed Equipment
         this.EmbedItem(actor, "dcc-core-book.dcc-core-equipment", this.equipment_list[0].replace("&amp;", "&")); // Premium Pack
         // Append Note
-        note += "Equipment: " + this.equipment_list[0] + "</p>";
+        note += "Equipment: " + this.equipment_list[0] + "<br>";
+
+
+        // Determine hit points; roll 1d4, adjusted by Stamina modifier.
+        let roll = new Roll("1d4");
+        let rolled_results = roll.evaluate({ async: false }).total;
+        if (game.settings.get(settingsKey, "DiceSoNiceEnabled")) { game.dice3d?.showForRoll(roll); }
+        const hp = rolled_results + parseInt(formData.sta_modifier);
+
+        // Determine starting money; roll 5d12 copper pieces.
+        roll = new Roll("5d12");
+        rolled_results = roll.evaluate({ async: false }).total;
+        if (game.settings.get(settingsKey, "DiceSoNiceEnabled")) { game.dice3d?.showForRoll(roll); }
+        const cp = rolled_results;
+        // Append Note
+        note += "Starting Money: " + rolled_results + " cp</p>";
 
         // Append Note
         note += "Birth Augur: " + (this.luck !== "" ? this.luck + " (" + formData.lck_modifier + ")" : "");
@@ -287,6 +301,9 @@ export class DistributeAbilityScores extends FormApplication {
         // Finally update actor
         await actor.update({
           'name': (formData.charactername === "New Actor" || formData.charactername === "") ? character_name : formData.charactername,
+          'data.attributes.hp.value': Math.max(hp,1),
+          'data.attributes.hp.max': Math.max(hp,1),
+          'data.currency.cp': actor.data.data.currency.cp + cp,
           'data.abilities.str.value': formData.str_final_score_display,
           'data.abilities.agl.value': formData.agl_final_score_display,
           'data.abilities.sta.value': formData.sta_final_score_display,
