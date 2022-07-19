@@ -295,19 +295,21 @@ export default class dcc_ActorHelper extends base_ActorHelper {
         
         // Embed items
         // Trade Weapon
-        if(data.dcc_trade_weapon.includes("dart")){
+        // TODO: Need to add modifiers
+        if(data.dcc_trade_weapon.toLowerCase().includes("dart")){
             for(let i = 0; i < data.dcc_trade_weapon_ammo_qty; i += 1){
-                this._EmbedItem("dcc-core-book.dcc-core-occupation-items", data.dcc_trade_weapon); // Weapon - Premium Pack
+                this._EmbedWeaponItem("dcc-core-book.dcc-core-occupation-items", data.dcc_trade_weapon, 1, data.agl_modifier, ""); // Weapon - Premium Pack
             }
         }
         else if(this.missile_weapons.includes(data.dcc_trade_weapon)){
-            // Missile Weapon & Ammo
-            this._EmbedItem("dcc-core-book.dcc-core-occupation-items", data.dcc_trade_weapon); // Weapon - Premium Pack
+            // Missile fire Weapon
+            this._EmbedWeaponItem("dcc-core-book.dcc-core-occupation-items", data.dcc_trade_weapon, 1, data.agl_modifier, ""); // Weapon - Premium Pack
+            // Ammo
             this._EmbedItem("dcc-core-book.dcc-core-ammunition", data.dcc_trade_weapon_ammo, data.dcc_trade_weapon_ammo_qty); // Ammo - Premium Pack
         }        
         else{
             // Weapon is not dart|sling|Shortbow
-            this._EmbedItem("dcc-core-book.dcc-core-occupation-items", data.dcc_trade_weapon); // Weapon - Premium Pack
+            this._EmbedWeaponItem("dcc-core-book.dcc-core-occupation-items", data.dcc_trade_weapon, 1, data.str_modifier, data.str_modifier); // Weapon - Premium Pack
         }
 
         // Trade Good
@@ -335,7 +337,12 @@ export default class dcc_ActorHelper extends base_ActorHelper {
             'name': this._character_name,
             'data.attributes.hp.value': hit_points,
             'data.attributes.hp.max': hit_points,
+            'data.attributes.ac.value':10 + parseInt(data.agl_modifier),
+            'data.attributes.init.value':data.agl_modifier,
             'data.currency.cp': this._actor.data.data.currency.cp + data.currency_cp,
+            'data.saves.frt.value':data.sta_modifier,
+            'data.saves.ref.value':data.agl_modifier,
+            'data.saves.wil.value':data.per_modifier,
             'data.abilities.str.value': data.str_final_score_display,
             'data.abilities.agl.value': data.agl_final_score_display,
             'data.abilities.sta.value': data.sta_final_score_display,

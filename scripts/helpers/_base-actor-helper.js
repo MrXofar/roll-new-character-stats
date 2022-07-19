@@ -79,6 +79,25 @@ export class base_ActorHelper {
         }
     }
 
+    async _EmbedWeaponItem(pack_id, item_name, qty, hit_mod, dmg_mod) {
+        // Entirely separate function from _EmbedItem is probably not necessary, but here we are.
+        qty = (qty === 0 ? 1 : qty);
+        const pack = game.packs.get(pack_id);
+        const itemId = pack?.index.getName(item_name)?._id;
+        // Nothing will become embedded if the pack is not present
+        if (itemId) {
+            const _item = await pack.getDocument(itemId); 
+            const obj_item = _item.data.toObject();
+
+            // +Weapon modifiers
+            obj_item.data.toHit = (hit_mod !== "0" ? hit_mod : "+0");
+            obj_item.data.damage += (dmg_mod !== "0" ? dmg_mod : "");
+            obj_item.data.quantity = qty;
+            
+            await this._actor.createEmbeddedDocuments("Item", [obj_item]);
+        }
+    }
+
     async _Update(data){
         await this._actor.update({data});
     }
