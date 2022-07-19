@@ -1,3 +1,30 @@
+v2.3.0 - 7/19/2022
+----------------------------------------------
+Refactored lots of stuff. 
+This just means I hopefully improved a lot of the code without changing the overall module.
+The focus of this refactoring was to make it simpler for me to add enhanced game system support.
+The use of gamesystem-actor-helpers makes this possible. Each gamesystem-actor-helper is customized to roll the appropriate
+dice for "other properties" - i.e. hit points, money, equipment, etc. The base-actor-helper contains properties common to most game systems, while the 
+game system specific actor-helper (handler?) handles the properties unique to the game system. 
+At the time of this release, Dungeon Crawl Classics (DCC) is the only game system with the enhanced game system support. I look forward to adding
+enhanced support for other game systems in the near future.
+
+Enhanced DCC Support:
+More detailed description appears in chat as well as the Configure Actor window.
+"Starting HP:" now shows in Configure Actor window prior to accepting actor. Value shown is result of 1d4 roll. Stamina Modifier shown in parenthesis.
+Fixed - Farmer type now shows in Occupation field.
+New Setting - Show Description (World) = "Hide/Show character description in chat message."
+
+New Settings for all supported game systems
+Remove Configure Actor Button (World) - "This setting will remove the Configure Actor button when clicked."
+Show Condensed Ability Results (World) = "Display Ability results in condensed form if Show Results Text is checked."
+
+Late Entries:
+(v2.2.33) General: Hide Bonus Points column when "0 Bonus Points" is selected. 
+                   Hide Score column when "0 Bonus Points" is selected and "Distribute Results" is unchecked.  
+(v2.2.32) Enhanced DCC Support - Added more info in Notes tab.
+
+
 v2.2.33 - 7/13/2022
 ----------------------------------------------
 Enhanced DCC Support - fixed some more things
@@ -68,7 +95,7 @@ Changed /data/racial-bonus.json to /data/character-properties.json and expanded 
 Removed /scripts/character-properties.js.
 Added vanilla pf1 races to /data/character-properties.json.
 Added /data/pf1-flavored-races(not used).json - just to keep some of the "pf1 flavored race" entries handy.
-Added /data/system-helper.js for getting game system specific data from json files. 
+Added /data/game-system-helper.js for getting game system specific data from json files. 
 Modified DM Note to NOT display "over 18" rules when they don't apply* - even if "Allow Over 18" is not selected in settings.
 *Over 18 setting/rules are ignored when scores are applied as rolled (not distributed) and there are no Bonus Points awarded.
 Moved "abilities" (i.e. "str", "dex", etc.) to /data/character-properties.json under each game system.

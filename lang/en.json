@@ -3,7 +3,7 @@
     "settings": {
       "NumberOfActors": {
         "Name": "Number of Actors",
-        "Hint": "Enter how many actors do you want rolled. Use with caution if Dice So Nice! is enabled."    
+        "Hint": "Enter how many actors do you want rolled. Use with CAUTION if Dice So Nice! is enabled."    
       },
       "DiceSoNiceEnabled": {
         "Name": "Dice So Nice!",
@@ -68,6 +68,14 @@
         "Name": "Hide Results Zone",
         "Hint": "This setting will hide Results Zone when DistributeResults is unchecked."      
       },
+      "ChatRemoveConfigureActorButton": {
+        "Name": "Remove Configure Actor Button",
+        "Hint": "This setting will remove the Configure Actor button when clicked."      
+      },
+      "ChatShowDescription":{
+        "Name": "Show Description",
+        "Hint": "Hide/Show character description in chat message."
+      },
       "ChatShowMethodText":{
         "Name": "Show Method Text",
         "Hint": "Hide/Show Method text in chat message"
@@ -75,6 +83,10 @@
       "ChatShowResultsText":{
         "Name": "Show Results Text",
         "Hint": "Hide/Show Results text in chat message"
+      },
+      "ChatShowCondensedResults":{
+        "Name": "Show Condensed Ability Results",
+        "Hint": "Display Ability results in condensed form if Show Results Text is checked."
       },
       "ChatShowBonusPointsText":{
         "Name": "Show Bonus Points Text",

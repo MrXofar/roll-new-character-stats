@@ -1,11 +1,13 @@
 
 import JSON_Helper from "./json-helper.js";
 
-export default class SYSTEM_Helper {
+const jh = new JSON_Helper();
+
+export default class GAME_SYSTEM_Helper {
+
     constructor() { }
 
     async getSystemRaces() {
-        const jh = new JSON_Helper();
         const jsonDATA = await jh.getJSONData("./modules/roll-new-character-stats/data/character-properties.json");
         switch (game.system.id) {
             case "dnd5e":
@@ -24,7 +26,6 @@ export default class SYSTEM_Helper {
     }
 
     async getSystemAbilities() {
-        const jh = new JSON_Helper();
         const jsonDATA = await jh.getJSONData("./modules/roll-new-character-stats/data/character-properties.json");
         switch (game.system.id) {
             case "dnd5e":
@@ -39,6 +40,20 @@ export default class SYSTEM_Helper {
                 return jsonDATA.game_system[0].dcc.abilities;
             default:// Default to dnd5e for now
                 return jsonDATA.game_system[0].dnd5e.abilities;
+        }
+    }
+
+    getSystemActorType() {
+        switch (game.system.id) {
+            case "dnd5e":
+            case "pf1":
+            case "ose":
+            case "archmage":
+                return "character";
+            case "dcc":
+                return "Player";
+            default:
+                return "character";
         }
     }
 }

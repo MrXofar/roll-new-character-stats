@@ -1,6 +1,12 @@
 import { RollNewCharacterStats } from "./main.js";
 export const settingsKey = "roll-new-character-stats";
 
+// ***********************************************************************************************
+//
+// MAKE SURE YOU ADD NEW SETTINGS TO ./registered-settings.js 
+//
+// ***********************************************************************************************
+
 export function registerSettings() {
 
     game.settings.register(settingsKey, "NumberOfActors", {
@@ -130,6 +136,24 @@ export function registerSettings() {
         default: false
     });
 
+    game.settings.register(settingsKey, "ChatRemoveConfigureActorButton", {
+        name: game.i18n.localize("RNCS.settings.ChatRemoveConfigureActorButton.Name"),
+        hint: game.i18n.localize("RNCS.settings.ChatRemoveConfigureActorButton.Hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: true
+    });
+
+    game.settings.register(settingsKey, "ChatShowDescription", {
+        name: game.i18n.localize("RNCS.settings.ChatShowDescription.Name"),
+        hint: game.i18n.localize("RNCS.settings.ChatShowDescription.Hint"),
+        scope: "world",
+        config: game.system.id === "dcc",
+        type: Boolean,
+        default: true
+    });
+
     game.settings.register(settingsKey, "ChatShowMethodText", {
         name: game.i18n.localize("RNCS.settings.ChatShowMethodText.Name"),
         hint: game.i18n.localize("RNCS.settings.ChatShowMethodText.Hint"),
@@ -142,6 +166,15 @@ export function registerSettings() {
     game.settings.register(settingsKey, "ChatShowResultsText", {
         name: game.i18n.localize("RNCS.settings.ChatShowResultsText.Name"),
         hint: game.i18n.localize("RNCS.settings.ChatShowResultsText.Hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: true
+    });
+
+    game.settings.register(settingsKey, "ChatShowCondensedResults", {
+        name: game.i18n.localize("RNCS.settings.ChatShowCondensedResults.Name"),
+        hint: game.i18n.localize("RNCS.settings.ChatShowCondensedResults.Hint"),
         scope: "world",
         config: true,
         type: Boolean,
