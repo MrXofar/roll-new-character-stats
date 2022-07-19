@@ -1,4 +1,12 @@
-v2.3.0 - 7/19/2022
+v3.0.1 - 7/19/22
+----------------------------------------------
+Enhanced DCC Support:
+Populate "Saving Throw" modifiers, "AC", "Init" modifier, and "To Hit" & "Damage" modifiers.
+
+Corrected version tag for previous entry in this file. 
+
+
+v3.0.0 - 7/19/2022
 ----------------------------------------------
 Refactored lots of stuff. 
 This just means I hopefully improved a lot of the code without changing the overall module.
