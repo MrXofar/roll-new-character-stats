@@ -146,7 +146,7 @@
       "confirm-roll":{
         "Title": "Roll Abilities",
         "Method": "New abilities are rolled using the following method:",
-        "Content": "Roll abilities for a new character?"
+        "Content": "Roll abilities for {0} new {1}?"
       },
       "results-button":{
         "configure-new-actor": "Configure Actor"

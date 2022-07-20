@@ -1,3 +1,15 @@
+v3.0.2 - 7/20/22
+----------------------------------------------
+- Wait for Dice So Nice! Animation: Chat message will now only display after Dice So Nice! animation is complete - if installed and enabled.
+    This results in a longer wait for all rolls to be complete and displayed (it's literally just a couple seconds between each roll).
+    But it does add to the suspense a bit. :)
+
+- Settings: Opened up "Number Of Actors" (world) setting to all game systems.
+
+- Confirmation text will now show the number of new actors you are about to roll based on Module Settings.
+
+- Clarified some comments
+
 v3.0.1 - 7/19/22
 ----------------------------------------------
 Enhanced DCC Support:

@@ -13,7 +13,7 @@ export function registerSettings() {
         name: game.i18n.localize("RNCS.settings.NumberOfActors.Name"),
         hint: game.i18n.localize("RNCS.settings.NumberOfActors.Hint"),
         scope: "client",
-        config: game.system.id === "dcc",
+        config: true,
         type: Number,
         default: "1"
     });

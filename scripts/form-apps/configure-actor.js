@@ -197,13 +197,6 @@ export class ConfigureActor extends FormApplication {
             default:
         }
     }
-
-    RollDiceForTotal(formula){
-      let roll = new Roll(formula);
-      let total = roll.evaluate({ async: false }).total;
-      if (this._settings.DiceSoNiceEnabled) { game.dice3d?.showForRoll(roll); }
-      return total;
-    }
 }
 
 window.ConfigureActor = ConfigureActor;

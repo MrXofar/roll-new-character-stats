@@ -6,7 +6,7 @@ export default class dcc_ActorHelper extends base_ActorHelper {
     OPR_HITPOINTS = 0;      //1d4   => hit points
     OPR_STARTING_MONEY = 1; //5d12  => starting money "cp"
     OPR_OCCUPATION = 2;     //1d100 => occupation
-    OPR_AMMO = 3;           //1d6?  => missile weapon ammo
+    OPR_AMMO_QTY = 3;       //1d6?  => missile weapon ammo
     OPR_FARMER_TYPE = 4;    //1d8?  => farmer type
     OPR_FARM_ANIMAL = 5;    //1d6?  => farm animal (trade good)
     OPR_CART_CONTENTS = 6;  //1d6?  => cart contents (trade good)
@@ -207,7 +207,7 @@ export default class dcc_ActorHelper extends base_ActorHelper {
             //      However, we still need trade_weapon_ammo_qty for "darts" 
             this.trade_weapon_ammo = (this.trade_weapon === "Shortbow" ? "Arrows" : "Sling stones");
             if(this.other_properties_results){
-                this.trade_weapon_ammo_qty = this.other_properties_results[this.OPR_AMMO];
+                this.trade_weapon_ammo_qty = this.other_properties_results[this.OPR_AMMO_QTY];
             }else{
                 this.trade_weapon_ammo_qty = this._RollDiceForTotal("1d6");
             }

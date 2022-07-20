@@ -29,7 +29,7 @@ export class DiceRoller {
 
     // Roll Them Dice!
     async RollThemDice() {
-        this.RollAbilities();
+        let roll_data = this.RollAbilities();
         // Prepare formula to roll other properties
         let formula = "";
         switch (game.system.id) {
@@ -43,10 +43,11 @@ export class DiceRoller {
                 break;
             case "dcc":
                 // Rolls with '?' are conditional. Use result in dcc-actor-handler if condition is met.
+                // Example: The result from the 1d8? for farmer type will only be applied if the 1d100 results in a Farmer* character.
                 // 1d4   => hit points
                 // 5d12  => starting money "cp"
                 // 1d100 => occupation
-                // 1d6?  => missile weapon ammo
+                // 1d6?  => missile weapon ammo quantity
                 // 1d8?  => farmer type
                 // 1d6?  => farm animal (trade good)
                 // 1d6?  => cart contents (trade good)
@@ -55,9 +56,11 @@ export class DiceRoller {
                 formula = "1d4/5d12/1d100/1d6/1d8/1d6/1d6/1d24/1d30";
                 break;
         }
+        let add_roll_data = [];
         if(formula !== ""){
-            this.RollOtherProperties(formula);
+            add_roll_data = await this.RollOtherProperties(formula);
         }
+        return roll_data.concat(add_roll_data);
     }
 
     Formula_Abilities() {
@@ -75,12 +78,26 @@ export class DiceRoller {
 
     RollAbilities(){
         // Ability Rolls
+        let roll_data = [];
         for (let rs = 0; rs < this._settingNumberOfRollsCount(); rs++) {
             const roll = new Roll(this.Formula_Abilities());
             const rolled_results = roll.evaluate({ async: false });
-            if(this._settings.DiceSoNiceEnabled){game.dice3d?.showForRoll(roll);}            
             this.results_abilities.push(rolled_results)
+
+            //Get roll data
+            if (this._settings.DiceSoNiceEnabled) {
+                for (let i = 0; i < rolled_results.dice[0].results.length; i += 1) {
+                    roll_data.push({
+                        result: rolled_results.dice[0].results[i].result,
+                        resultLabel: rolled_results.dice[0].results[i].result,
+                        type: "d6",
+                        vectors: [],
+                        options: {}
+                    });
+                }
+            }
         }
+
 
         // Drop Lowest Set
         if (this._settings.DropLowestSet) {
@@ -100,19 +117,67 @@ export class DiceRoller {
             case 2: //"1d4 Bonus Points":
                 const bonus = new Roll("1d4");
                 this.bonus_results = bonus.evaluate({ async: false }).total;
-                if(this._settings.DiceSoNiceEnabled){game.dice3d?.showForRoll(bonus);} 
+                if (this._settings.DiceSoNiceEnabled) {
+                    roll_data.push({
+                        result: this.bonus_results,
+                        resultLabel: this.bonus_results,
+                        type: "d4",
+                        vectors: [],
+                        options: {}
+                    });
+                }
+
                 break;
             default:
         }
+        // console.log(roll_data);
+        return roll_data;
     }
 
-    RollOtherProperties(formula){
-        const roll = new Roll(formula);
-        const rolled_results = roll.evaluate({ async: false });
-        if(this._settings.DiceSoNiceEnabled){game.dice3d?.showForRoll(roll);}  
-        for(let i = 0; i < rolled_results.dice.length; i += 1){
+    async RollOtherProperties(formula) {
+        let roll_data = [];
+        const roll = await new Roll(formula);
+        const rolled_results = await roll.evaluate({ async: false });
+
+        for (let i = 0; i < rolled_results.dice.length; i += 1) {
             this._other_properties_results.push(rolled_results.dice[i].total);
+
+            // Get roll data
+            if (this._settings.DiceSoNiceEnabled) {
+                for (let j = 0; j < rolled_results.dice[i].results.length; j += 1) {
+                    let _result = rolled_results.dice[i].results[j].result;
+                    if (rolled_results.dice[i].faces !== 100) {
+                        roll_data.push({
+                            result: _result,
+                            resultLabel: _result,
+                            type: "d" + rolled_results.dice[i].faces,
+                            vectors: [],
+                            options: {}
+                        });
+                    } else {// Deal with d100: Seriously??? Surely this can be simplified
+                        roll_data.push({
+                            resultLabel: _result.toString().substring(0, 1) + "0",
+                            d100Result: _result,
+                            result: _result.toString().substring(0, 1),
+                            type: "d100",
+                            vectors: [],
+                            options: {}
+                        });
+                        if (parseInt(_result) >= 10) {
+                            roll_data.push({
+                                resultLabel: _result.toString().substring(1, 2),
+                                d100Result: _result,
+                                result: _result.toString().substring(1, 2),
+                                type: "d10",
+                                vectors: [],
+                                options: {}
+                            });
+                        }
+                    }
+                }
+            }
         }
+        return roll_data;
     }
 
     GetFinalResults() {
@@ -127,9 +192,8 @@ export class DiceRoller {
         return _ability_scores;
     }
 
-    // This setting only available to DCC at the moment
     NumberOfActors() {
-        return (game.system.id === "dcc" ? parseInt(this._settings.NumberOfActors) : 1);
+        return parseInt(this._settings.NumberOfActors);
     }
     
     // Roll method details for Abilities (3d6, 4d6, 2d6+6, etc...)

@@ -90,23 +90,44 @@ export class RollNewCharacterStats {
 	static ID = 'roll-new-character-stats';
 }
 
+String.prototype.format = function () {
+	// store arguments in an array
+	var args = arguments;
+	// use replace to iterate over the string
+	// select the match and check if related argument is present
+	// if yes, replace the match with the argument
+	return this.replace(/{([0-9]+)}/g, function (match, index) {
+	  // check if the argument is present
+	  return typeof args[index] == 'undefined' ? match : args[index];
+	});
+  };
+
 export async function RollStats() {	
 
 	// Roll them dice!
+	const _settings = new RegisteredSettings;
 	let dice_roller = new DiceRoller();	
+
+	let question = game.i18n.localize("RNCS.dialog.confirm-roll.Content").toString().format(_settings.NumberOfActors,(_settings.NumberOfActors === 1 ? "character" : "characters"));
+
     const confirmed = await Dialog.confirm({
 		title: game.i18n.localize("RNCS.dialog.confirm-roll.Title"),
-		content: "<small>" + dice_roller.GetMethodText() + game.i18n.localize("RNCS.dialog.confirm-roll.Content") + "</small>"
+		content: "<small>" + dice_roller.GetMethodText() + "<p>" + question + "</p></small>"
 	  });
 
 	if (confirmed) {
-
 		for (let _actor = 0; _actor < dice_roller.NumberOfActors(); _actor += 1) {
 			// Roll abilities
 			dice_roller = new DiceRoller()
-			await dice_roller.RollThemDice();
+			let roll_data = await dice_roller.RollThemDice();
 
 			// Show results
+			const _settings = new RegisteredSettings;
+			if (_settings.DiceSoNiceEnabled) {
+				let data = { throws: [{ dice: roll_data }] };
+				console.log(data);
+				await game.dice3d?.show(data)
+			}
 			ShowResultsInChatMessage(dice_roller);
 		}
 	}
