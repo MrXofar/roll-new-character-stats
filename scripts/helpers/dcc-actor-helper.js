@@ -1,17 +1,19 @@
 import { base_ActorHelper } from './_base-actor-helper.js';
 
-export default class dcc_ActorHelper extends base_ActorHelper {
+// OPR_CONSTANTS
+const opr = {
+    HITPOINTS     : 0,  //1d4   => hit points
+    STARTING_MONEY: 1,  //5d12  => starting money "cp"
+    OCCUPATION    : 2,  //1d100 => occupation
+    AMMO_QTY      : 3,  //1d6?  => missile weapon ammo
+    FARMER_TYPE   : 4,  //1d8?  => farmer type
+    FARM_ANIMAL   : 5,  //1d6?  => farm animal (trade good)
+    CART_CONTENTS : 6,  //1d6?  => cart contents (trade good)
+    EQUIPMENT     : 7,  //1d24  => equipment
+    LUCK_STORE    : 8   //1d30  => luck store
+}
 
-    // OPR_CONSTANTS
-    OPR_HITPOINTS = 0;      //1d4   => hit points
-    OPR_STARTING_MONEY = 1; //5d12  => starting money "cp"
-    OPR_OCCUPATION = 2;     //1d100 => occupation
-    OPR_AMMO_QTY = 3;       //1d6?  => missile weapon ammo
-    OPR_FARMER_TYPE = 4;    //1d8?  => farmer type
-    OPR_FARM_ANIMAL = 5;    //1d6?  => farm animal (trade good)
-    OPR_CART_CONTENTS = 6;  //1d6?  => cart contents (trade good)
-    OPR_EQUIPMENT = 7;      //1d24  => equipment
-    OPR_LUCK_STORE = 8;     //1d30  => luck store
+export default class dcc_ActorHelper extends base_ActorHelper {
 
     // base properties
     _hp_modifier_ability = "sta";
@@ -36,31 +38,28 @@ export default class dcc_ActorHelper extends base_ActorHelper {
     missile_weapons = ["Shortbow", "Sling"];// Excludes darts until they are given an ammo type by DCC game system developer
     note = "";
 
-    constructor(actor, other_properties_results) {
-        super(actor, other_properties_results);
+    constructor(actor, other_properties_results, owner_id) {
+        super(actor, other_properties_results, owner_id);
     }
     
     // if(this.other_properties_results){
-    //     this. = this.other_properties_results[this.OPR_];
+    //     this. = this.other_properties_results[opr.];
     // }else{
     //     this. = this._RollDiceForTotal("1d6");
     // }
 
     async RollOccupation() {
 
-        // Roll from table if no other_properties_results are passed into class
-        let pack = game.packs.get("dcc-core-book.dcc-core-tables")// Premium Pack
-        let entry = pack?.index.getName("Table 1-3: Occupation");
-        const roll_table = await pack?.getDocument(entry._id)
-        let result = null;
+        const rolltable_doc = await this._GetDocumentFromCompendium("dcc-core-book.dcc-core-tables", "Table 1-3: Occupation"); // Premium Pack
         let rolled_occupation = null;
+
         if(this.other_properties_results){
             // let test = 36
-            // rolled_occupation = roll_table?.results.contents.filter(x => x.data.range[0] === test && x.data.range[1] >= test)[0];
-            rolled_occupation = roll_table?.results.contents.filter(x => x.data.range[0] <= this.other_properties_results[this.OPR_OCCUPATION] && 
-                                                                         x.data.range[1] >= this.other_properties_results[this.OPR_OCCUPATION])[0];
+            // rolled_occupation = rolltable_doc?.results.contents.filter(x => x.data.range[0] === test && x.data.range[1] >= test)[0];
+            rolled_occupation = rolltable_doc?.results.contents.filter(x => x.data.range[0] <= this.other_properties_results[opr.OCCUPATION] && 
+                                                                         x.data.range[1] >= this.other_properties_results[opr.OCCUPATION])[0];
         }else{
-            result = await roll_table?.roll(); 
+            let result = await rolltable_doc?.roll(); 
             rolled_occupation = result?.results[0];
             if (this._settings.DiceSoNiceEnabled) { game.dice3d?.showForRoll(result?.roll); }
         }
@@ -69,14 +68,15 @@ export default class dcc_ActorHelper extends base_ActorHelper {
             this.occupation = rolled_occupation.data.text;
 
             // Parse out the details
-            // NOTE: This will need to be revisted if roll table "Table 1-3: Occupation" is ever changed. 
+            // NOTE: This will need to be revisited if roll table "Table 1-3: Occupation" is ever changed. 
             let pattern = /(?<=<td>)(.+?)(?=<\/td>)/g;
             this.occupation_details = this.occupation.match(pattern);
             this.occupation_desc = this.occupation_details[0];  
             this.trade_weapon = this.occupation_details[1];     
             this.trade_good = this.occupation_details[2];       
 
-            // Some of the follwoing functions are small enough to include here, but I htink this is more readable.
+            // Some of the following functions are small enough to include inline, but I think this is more readable.
+
             // † If a missile fire weapon (such as sling or dart), roll 1d6 to determine number of sling stones or darts.
             this.SetMissileWeaponDetails()
 
@@ -101,18 +101,21 @@ export default class dcc_ActorHelper extends base_ActorHelper {
                     this.SetCartContents()
                 }
             }
+
+            // Set Character Name - Can be changed in Configure Actor form
+            this._SetCharacterName(this._character_name, this.farmer_type, this.occupation_desc)
         }
     }
 
     BuildDescription(){
 
         // Example:
-        // Starting HP: 3 (+1) || (+Stamina Modifier)
+        // Hit Points HP: 3 (+1) || (+Stamina Modifier)
         // Occupation: Rope maker
         // Weapon: Knife (as dagger)
         // Trade Good: Rope, 100’
         // Equipment: Lantern
-        // Starting Money: 28 cp
+        // Money: 28 cp
         // Birth Augur: Lived through famine: Fortitude saving throws (+1) || (+Luck Modifier)
 
         this.note += "<table>";
@@ -158,39 +161,33 @@ export default class dcc_ActorHelper extends base_ActorHelper {
     }
 
     async RollEquipment() {
-        let pack = game.packs.get("dcc-core-book.dcc-core-tables")// Premium Pack
-        let entry = pack?.index.getName("Table 3-4: Equipment");
-        const roll_table = await pack?.getDocument(entry._id)
-        let result = null;
+        const rolltable_doc = await this._GetDocumentFromCompendium("dcc-core-book.dcc-core-tables", "Table 3-4: Equipment"); // Premium Pack
         let rolled_equipment = null;
 
         if(this.other_properties_results){
-            rolled_equipment = roll_table?.results.contents.filter(x => x.data.range[0] <= this.other_properties_results[this.OPR_EQUIPMENT] && 
-                                                                        x.data.range[1] >= this.other_properties_results[this.OPR_EQUIPMENT])[0];
+            rolled_equipment = rolltable_doc?.results.contents.filter(x => x.data.range[0] <= this.other_properties_results[opr.EQUIPMENT] && 
+                                                                           x.data.range[1] >= this.other_properties_results[opr.EQUIPMENT])[0];
         }else{
-            result = await roll_table?.roll()
+            let result = await rolltable_doc?.roll()
             rolled_equipment = result?.results[0]
             if (this._settings.DiceSoNiceEnabled) { game.dice3d?.showForRoll(result?.roll); }
         }
 
         if (rolled_equipment) {
-            this.equipment = rolled_equipment.data.text.replace("&amp;", "&"); // Repalce &amp; with & - otherwise, item won't be found in equipment roll_table
+            this.equipment = rolled_equipment.data.text.replace("&amp;", "&"); // Repalce &amp; with & - otherwise, item won't be found in equipment rolltable_doc
         }
     }
 
     async RollLuck() {
-        let pack = game.packs.get("dcc-core-book.dcc-core-tables")// Premium Pack
-        let entry = pack?.index.getName("Table 1-2: Luck Score");
-        const roll_table = await pack?.getDocument(entry._id)
-        let result = null;
+        const rolltable_doc = await this._GetDocumentFromCompendium("dcc-core-book.dcc-core-tables", "Table 1-2: Luck Score"); // Premium Pack
         let rolled_luck = null;
 
         if(this.other_properties_results){
-            rolled_luck = roll_table?.results.contents.filter(x => x.data.range[0] <= this.other_properties_results[this.OPR_LUCK_STORE] && 
-                                                                   x.data.range[1] >= this.other_properties_results[this.OPR_LUCK_STORE])[0];
+            rolled_luck = rolltable_doc?.results.contents.filter(x => x.data.range[0] <= this.other_properties_results[opr.LUCK_STORE] && 
+                                                                      x.data.range[1] >= this.other_properties_results[opr.LUCK_STORE])[0];
         }else{
-            result = await roll_table?.roll()
-            rolled_luck = result?.results[0]
+            let result = await rolltable_doc?.roll();
+            rolled_luck = result?.results[0];
             if (this._settings.DiceSoNiceEnabled) { game.dice3d?.showForRoll(result?.roll); }
         }
 
@@ -200,14 +197,14 @@ export default class dcc_ActorHelper extends base_ActorHelper {
     }
 
     SetMissileWeaponDetails() {
+        //NOTE: There is no "dart" ammo at this time, only "Arrows" and "Sling stones"
+        //      However, we still need trade_weapon_ammo_qty for "darts" 
         let pattern = /dart|sling|Shortbow/i;
         if (this.trade_weapon.match(pattern))
         {
-            //NOTE: There is no "dart" ammo at this time, only "Arrows" and "Sling stones"
-            //      However, we still need trade_weapon_ammo_qty for "darts" 
             this.trade_weapon_ammo = (this.trade_weapon === "Shortbow" ? "Arrows" : "Sling stones");
             if(this.other_properties_results){
-                this.trade_weapon_ammo_qty = this.other_properties_results[this.OPR_AMMO_QTY];
+                this.trade_weapon_ammo_qty = this.other_properties_results[opr.AMMO_QTY];
             }else{
                 this.trade_weapon_ammo_qty = this._RollDiceForTotal("1d6");
             }
@@ -216,7 +213,7 @@ export default class dcc_ActorHelper extends base_ActorHelper {
 
     SetFarmerType(){
         if(this.other_properties_results){
-            this.farmer_type = this.farmer_types[this.other_properties_results[this.OPR_FARMER_TYPE] - 1];
+            this.farmer_type = this.farmer_types[this.other_properties_results[opr.FARMER_TYPE] - 1];
         }else{
             const type = this._RollDiceForTotal("1d8");
             this.farmer_type = this.farmer_types[type - 1];
@@ -232,7 +229,7 @@ export default class dcc_ActorHelper extends base_ActorHelper {
             (herders.length > 0 && this.occupation_desc === "Herder") ||
             (dwarven_herders.length > 0 && this.occupation_desc === "Dwarven herder")) {
             if (this.other_properties_results) {
-                this.trade_good = this.farm_animals[this.other_properties_results[this.OPR_FARM_ANIMAL] - 1];
+                this.trade_good = this.farm_animals[this.other_properties_results[opr.FARM_ANIMAL] - 1];
             } else {
                 let animal = this._RollDiceForTotal("1d6");
                 this.trade_good = this.farm_animals[animal - 1];
@@ -242,8 +239,8 @@ export default class dcc_ActorHelper extends base_ActorHelper {
 
     SetCartContents() {
         if (this.other_properties_results) {
-            this.contents = this.other_properties_results[this.OPR_CART_CONTENTS]
-            this.cart_content = this.cart_contents[this.other_properties_results[this.OPR_CART_CONTENTS] - 1];
+            this.contents = this.other_properties_results[opr.CART_CONTENTS]
+            this.cart_content = this.cart_contents[this.other_properties_results[opr.CART_CONTENTS] - 1];
         } else {
             this.contents = this._RollDiceForTotal("1d6");
             this.cart_content = this.cart_contents[this.contents - 1];
@@ -253,7 +250,7 @@ export default class dcc_ActorHelper extends base_ActorHelper {
     // OVERRIDES
     _RollBaseHitPoints(formula){
         if(this.other_properties_results){
-            this._hp_base = this.other_properties_results[this.OPR_HITPOINTS];
+            this._hp_base = this.other_properties_results[opr.HITPOINTS];
         }else{
             this._hp_base = super._RollDiceForTotal(formula);
         }
@@ -262,40 +259,58 @@ export default class dcc_ActorHelper extends base_ActorHelper {
 
     _RollStartingMoney(formula, type){
         if(this.other_properties_results){
-            this._currency_cp = this.other_properties_results[this.OPR_STARTING_MONEY];
+            this._currency_cp = this.other_properties_results[opr.STARTING_MONEY];
         }else{
             this._currency_cp = super._RollStartingMoney(formula, type);
         }
         return this._currency_cp;
     }
 
-    _SetCharacterName(character_name, farmer_type, occupation_desc) {
-        if (character_name === "New Actor" || character_name === "") {
-            const playerOwners = Object.entries(this._actor.data.permission).filter(([id, level]) => level === 3).map(([id, level]) => id); //(!game.users.get(id)?.isGM && game.users.get(id)?.active) && 
+    async _SetCharacterName(character_name, farmer_type, occupation_desc) {
+
+        if (character_name === "New Actor") {            
             switch (this._settings.NameFormat) {
                 case "0":
-                    this._character_name = game.users.get(playerOwners[0])?.name + " (" + (farmer_type !== "" ? farmer_type + " " : "") + occupation_desc + ")"
+                    // Player (Occupation)
+                    this._character_name = game.users.get(this._owner_id)?.name + " (" + (farmer_type !== "" ? farmer_type + " " : "") + occupation_desc + ")"
                     break;
                 case "1":
-                    this._character_name = (farmer_type !== "" ? farmer_type + " " : "") + occupation_desc + " (" + game.users.get(playerOwners[0])?.name + ")"
+                    // Occupation (Player)
+                    this._character_name = (farmer_type !== "" ? farmer_type + " " : "") + occupation_desc + " (" + game.users.get(this._owner_id)?.name + ")"
                     break;
                 case "2":
+                    // Occupation
                     this._character_name = (farmer_type !== "" ? farmer_type + " " : "") + occupation_desc;
                     break;
                 case "3":
-                // roll_name(future);
+                    // Random name from "Appendix S: Sobriquets"
+                    const rolltable_doc = await this._GetDocumentFromCompendium("dcc-core-book.dcc-core-tables", "Appendix S: Sobriquets"); // Premium Pack
+                    let result = await rolltable_doc?.roll();
+                    let rolled_names = result?.results[0];
+                    if(rolled_names){
+                        if (this._settings.DiceSoNiceEnabled) { game.dice3d?.showForRoll(result?.roll); }
+                        // Parse out the names
+                        let pattern = /(?<=<td>)(.+?)(?=<\/td>)/g;
+                        let name_list = rolled_names.data.text.match(pattern);
+                        let name_id = this._RollDiceForTotal("1d4");
+                        this._character_name = name_list[name_id - 1];// Pick from Random Column
+                    }
+                    else // Premium pack not installed - Maybe provide a list of random names not found in premium pack? User custom names list?
+                    {// Make my own random name generator maybe ???
+                        this._character_name = "No Random Name Choices";
+                    }
+                    break;
                 default:
                     this._character_name = "New DCC Actor";
             }
         }
-        else{this._character_name = character_name;}
+        else { this._character_name = character_name; }
     }
 
     async _Update(data) {
         
         // Embed items
         // Trade Weapon
-        // TODO: Need to add modifiers
         if(data.dcc_trade_weapon.toLowerCase().includes("dart")){
             for(let i = 0; i < data.dcc_trade_weapon_ammo_qty; i += 1){
                 this._EmbedWeaponItem("dcc-core-book.dcc-core-occupation-items", data.dcc_trade_weapon, 1, data.agl_modifier, ""); // Weapon - Premium Pack
@@ -329,7 +344,9 @@ export default class dcc_ActorHelper extends base_ActorHelper {
         this._EmbedItem("dcc-core-book.dcc-core-equipment", data.dcc_equipment); // Premium Pack
 
         // Set name
-        this._SetCharacterName(data.character_name, data.dcc_farmer_type, data.dcc_occupation_desc);
+        if(data.character_name === "New Actor"){
+            this._SetCharacterName(data.character_name, data.dcc_farmer_type, data.dcc_occupation_desc);
+        }else{this._character_name = data.character_name;}
 
         // UPDATE
         const hit_points = Math.max(parseInt(data.hp_base) + parseInt(data.hp_modifier), 1);

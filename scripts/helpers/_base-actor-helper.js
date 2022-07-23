@@ -5,6 +5,7 @@ import { RegisteredSettings } from "../registered-settings.js";
 export class base_ActorHelper {
 
     // Base Properties
+    _owner_id = null;
     _settings = new RegisteredSettings;
     _game_system_helper = new GAME_SYSTEM_Helper();
     _character_name = "New Actor";
@@ -17,9 +18,10 @@ export class base_ActorHelper {
     _currency_sp = 0;
     _currency_cp = 0;
 
-    constructor(actor, other_properties_results) {
+    constructor(actor, other_properties_results, owner_id) {
         this._actor = actor;
         this.other_properties_results = other_properties_results;
+        this._owner_id = owner_id;
     }
 
     _SetCharacterName(){
@@ -61,39 +63,35 @@ export class base_ActorHelper {
         return total;
     }
 
+    async _GetDocumentFromCompendium(pack_id, item_name){
+        // Returns nothing if the pack is not present
+        let pack = game.packs.get(pack_id);
+        let item_id = pack?.index.getName(item_name)?._id;
+        return await pack?.getDocument(item_id);
+    }
+
     async _EmbedItem(pack_id, item_name, qty) {
-        //console.log("pack: " + pack_id + ", " + "item_name: " + item_name);
         qty = (qty === 0 ? 1 : qty);
-        const pack = game.packs.get(pack_id);
-        //console.log(pack);
-        const itemId = pack?.index.getName(item_name)?._id;
-        //console.log(itemId);
+        const item_doc = await this._GetDocumentFromCompendium(pack_id, item_name);
         // Nothing will become embedded if the pack is not present
-        if (itemId) {
-            const _item = await pack.getDocument(itemId);            
-            //console.log(_item);
-            const obj_item = _item.data.toObject();
-            //console.log(obj_item);
+        if (item_doc) {
+            const obj_item = item_doc.data.toObject();
             obj_item.data.quantity = qty;
             await this._actor.createEmbeddedDocuments("Item", [obj_item]);
         }
     }
 
     async _EmbedWeaponItem(pack_id, item_name, qty, hit_mod, dmg_mod) {
-        // Entirely separate function from _EmbedItem is probably not necessary, but here we are.
+        // Entirely separate function from _EmbedItem is probably not necessary, but here we are - overload would have been nice, but javascript says no.
         qty = (qty === 0 ? 1 : qty);
-        const pack = game.packs.get(pack_id);
-        const itemId = pack?.index.getName(item_name)?._id;
+        const item_doc = await this._GetDocumentFromCompendium(pack_id, item_name);
         // Nothing will become embedded if the pack is not present
-        if (itemId) {
-            const _item = await pack.getDocument(itemId); 
-            const obj_item = _item.data.toObject();
-
-            // +Weapon modifiers
+        if (item_doc) {
+            // Add weapon modifiers
+            const obj_item = item_doc.data.toObject();
             obj_item.data.toHit = (hit_mod !== "0" ? hit_mod : "+0");
             obj_item.data.damage += (dmg_mod !== "0" ? dmg_mod : "");
-            obj_item.data.quantity = qty;
-            
+            obj_item.data.quantity = qty;            
             await this._actor.createEmbeddedDocuments("Item", [obj_item]);
         }
     }

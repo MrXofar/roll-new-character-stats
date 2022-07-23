@@ -7,8 +7,8 @@ export default class ose_ActorHelper extends base_ActorHelper {
 
     // game system unique properties
 
-    constructor(actor, other_properties_results) {
-        super(actor, other_properties_results);
+    constructor(actor, other_properties_results, owner_id) {
+        super(actor, other_properties_results, owner_id);
     }
 
    // UNIQUE DATA
@@ -21,13 +21,7 @@ export default class ose_ActorHelper extends base_ActorHelper {
             'data.scores.con.value': data.con_final_score_display,
             'data.scores.int.value': data.int_final_score_display,
             'data.scores.wis.value': data.wis_final_score_display,
-            'data.scores.cha.value': data.cha_final_score_display,
-            'data.scores.str.bonus': data.str_modifier,
-            'data.scores.dex.bonus': data.dex_modifier,
-            'data.scores.con.bonus': data.con_modifier,
-            'data.scores.int.bonus': data.int_modifier,
-            'data.scores.wis.bonus': data.wis_modifier,
-            'data.scores.cha.bonus': data.cha_modifier
+            'data.scores.cha.value': data.cha_final_score_display
         });
     }
 

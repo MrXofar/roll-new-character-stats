@@ -43,7 +43,7 @@ export class DiceRoller {
                 break;
             case "dcc":
                 // Rolls with '?' are conditional. Use result in dcc-actor-handler if condition is met.
-                // Example: The result from the 1d8? for farmer type will only be applied if the 1d100 results in a Farmer* character.
+                // Example: The result from the 1d8? for farmer type will only be applied if the 1d100 results in a Farmer* occupation.
                 // 1d4   => hit points
                 // 5d12  => starting money "cp"
                 // 1d100 => occupation
@@ -65,14 +65,11 @@ export class DiceRoller {
 
     Formula_Abilities() {
 
-// TODO-LOW: Add DieType|Sides setting to roll different sided die for abilities under different game systems
-// TODO-LOW: Change "roll +modifiers" into a separate setting 
-
         let formula = this._settingAbilitiesRollMethodNumDie();
-        formula += "d6"; 
+        formula += "d6"; // TODO-LOW: Add AbilitiesRollMethodNumFaces() setting to roll different sided die
         formula += (this._settings.ReRollOnes ? "rr1" : "");
         formula += (this._settings.DropLowestDieRoll ? "dl" : "") 
-        formula += this._settingAbilitiesRollMethodNumDie() === 2 ? "+6" : "";
+        formula += this._settingAbilitiesRollMethodNumDie() === 2 ? "+6" : ""; // TODO-LOW: Add AbilitiesRollMethodDieMod() to add modifier to rolls
         return formula;
     }
 

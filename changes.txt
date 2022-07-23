@@ -1,3 +1,20 @@
+v3.0.3 - 7/20/22
+----------------------------------------------
+All Supported Game Systems: 
+- FIXED - "Score*" and "* No scores over 18 allowed." text were being displayed when they should not be.
+- REMOVED - "drop result here" tool tip removed from Configure Actor form Results column. It was annoying me.
+
+Enhanced DCC Support:
+- FIXED - Roll New Character Stats (RNCS) was causing style conflict with input elements on other modules. My bad.
+    A kind thank you goes to @Mortati for reporting.
+- Implemented Random character names - picked from "Appendix S: Sobriquets".
+    This was a cool suggestion from @Klaus.
+
+General:
+- Some minor code refactoring.
+- More comment cleanup.
+
+
 v3.0.2 - 7/20/22
 ----------------------------------------------
 - Wait for Dice So Nice! Animation: Chat message will now only display after Dice So Nice! animation is complete - if installed and enabled.
@@ -9,6 +26,7 @@ v3.0.2 - 7/20/22
 - Confirmation text will now show the number of new actors you are about to roll based on Module Settings.
 
 - Clarified some comments
+
 
 v3.0.1 - 7/19/22
 ----------------------------------------------

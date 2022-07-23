@@ -5,24 +5,32 @@
 
             // Apply as Rolled?
             const ability_scores = document.getElementById("ability_scores");
-            if (ability_scores.dataset.hideresultszone === "true") { document.getElementById("results-table")?.classList.add("display_none"); }
-            if (ability_scores.dataset.bonus_points === "0") { HideBonusPointColumn(); }
-            if (ability_scores.dataset.distributeresults === "false") { ApplyAsRolled(); }
-            if(game.system.id !== "dnd5e"){
-                if (ability_scores.dataset.bonus_points === "0" && ability_scores.dataset.distributeresults === "false") { HideScoreColumn(); }
-            }
+            HideResultsZone(ability_scores.dataset.hideresultszone === "true")
+            HideBonusPointColumn(ability_scores.dataset.bonus_points === "0");
+            ApplyAsRolled(ability_scores.dataset.distributeresults === "false");
 
             // Game System Specific Configuration
+            // If there are no bonus points, and results are applied as rolled, then we can hide the Score column - because the Result col IS the Score.
+            let hide_score_col = ability_scores.dataset.bonus_points === "0" && ability_scores.dataset.distributeresults === "false"
             switch (game.system.id) {
 
+                case "dnd5e":
+                    // Always show Score column because players can select Race during Configuration
+                    break;
+                case "pf1":
+                    HideScoreColumn(hide_score_col);
+                    break;
                 case "ose":
+                    HideRaceOptions();
+                    HideScoreColumn(hide_score_col);
+                    break;
                 case "archmage":
                     HideRaceOptions();
+                    HideScoreColumn(hide_score_col);
                     break;
                 case "dcc":
                     HideRaceOptions();
-                    // let dcc_occupation = document.getElementById("dcc_occupation");
-                    // dcc_occupation.innerHTML = dcc_occupation.dataset.dcc_occupation;
+                    HideScoreColumn(hide_score_col);
                     let dcc_description = document.getElementById("dcc_description");
                     dcc_description.innerHTML = dcc_description.dataset.dcc_description;
                     break;
@@ -32,22 +40,26 @@
             }
         }
 
+        function HideResultsZone(hide) {
+            if (hide) { document.getElementById("results-table")?.classList.add("display_none"); }
+        }
+
         function HideRaceOptions() {
             // Hide Race selector and Race Bonus column            
             document.getElementById("race-selector")?.classList.add("display_none");
             HideColumn(".race-mod-header", ".racial-mod");
         }
 
-        function HideBonusPointColumn() {
-            HideColumn(".bonus-header", ".bonus-points")
+        function HideBonusPointColumn(hide) {
+            if (hide) { HideColumn(".bonus-header", ".bonus-points"); }
         }
 
-        function HideScoreColumn() {
-            HideColumn(".score-header", ".final-score")
+        function HideScoreColumn(hide) {
+            if (hide) { HideColumn(".score-header", ".final-score"); }
         }
 
         function HideAbilityModifierColumn() {
-            HideColumn(".modifier-header", ".modifier")
+            HideColumn(".modifier-header", ".modifier");
         }
 
         function HideColumn(table_header_class, table_data_class) {
@@ -152,7 +164,7 @@
                 modifier.value = (ability_mod > 0 ? "+" : "") + ability_mod;
 
                 // Set hp modifier
-                if(hp_modifier_ability.value === ability_text){hp_modifier.value = modifier.value;}
+                if (hp_modifier_ability.value === ability_text) { hp_modifier.value = modifier.value; }
 
                 // TODO-LOW: Validation for score over 18 is still kinda sucky                
                 score_over_18 = (final_score_display.value > 18 ? true : score_over_18);
@@ -198,18 +210,21 @@
             return false;
         }
 
-        function ApplyAsRolled() { // Fires from Hooks.on renderDistributeAbilityScores if ability_scores.dataset.distributeresults === "false"
-            const ability_drop_items = results_drop_zone.querySelectorAll(".ability-drop-item");
-            for (let item = 0; item < ability_drop_items.length; item += 1) {
-                const next_ability = GetNextAbilityDropZone();
-                if (next_ability) {
-                    ability_drop_items[item].removeAttribute("ondblclick");
-                    ability_drop_items[item].removeAttribute("draggable");
-                    next_ability.appendChild(ability_drop_items[item]);
+        function ApplyAsRolled(apply_as_rolled) {
+            if (apply_as_rolled) {
+
+                const ability_drop_items = results_drop_zone.querySelectorAll(".ability-drop-item");
+                for (let item = 0; item < ability_drop_items.length; item += 1) {
+                    const next_ability = GetNextAbilityDropZone();
+                    if (next_ability) {
+                        ability_drop_items[item].removeAttribute("ondblclick");
+                        ability_drop_items[item].removeAttribute("draggable");
+                        next_ability.appendChild(ability_drop_items[item]);
+                    }
                 }
+                results_drop_zone.innerHTML = "<small><em>" + game.i18n.localize("RNCS.form-app.form-text.applied-as-rolled") + "</em></small>";
+                RecalcFinalScores();
             }
-            results_drop_zone.innerHTML = "<small><em>" + game.i18n.localize("RNCS.form-app.form-text.applied-as-rolled") + "</em></small>";
-            RecalcFinalScores();
         }
 
         async function UpdateRaceBonus(ev) {
@@ -260,7 +275,7 @@
         <div class="div_lable">Name:</div>
         <!-- Name has nothing to do with scores, I am just being lazy with submit.disable -->
         <div class="div_user_input">
-            <input id="character_name" name="character_name" onchange="RecalcFinalScores()" type="String"
+            <input class="rncs-input" id="character_name" name="character_name" onchange="RecalcFinalScores()" type="String"
                 value="{{character_name}}" />
         </div>
     </div>
@@ -273,38 +288,53 @@
         </div>
     </div>
 
-    <!-- COMMON DATA -->
-    <div class="display_none">
-        <input id="hp_base"             name="hp_base"               value={{hp_base}}></input>
-        <input id="hp_modifier_ability" name="hp_modifier_ability"   value={{hp_modifier_ability}}></input>
-        <input id="hp_modifier"         name="hp_modifier"           value=0></input>
-        <input id="currency_pp"         name="currency_pp"           value={{currency_pp}}></input>
-        <input id="currency_ep"         name="currency_ep"           value={{currency_ep}}></input>
-        <input id="currency_gp"         name="currency_gp"           value={{currency_gp}}></input>
-        <input id="currency_sp"         name="currency_sp"           value={{currency_sp}}></input>
-        <input id="currency_cp"         name="currency_cp"           value={{currency_cp}}></input>
+    <!-- BEGIN COMMON DATA -->
+    <!-- class="display_none" -->
+    <div class="display_none">                                  
+        <table>
+            <tr><td>hp_base             </td><td><input id="hp_base"             name="hp_base"              value={{hp_base}}>              </input></td></tr>
+            <tr><td>hp_modifier_ability </td><td><input id="hp_modifier_ability" name="hp_modifier_ability"  value={{hp_modifier_ability}}>  </input></td></tr>
+            <tr><td>hp_modifier         </td><td><input id="hp_modifier"         name="hp_modifier"          value=0>                        </input></td></tr>
+            <tr><td>currency_pp         </td><td><input id="currency_pp"         name="currency_pp"          value={{currency_pp}}>          </input></td></tr>
+            <tr><td>currency_ep         </td><td><input id="currency_ep"         name="currency_ep"          value={{currency_ep}}>          </input></td></tr>
+            <tr><td>currency_gp         </td><td><input id="currency_gp"         name="currency_gp"          value={{currency_gp}}>          </input></td></tr>
+            <tr><td>currency_sp         </td><td><input id="currency_sp"         name="currency_sp"          value={{currency_sp}}>          </input></td></tr>
+            <tr><td>currency_cp         </td><td><input id="currency_cp"         name="currency_cp"          value={{currency_cp}}>          </input></td></tr>                                  
+        </table>
     </div>
+    <!-- END COMMON DATA -->
 
-    <!-- GAME SYSTEM UNIQUE DATA -->
+    <!-- BEGIN GAME SYSTEM UNIQUE DATA -->
+    <!-- {{#if is_dnd5e}}
+    {{/if}}
+    {{#if is_pf1}}
+    {{/if}}
+    {{#if is_archmage}}
+    {{/if}}
+    {{#if is_ose}}
+    {{/if}} -->
+
     {{#if is_dcc}}
     <p style="font-size: small;">
-        <!-- <span id="dcc_occupation" data-dcc_occupation="{{dcc_occupation}}"></span> -->
         <span id="dcc_description" data-dcc_description="{{description}}"></span>
     </p>
     <div class="display_none">
-        dcc_description:<input name="dcc_description" value="{{description}}"></input>
-        dcc_farmer_type:<input name="dcc_farmer_type" value="{{dcc_farmer_type}}"></input>
-        dcc_occupation_desc:<input name="dcc_occupation_desc" value="{{dcc_occupation_desc}}"></input>
-        dcc_trade_weapon:<input name="dcc_trade_weapon" value="{{dcc_trade_weapon}}"></input>
-        dcc_trade_weapon_ammo:<input name="dcc_trade_weapon_ammo" value="{{dcc_trade_weapon_ammo}}"></input>
-        dcc_trade_weapon_ammo_qty:<input name="dcc_trade_weapon_ammo_qty" value="{{dcc_trade_weapon_ammo_qty}}"></input>
-        dcc_trade_good:<input name="dcc_trade_good" value="{{dcc_trade_good}}"></input>
-        dcc_farm_animal:<input name="dcc_farm_animal" value="{{dcc_farm_animal}}"></input>
-        dcc_cart_content:<input name="dcc_cart_content" value="{{dcc_cart_content}}"></input>
-        dcc_equipment:<input name="dcc_equipment" value="{{dcc_equipment}}"></input>
-        dcc_luck:<input name="dcc_luck" value="{{dcc_luck}}"></input>
+        dcc_description:</td><td><input name="dcc_description" value="{{description}}">                                         
+        <table>
+            <tr><td>dcc_farmer_type:            </td><td><input name="dcc_farmer_type"              value="{{dcc_farmer_type}}">            </input></td></tr>
+            <tr><td>dcc_occupation_desc:        </td><td><input name="dcc_occupation_desc"          value="{{dcc_occupation_desc}}">        </input></td></tr>
+            <tr><td>dcc_trade_weapon:           </td><td><input name="dcc_trade_weapon"             value="{{dcc_trade_weapon}}">           </input></td></tr>
+            <tr><td>dcc_trade_weapon_ammo:      </td><td><input name="dcc_trade_weapon_ammo"        value="{{dcc_trade_weapon_ammo}}">      </input></td></tr>
+            <tr><td>dcc_trade_weapon_ammo_qty:  </td><td><input name="dcc_trade_weapon_ammo_qty"    value="{{dcc_trade_weapon_ammo_qty}}">  </input></td></tr>
+            <tr><td>dcc_trade_good:             </td><td><input name="dcc_trade_good"               value="{{dcc_trade_good}}">             </input></td></tr>
+            <tr><td>dcc_farm_animal:            </td><td><input name="dcc_farm_animal"              value="{{dcc_farm_animal}}">            </input></td></tr>
+            <tr><td>dcc_cart_content:           </td><td><input name="dcc_cart_content"             value="{{dcc_cart_content}}">           </input></td></tr>
+            <tr><td>dcc_equipment:              </td><td><input name="dcc_equipment"                value="{{dcc_equipment}}">              </input></td></tr>
+            <tr><td>dcc_luck:                   </td><td><input name="dcc_luck"                     value="{{dcc_luck}}">                   </input></td></tr>
+        </table>
     </div>
     {{/if}}
+    <!-- END GAME SYSTEM UNIQUE DATA -->
 
 
     <table id="results-table">
@@ -332,7 +362,7 @@
             <th class="race-mod-header">Race Bonus</th>
             <th class="score-header">Score
                 {{#if_AorB DistributeResults bonus_points}}
-                {{#unless over18allowed}}
+                {{#unless Over18Allowed}}
                 <span style="font-size: small;">
                     *
                 </span>
@@ -344,7 +374,7 @@
         {{#each abilities as |abilities id|}}
         <tr id="{{abilities}}_row" class="ability-row">
             <td class="ability-text">{{abilities}}</td>
-            <td id="{{abilities}}_ability_drop_zone" class="ability-drop-zone" title="drop result here"
+            <td id="{{abilities}}_ability_drop_zone" class="ability-drop-zone"
                 ondrop="drop_handler(event)" ondragover="dragover_handler(event)">
             </td>
             <td class="bonus-points"><span id="{{abilities}}_bp_minus" class="bp-button bp-button-minus"
@@ -365,7 +395,7 @@
     </button>
 
     {{#if_AorB DistributeResults bonus_points}}
-    {{#unless over18allowed}}
+    {{#unless Over18Allowed}}
     <span style="font-size: small;">
         {{localize "RNCS.form-app.form-text.over-18-not-allowed"}}
     </span>

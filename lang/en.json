@@ -15,7 +15,8 @@
         "choices":{
           "0": "Player (Occupation)",
           "1": "Occupation (Player)",
-          "2": "Occupation"
+          "2": "Occupation",
+          "3": "Random"
         }     
       },
       "AbilitiesRollMethod": {
@@ -109,7 +110,7 @@
         "re-roll-ones": " - reroll ones",
         "drop-lowest-set": " - drop lowest set",
         "over-18-allowed": "Over 18 Allowed",
-        "over-18-not-allowed": "No scores over 18 at 1st level",
+        "over-18-not-allowed": "No scores over 18 allowed",
         "distribute-freely": "Distribute freely",
         "apply-as-rolled": "Apply as rolled"
       },

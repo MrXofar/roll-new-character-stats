@@ -7,8 +7,8 @@ export default class archmage_ActorHelper extends base_ActorHelper {
 
     // game system unique properties
 
-    constructor(actor, other_properties_results) {
-        super(actor, other_properties_results);
+    constructor(actor, other_properties_results, owner_id) {
+        super(actor, other_properties_results, owner_id);
     }
 
    // UNIQUE DATA

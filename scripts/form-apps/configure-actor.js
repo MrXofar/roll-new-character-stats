@@ -103,7 +103,7 @@ export class ConfigureActor extends FormApplication {
 
                 // Actor document is not passed in at this time since one will not be created until player accepts the new actor
                 // other_properties_results contains the player's rolls for properties such as hp, occupation, equipment, luck etc.
-                dcc_actor_helper = new dcc_ActorHelper(null, this.other_properties_results); 
+                dcc_actor_helper = new dcc_ActorHelper(null, this.other_properties_results, this.owner_id); 
 
                 // Roll/Set common properties
                 hp_base = dcc_actor_helper._RollBaseHitPoints("1d4"); // default formula provided in case no other_properties_results provided 
@@ -119,6 +119,9 @@ export class ConfigureActor extends FormApplication {
 
                 // Build description
                 description = dcc_actor_helper.BuildDescription();
+
+                // Get name
+                character_name = dcc_actor_helper._character_name;
                 
                 break;
             default:
@@ -141,7 +144,19 @@ export class ConfigureActor extends FormApplication {
             // END Common Character data
 
             // BEGIN Game System Unique data
-            // DCC
+            // dnd5e            
+            is_dnd5e: game.system.id === "dnd5e",
+            
+            // pf1
+            is_pf1: game.system.id === "pf1",
+
+            // archmage
+            is_archmage: game.system.id === "archmage",
+
+            // ose
+            is_ose: game.system.id === "ose",
+
+            // dcc
             is_dcc: game.system.id === "dcc",
             dcc_occupation: dcc_actor_helper?.occupation,
             dcc_occupation_desc: dcc_actor_helper?.occupation_desc,
@@ -172,7 +187,10 @@ export class ConfigureActor extends FormApplication {
             img: "icons/svg/mystery-man.svg"
         });
 
+        //console.log(actor);
+        
         // Use [game-system]-actor-handler class to update actor
+        console.log(game.system.id);
         switch (game.system.id) {
             case "dnd5e":
                 let dnd5e_actor_helper = new dnd5e_ActorHelper(actor);

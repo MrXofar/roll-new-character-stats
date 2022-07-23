@@ -36,7 +36,8 @@ export function registerSettings() {
         choices: {
             "0": game.i18n.localize("RNCS.settings.NameFormat.choices.0"),
             "1": game.i18n.localize("RNCS.settings.NameFormat.choices.1"),
-            "2": game.i18n.localize("RNCS.settings.NameFormat.choices.2")
+            "2": game.i18n.localize("RNCS.settings.NameFormat.choices.2"),
+            "3": game.i18n.localize("RNCS.settings.NameFormat.choices.3")
         },
         default: "0"
     });

@@ -57,6 +57,10 @@ Hooks.on("renderChatLog", (app, [html]) => {
 	});
 }); 
 
+export class RollNewCharacterStats {
+	static ID = 'roll-new-character-stats';
+}
+
 function RemoveButton(msgId) {
 
 	let chatMessage = game.messages?.get(msgId);
@@ -84,10 +88,6 @@ async function FormApp_ConfigureActor(msgId, owner_id, final_results, bonus_poin
 
 	new ConfigureActor(owner_id, final_results, bonus_points, other_properties_results, Over18Allowed, DistributeResults, HideResultsZone).render(true);
 
-}
-
-export class RollNewCharacterStats {
-	static ID = 'roll-new-character-stats';
 }
 
 String.prototype.format = function () {
@@ -125,7 +125,7 @@ export async function RollStats() {
 			const _settings = new RegisteredSettings;
 			if (_settings.DiceSoNiceEnabled) {
 				let data = { throws: [{ dice: roll_data }] };
-				console.log(data);
+				//console.log(data);
 				await game.dice3d?.show(data)
 			}
 			ShowResultsInChatMessage(dice_roller);
