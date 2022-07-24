@@ -56,10 +56,10 @@ export class base_ActorHelper {
         return amount
     }
 
-    _RollDiceForTotal(formula) {
+    _RollDiceForTotal(formula, override_dicesonice) {
         let roll = new Roll(formula);
         let total = roll.evaluate({ async: false }).total;
-        if (this._settings.DiceSoNiceEnabled) { game.dice3d?.showForRoll(roll); }
+        if (this._settings.DiceSoNiceEnabled && !override_dicesonice) { game.dice3d?.showForRoll(roll); }
         return total;
     }
 
@@ -89,6 +89,7 @@ export class base_ActorHelper {
         if (item_doc) {
             // Add weapon modifiers
             const obj_item = item_doc.data.toObject();
+            // NOTE: This works fine for now (for dcc), but may need to be refined for other game systems in the future.
             obj_item.data.toHit = (hit_mod !== "0" ? hit_mod : "+0");
             obj_item.data.damage += (dmg_mod !== "0" ? dmg_mod : "");
             obj_item.data.quantity = qty;            

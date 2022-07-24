@@ -1,4 +1,10 @@
-v3.0.3 - 7/20/22
+v3.0.4 - d/m/20yy
+----------------------------------------------
+- Prefixed all css classes with "rncs-" and changed "stylesheet.css" to "rncs-styles.css" just to be safe after my screwup with input elements.
+- Corrected v3.0.3 release date in changes.txt
+
+
+v3.0.3 - 7/22/2022
 ----------------------------------------------
 All Supported Game Systems: 
 - FIXED - "Score*" and "* No scores over 18 allowed." text were being displayed when they should not be.
@@ -15,7 +21,7 @@ General:
 - More comment cleanup.
 
 
-v3.0.2 - 7/20/22
+v3.0.2 - 7/20/2022
 ----------------------------------------------
 - Wait for Dice So Nice! Animation: Chat message will now only display after Dice So Nice! animation is complete - if installed and enabled.
     This results in a longer wait for all rolls to be complete and displayed (it's literally just a couple seconds between each roll).
@@ -28,7 +34,7 @@ v3.0.2 - 7/20/22
 - Clarified some comments
 
 
-v3.0.1 - 7/19/22
+v3.0.1 - 7/19/2022
 ----------------------------------------------
 Enhanced DCC Support:
 Populate "Saving Throw" modifiers, "AC", "Init" modifier, and "To Hit" & "Damage" modifiers.

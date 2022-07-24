@@ -1,11 +1,11 @@
-  .results-header{
+  .rncs-results-header{
     padding-left: 10px !important;
     padding-right: 10px !important;
     height: 3em;
     font-size: small;
     font-style: italic;
   }
-  .results-drop-zone{
+  .rncs-results-drop-zone{
     width: 100%;
     padding: 5px;
     height: 3em;
@@ -13,7 +13,7 @@
     font-style: italic;
     text-align: left;
   }
-  .ability-drop-item {
+  .rncs-ability-drop-item {
     display: inline-block;
     width: 2.5em;
     height: 2.5em;
@@ -25,33 +25,33 @@
     font-style: normal !important;
     margin-right: 3px !important;
   }  
-  .final-score-display{
+  .rncs-final-score-display{
     border: none;
     background-color: transparent;
     height: 2.5em; 
     width: 2.5em;
     text-align: center;
-    font-size: medium;
+    font-size: 1em;
   }
-  .final-score-unmod{
+  .rncs-final-score-unmod{
     display: none;
   }
-  .display_none{    
+  .rncs-display-none{    
     display: none;
   }
-  .modifier{
+  .rncs-modifier{
     border: none;
     background-color: transparent;
     height: 2.5em; 
     width: 2.5em;
     text-align: center;
-    font-size: small;
+    font-size: .9em;
   }
-  .header-row, .ability-row{
+  .rncs-header-row, .rncs-ability-row{
     text-align: center;
     font-size: small;
   }
-  .bp-button{    
+  .rncs-bp-button{    
     width: 1.4em;
     height: 1.4em;
     display: inline-block;
@@ -59,28 +59,24 @@
     margin-right: 5px;
     border: 1px solid #413737; 
   }
-  .bp-button:hover{
+  .rncs-bp-button:hover{
     background-color: #C5C3B8;
   }
-  .bp-button-minus{   
+  .rncs-bp-button-minus{   
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
   }
-  .bp-button-plus{
+  .rncs-bp-button-plus{
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
   }
-  .modifier{
-    font-size: 12px;
-    padding-bottom: 3px;
-  }
-  .ability-text{
-    font-size: 18px;
+  .rncs-ability-text{
+    font-size: 16px;
     text-transform: capitalize;
     font-family: var(--modesto);
     font-weight: 700;
   }
-  .over18{
+  .rncs-over18{
     color: red;
   }
   .rncs-input{
@@ -97,9 +93,9 @@
     border-radius: 3px;
     width: 100%;
   }
-  .div_lable{
+  .rncs-div_lable{
     width:15%;display: inline-block;
   }
-  .div_user_input{
+  .rncs-div_user_input{
     width:84%;display: inline-block;
   }

@@ -368,7 +368,7 @@ export class DiceRoller {
                 d6_results = this.results_abilities[set].dice[0].results.map(function (e) { return e.result; }).join(', ');
                 apply_to = (att_idx < abilities.length && !this._settings.DistributeResults && this.drop_val_index !== set ? abilities[att_idx] : "R" + (set + 1));
                 results_text += "<td style=\"text-align: center;\">";
-                results_text += "<label class=\"ability-text\">" + (this.drop_val_index === set ? "X" : apply_to) + "</label><br>";
+                results_text += "<label class=\"rncs-ability-text\">" + (this.drop_val_index === set ? "X" : apply_to) + "</label><br>";
                 results_text += this.results_abilities[set].total
                 results_text += "</td>";
                 if (this.drop_val_index !== set) { att_idx++; }
@@ -379,7 +379,7 @@ export class DiceRoller {
             // Detailed rolls
             for (let set = 0; set < this.results_abilities.length; set++) {
                 d6_results = this.results_abilities[set].dice[0].results.map(function (e) { return e.result; }).join(', ');
-                apply_to = att_idx < abilities.length && !this._settings.DistributeResults && this.drop_val_index !== set ? "<label class=\"ability-text\">" + abilities[att_idx] + "</label>: " : "";
+                apply_to = att_idx < abilities.length && !this._settings.DistributeResults && this.drop_val_index !== set ? "<label class=\"rncs-ability-text\">" + abilities[att_idx] + "</label>: " : "";
                 results_text += apply_to;
                 results_text += this.drop_val_index === set ? "Dropped => " : "";
                 results_text += this.results_abilities[set].total + " [" + d6_results + "]";

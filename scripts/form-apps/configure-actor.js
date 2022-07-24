@@ -90,17 +90,6 @@ export class ConfigureActor extends FormApplication {
                 break;
             case "dcc":
 
-            // TODO-MEDIUM: ??? Refactor this to be a single function call to dcc_actor_helper here and on main.js.ShowResultsInChatMessage()
-                //1d4   => hit points
-                //5d12  => starting money "cp"
-                //1d100 => occupation
-                //1d6?  => missile weapon ammo
-                //1d8?  => farmer type
-                //1d6?  => farm animal (trade good)
-                //1d6?  => cart contents (trade good)
-                //1d24  => equipment
-                //1d30  => luck store
-
                 // Actor document is not passed in at this time since one will not be created until player accepts the new actor
                 // other_properties_results contains the player's rolls for properties such as hp, occupation, equipment, luck etc.
                 dcc_actor_helper = new dcc_ActorHelper(null, this.other_properties_results, this.owner_id); 
@@ -189,7 +178,7 @@ export class ConfigureActor extends FormApplication {
 
         //console.log(actor);
         
-        // Use [game-system]-actor-handler class to update actor
+        // Use [game-system]-actor-helper class to update actor
         console.log(game.system.id);
         switch (game.system.id) {
             case "dnd5e":

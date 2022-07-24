@@ -41,33 +41,33 @@
         }
 
         function HideResultsZone(hide) {
-            if (hide) { document.getElementById("results-table")?.classList.add("display_none"); }
+            if (hide) { document.getElementById("results-table")?.classList.add("rncs-display-none"); }
         }
 
         function HideRaceOptions() {
             // Hide Race selector and Race Bonus column            
-            document.getElementById("race-selector")?.classList.add("display_none");
-            HideColumn(".race-mod-header", ".racial-mod");
+            document.getElementById("race-selector")?.classList.add("rncs-display-none");
+            HideColumn(".rncs-race-mod-header", ".rncs-racial-mod");
         }
 
         function HideBonusPointColumn(hide) {
-            if (hide) { HideColumn(".bonus-header", ".bonus-points"); }
+            if (hide) { HideColumn(".rncs-bonus-header", ".rncs-bonus-points"); }
         }
 
         function HideScoreColumn(hide) {
-            if (hide) { HideColumn(".score-header", ".final-score"); }
+            if (hide) { HideColumn(".rncs-score-header", ".rncs-final-score"); }
         }
 
         function HideAbilityModifierColumn() {
-            HideColumn(".modifier-header", ".modifier");
+            HideColumn(".rncs-modifier-header", ".modifier");
         }
 
         function HideColumn(table_header_class, table_data_class) {
-            ability_scores.querySelector(".header-row").querySelector(table_header_class)?.classList.add("display_none");
-            const ability_rows = ability_scores.querySelectorAll(".ability-row")
+            ability_scores.querySelector(".rncs-header-row").querySelector(table_header_class)?.classList.add("rncs-display-none");
+            const ability_rows = ability_scores.querySelectorAll(".rncs-ability-row")
             for (let row = 0; row < ability_rows.length; row += 1) {
                 const ability_row = document.getElementById(ability_rows[row].id);
-                ability_row.querySelector(table_data_class)?.classList.add("display_none");
+                ability_row.querySelector(table_data_class)?.classList.add("rncs-display-none");
             }
         }
 
@@ -85,7 +85,7 @@
             // Drop result in ability_drop_zone or results_drop_zone or swap results (prevent dropping multiple in one zone)
             if (drop_item_id.includes("div_final_result")) {
 
-                if (drop_zone.id === "results_drop_zone" || (drop_zone.id.includes("ability_drop_zone") && !drop_zone.querySelector(".ability-drop-item"))) {
+                if (drop_zone.id === "results_drop_zone" || (drop_zone.id.includes("ability_drop_zone") && !drop_zone.querySelector(".rncs-ability-drop-item"))) {
                     drop_zone.appendChild(document.getElementById(data));
                 }
                 else if (drop_zone.id.includes("div_final_result")) {// Dropping onto existing result in any zone will swap values
@@ -102,7 +102,7 @@
         // Increment or Decrement ability with Bonus Points
         function BPchange(ev) {
             const bp_button = document.getElementById(ev.target.id);
-            const bp_points = bp_button.parentElement.querySelector(".bp");
+            const bp_points = bp_button.parentElement.querySelector(".rncs-bp");
             const bp_points_value = parseInt(bp_points.innerText);
             const bp_max = parseInt(span_bp_max.innerText);
             let bp_remaining = parseInt(span_bp_remaining.innerText);
@@ -125,19 +125,19 @@
         function RecalcFinalScores() {
 
             // Get rows from ability scores table
-            const ability_rows = ability_scores.querySelectorAll(".ability-row");
+            const ability_rows = ability_scores.querySelectorAll(".rncs-ability-row");
             let over18NotAllowed = ability_scores.dataset.over18allowed === "false" && (ability_scores.dataset.distributeresults === "true" || ability_scores.dataset.bonus_points > 0);
 
             let score_over_18 = false;
             for (let row = 0; row < ability_rows.length; row += 1) {
                 const ability_row = document.getElementById(ability_rows[row].id);
-                const ability_drop_item = ability_row.querySelector(".ability-drop-zone").querySelector(".ability-drop-item");
-                const bonus_points = ability_row.querySelector(".bonus-points").querySelector(".bp");
-                const racial_mod = ability_row.querySelector(".racial-mod");
-                const final_score_unmod = ability_row.querySelector(".final-score-unmod");
-                const final_score_display = ability_row.querySelector(".final-score-display");
-                const modifier = ability_row.querySelector(".modifier");
-                const ability_text = ability_row.querySelector(".ability-text").innerText.toLowerCase()
+                const ability_drop_item = ability_row.querySelector(".rncs-ability-drop-zone").querySelector(".rncs-ability-drop-item");
+                const bonus_points = ability_row.querySelector(".rncs-bonus-points").querySelector(".rncs-bp");
+                const racial_mod = ability_row.querySelector(".rncs-racial-mod");
+                const final_score_unmod = ability_row.querySelector(".rncs-final-score-unmod");
+                const final_score_display = ability_row.querySelector(".rncs-final-score-display");
+                const modifier = ability_row.querySelector(".rncs-modifier");
+                const ability_text = ability_row.querySelector(".rncs-ability-text").innerText.toLowerCase()
 
                 // Calculate final score
                 final_result = parseInt(ability_drop_item ? ability_drop_item.innerText : 0);
@@ -170,9 +170,9 @@
                 score_over_18 = (final_score_display.value > 18 ? true : score_over_18);
                 over18NotAllowed = (score_over_18 && over18NotAllowed ? true : over18NotAllowed);
                 if (final_score_display.value > 18 && over18NotAllowed) {
-                    final_score_display.classList.add("over18");
+                    final_score_display.classList.add("rncs-over18");
                 } else {
-                    final_score_display.classList.remove("over18");
+                    final_score_display.classList.remove("rncs-over18");
                 }
             }
 
@@ -199,10 +199,10 @@
         }
 
         function GetNextAbilityDropZone() {
-            const ability_rows = ability_scores.querySelectorAll(".ability-row")
+            const ability_rows = ability_scores.querySelectorAll(".rncs-ability-row")
             for (let row = 0; row < ability_rows.length; row += 1) {
                 const ability_row = document.getElementById(ability_rows[row].id);
-                const ability_drop_zone = ability_row.querySelector(".ability-drop-zone")
+                const ability_drop_zone = ability_row.querySelector(".rncs-ability-drop-zone")
                 if (ability_drop_zone.innerText === "") {
                     return ability_drop_zone;
                 }
@@ -213,7 +213,7 @@
         function ApplyAsRolled(apply_as_rolled) {
             if (apply_as_rolled) {
 
-                const ability_drop_items = results_drop_zone.querySelectorAll(".ability-drop-item");
+                const ability_drop_items = results_drop_zone.querySelectorAll(".rncs-ability-drop-item");
                 for (let item = 0; item < ability_drop_items.length; item += 1) {
                     const next_ability = GetNextAbilityDropZone();
                     if (next_ability) {
@@ -249,11 +249,11 @@
                     race_bonuses = jsonDATA.game_system[0].dnd5e.races[select.selectedIndex]
             }
             // Update Race Bonus column
-            const ability_rows = ability_scores.querySelectorAll(".ability-row")
+            const ability_rows = ability_scores.querySelectorAll(".rncs-ability-row")
             for (let row = 0; row < ability_rows.length; row += 1) {
                 const ability_row = document.getElementById(ability_rows[row].id);
-                const ability_text = ability_row.querySelector(".ability-text").innerText.toLowerCase();
-                const racial_mod = ability_row.querySelector(".racial-mod");
+                const ability_text = ability_row.querySelector(".rncs-ability-text").innerText.toLowerCase();
+                const racial_mod = ability_row.querySelector(".rncs-racial-mod");
                 racial_mod.innerText = race_bonuses[ability_text];
             }
             RecalcFinalScores();
@@ -272,16 +272,16 @@
     </script>
 
     <div style="margin-bottom:5px;">
-        <div class="div_lable">Name:</div>
+        <div class="rncs-div_lable">Name:</div>
         <!-- Name has nothing to do with scores, I am just being lazy with submit.disable -->
-        <div class="div_user_input">
+        <div class="rncs-div_user_input">
             <input class="rncs-input" id="character_name" name="character_name" onchange="RecalcFinalScores()" type="String"
                 value="{{character_name}}" />
         </div>
     </div>
     <div id="race-selector">
-        <div class="div_lable">Race:</div>
-        <div class="div_user_input">
+        <div class="rncs-div_lable">Race:</div>
+        <div class="rncs-div_user_input">
             <select id="select_race" name="select_race" onchange="UpdateRaceBonus(event)" style="width:100%;">
                 {{selectOptions races selected=value nameAttr="race" labelAttr="race"}}
             </select>
@@ -289,8 +289,8 @@
     </div>
 
     <!-- BEGIN COMMON DATA -->
-    <!-- class="display_none" -->
-    <div class="display_none">                                  
+    <!-- class="rncs-display-none" -->
+    <div class="rncs-display-none">                                  
         <table>
             <tr><td>hp_base             </td><td><input id="hp_base"             name="hp_base"              value={{hp_base}}>              </input></td></tr>
             <tr><td>hp_modifier_ability </td><td><input id="hp_modifier_ability" name="hp_modifier_ability"  value={{hp_modifier_ability}}>  </input></td></tr>
@@ -318,7 +318,7 @@
     <p style="font-size: small;">
         <span id="dcc_description" data-dcc_description="{{description}}"></span>
     </p>
-    <div class="display_none">
+    <div class="rncs-display-none">
         dcc_description:</td><td><input name="dcc_description" value="{{description}}">                                         
         <table>
             <tr><td>dcc_farmer_type:            </td><td><input name="dcc_farmer_type"              value="{{dcc_farmer_type}}">            </input></td></tr>
@@ -339,11 +339,11 @@
 
     <table id="results-table">
         <tr>
-            <td class="results-header">Results:</td>
-            <td id="results_drop_zone" class="results-drop-zone" ondrop="drop_handler(event)"
+            <td class="rncs-results-header">Results:</td>
+            <td id="results_drop_zone" class="rncs-results-drop-zone" ondrop="drop_handler(event)"
                 ondragover="dragover_handler(event)">
                 {{#each final_results as |final_results id| }}
-                <div id="div_final_result{{id}}" class="ability-drop-item" ondblclick="MoveResult(event)"
+                <div id="div_final_result{{id}}" class="rncs-ability-drop-item" ondblclick="MoveResult(event)"
                     draggable="true">
                     {{final_results}}
                 </div>
@@ -354,13 +354,13 @@
 
     <table id="ability_scores" data-over18allowed={{Over18Allowed}} data-distributeresults={{DistributeResults}}
         data-bonus_points={{bonus_points}} data-hideresultszone={{HideResultsZone}}>
-        <tr id="header_row" class="header-row">
+        <tr id="header_row" class="rncs-header-row">
             <th>Ability</th>
             <th>Result</th>
-            <th class="bonus-header">Bonus&nbsp;</span><span id="span_bp_remaining">{{bonus_points}}</span>/<span
+            <th class="rncs-bonus-header">Bonus&nbsp;</span><span id="span_bp_remaining">{{bonus_points}}</span>/<span
                     id="span_bp_max">{{bonus_points}}</span></th>
-            <th class="race-mod-header">Race Bonus</th>
-            <th class="score-header">Score
+            <th class="rncs-race-mod-header">Race Bonus</th>
+            <th class="rncs-score-header">Score
                 {{#if_AorB DistributeResults bonus_points}}
                 {{#unless Over18Allowed}}
                 <span style="font-size: small;">
@@ -369,23 +369,23 @@
                 {{/unless}}
                 {{/if_AorB}}
             </th>
-            <th class="modifier-header">Mod</th>
+            <th class="rncs-modifier-header">Mod</th>
         </tr>
         {{#each abilities as |abilities id|}}
-        <tr id="{{abilities}}_row" class="ability-row">
-            <td class="ability-text">{{abilities}}</td>
-            <td id="{{abilities}}_ability_drop_zone" class="ability-drop-zone"
+        <tr id="{{abilities}}_row" class="rncs-ability-row">
+            <td class="rncs-ability-text">{{abilities}}</td>
+            <td id="{{abilities}}_ability_drop_zone" class="rncs-ability-drop-zone"
                 ondrop="drop_handler(event)" ondragover="dragover_handler(event)">
             </td>
-            <td class="bonus-points"><span id="{{abilities}}_bp_minus" class="bp-button bp-button-minus"
-                    onclick="BPchange(event)">-</span><span class="bp">0</span><span id="{{abilities}}_bp_plus"
-                    class="bp-button bp-button-plus" onclick="BPchange(event)">+</span></td>
-            <td id="{{abilities}}_racial_mod" class="racial-mod">0</td>
-            <td class="final-score" id="{{abilities}}_final_score">
-                <input name="{{abilities}}_final_score_unmod" class="final-score-unmod" value="0" />
-                <input name="{{abilities}}_final_score_display" class="final-score-display" value="0" />
+            <td class="rncs-bonus-points"><span id="{{abilities}}_bp_minus" class="rncs-bp-button rncs-bp-button-minus"
+                    onclick="BPchange(event)">-</span><span class="rncs-bp">0</span><span id="{{abilities}}_bp_plus"
+                    class="rncs-bp-button rncs-bp-button-plus" onclick="BPchange(event)">+</span></td>
+            <td id="{{abilities}}_racial_mod" class="rncs-racial-mod">0</td>
+            <td class="rncs-final-score" id="{{abilities}}_final_score">
+                <input name="{{abilities}}_final_score_unmod" class="rncs-final-score-unmod" value="0" />
+                <input name="{{abilities}}_final_score_display" class="rncs-final-score-display" value="0" />
             </td>
-            <td id="{{abilities}}_mod"><input name="{{abilities}}_modifier" class="modifier" value="-5" /></td>
+            <td id="{{abilities}}_mod"><input name="{{abilities}}_modifier" class="rncs-modifier" value="-5" /></td>
         </tr>
         {{/each}}
     </table>

@@ -37,7 +37,7 @@ Hooks.on("renderChatMessage", (app, [html]) => {
 	const button = html.querySelectorAll(".configure-new-actor")
 	if (!game.user.isGM && !game.user.testUserPermission(game.user, CONST.USER_PERMISSIONS.ACTOR_CREATE)) {
 		for (let i = 0; i < button.length; i += 1) {
-			button[i].classList.add("display_none");
+			button[i].classList.add("rncs-display-none");
 		}
 	}
 });
@@ -52,7 +52,7 @@ Hooks.on("renderChatLog", (app, [html]) => {
 			const final_results = msg.data.flags.roll_new_character_stats.final_results;
 			const bonus_points = msg.data.flags.roll_new_character_stats.bonus_points; 
 			const other_properties_results = msg.data.flags.roll_new_character_stats.other_properties_results; 
-			FormApp_ConfigureActor(msgId, owner_id, final_results, bonus_points, other_properties_results);
+			FormApp_ConfigureActor(target, msgId, owner_id, final_results, bonus_points, other_properties_results);
 		}
 	});
 }); 
@@ -72,12 +72,12 @@ function RemoveButton(msgId) {
 	chatMessage.update({ content });
 }
 
-async function FormApp_ConfigureActor(msgId, owner_id, final_results, bonus_points, other_properties_results) {
+async function FormApp_ConfigureActor(target, msgId, owner_id, final_results, bonus_points, other_properties_results) {
 
-	const _settings = new RegisteredSettings;
-	
-	// remove button?
-	if (_settings.ChatRemoveConfigureActorButton) { RemoveButton(msgId); }
+	const _settings = new RegisteredSettings;	
+
+	// remove button? if not, don't disable either.
+	if (_settings.ChatRemoveConfigureActorButton) { RemoveButton(msgId); } else { target.disabled = false; }
 
 	// Pass settings values into message so they persist for this particular roll
 	// This is necessary for when the Configure Actor button is not removed, and we want the 

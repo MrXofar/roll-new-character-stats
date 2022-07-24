@@ -288,11 +288,11 @@ export default class dcc_ActorHelper extends base_ActorHelper {
                     let result = await rolltable_doc?.roll();
                     let rolled_names = result?.results[0];
                     if(rolled_names){
-                        if (this._settings.DiceSoNiceEnabled) { game.dice3d?.showForRoll(result?.roll); }
+                        //if (this._settings.DiceSoNiceEnabled) { game.dice3d?.showForRoll(result?.roll); }
                         // Parse out the names
                         let pattern = /(?<=<td>)(.+?)(?=<\/td>)/g;
                         let name_list = rolled_names.data.text.match(pattern);
-                        let name_id = this._RollDiceForTotal("1d4");
+                        let name_id = this._RollDiceForTotal("1d4", true);
                         this._character_name = name_list[name_id - 1];// Pick from Random Column
                     }
                     else // Premium pack not installed - Maybe provide a list of random names not found in premium pack? User custom names list?
