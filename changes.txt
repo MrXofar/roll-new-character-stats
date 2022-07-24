@@ -1,4 +1,4 @@
-v3.0.4 - d/m/20yy
+v3.0.4 - 07/23/2022
 ----------------------------------------------
 - Prefixed all css classes with "rncs-" and changed "stylesheet.css" to "rncs-styles.css" just to be safe after my screwup with input elements.
 - Corrected v3.0.3 release date in changes.txt
