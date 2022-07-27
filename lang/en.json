@@ -36,12 +36,14 @@
         "Name": "Reroll Ones",
         "Hint": "This setting will cause 1's to be rerolled until a 1 is not rolled."      
       },
-      "NumberOfRolls": {
+      "NumberOfSetsRolled": {
         "Name": "Number of Sets Rolled",
         "Hint": "Select how many sets of die are to be rolled",
         "choices":{
           "0":"6 Sets",
-          "1":"7 Sets"
+          "1":"7 Sets",
+          "2":"8 Sets",
+          "3":"9 Sets"
         }        
       },
       "DropLowestSet": {
@@ -65,9 +67,18 @@
         "Name": "Distribute Results",
         "Hint": "This setting will allow distribution of results freely among abilities."      
       },
+      "DistributionMethod": {
+        "Name": "Distribution Method",
+        "Hint": "Choose how results will be distributed among abilities.",
+        "choices":{
+          "0": "Apply as Rolled",
+          "1": "Distribute Freely",
+          "2": "Ring Method"
+        }          
+      },
       "HideResultsZone": {
         "Name": "Hide Results Zone",
-        "Hint": "This setting will hide Results Zone when DistributeResults is unchecked."      
+        "Hint": "This setting will hide Results Zone when \"Apply as Rolled\" or \"Ring Method\" is selected."      
       },
       "ChatRemoveConfigureActorButton": {
         "Name": "Remove Configure Actor Button",
@@ -112,7 +123,8 @@
         "over-18-allowed": "Over 18 Allowed",
         "over-18-not-allowed": "No scores over 18 allowed",
         "distribute-freely": "Distribute freely",
-        "apply-as-rolled": "Apply as rolled"
+        "apply-as-rolled": "Apply as rolled",
+        "ring-method": "Ring method distribution"
       },
       "difficulty": {
         "label": "Difficulty",
@@ -139,7 +151,7 @@
         "final-scores-may-not": "Final scores may <b>not</b> ",
         "above-18": "be above 18 after including ",
         "bonus-points": "Bonus Point(s) and ",
-        "any-bonuses": "any bonuses at 1st level. "
+        "any-bonuses": "any beginning bonuses. "
       }
     },
     

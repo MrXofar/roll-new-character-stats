@@ -1,3 +1,24 @@
+v3.1.0 - 7/27/2022
+----------------------------------------------
+"New result distribution option: Ring Method"
+
+All Supported Game Systems: 
+- Fixed - Some settings were not persisting between rolls when settings changed. 
+         Previous roll's settings will now maintain original settings even if current settings are changed.
+
+- New Setting - "Distribution Method" (World) - Replaces "Distribute Results" setting.
+    
+    Choices: Apply as Rolled(default), Distribute Freely, Ring Method
+    Apply as Rolled(default): Results are applied to abilities in the order they were rolled.
+    Distribute Freely       : Results may be distributed freely among abilities.
+    Ring Method*            : Select three consecutive die rolls and apply them to any ability. 
+    (Watch https://www.youtube.com/watch?v=dxZ9Mk_FdNc for more info on how Ring Method works)
+
+    * Thank you @Sabre Runner for this suggestion!
+
+- Expanded "Number of Sets Rolled" options: Added "8 Sets" and "9 Sets".
+
+
 v3.0.4 - 07/23/2022
 ----------------------------------------------
 - Prefixed all css classes with "rncs-" and changed "stylesheet.css" to "rncs-styles.css" just to be safe after my screwup with input elements.

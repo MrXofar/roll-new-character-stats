@@ -48,11 +48,26 @@ Hooks.on("renderChatLog", (app, [html]) => {
 		const msgId = target.closest(".chat-message[data-message-id]")?.dataset.messageId;
 		if (msgId && target.matches(".chat-card button") && target.dataset.action === "configure_new_actor") {
 			const msg = game.messages.get(msgId);
-			const owner_id = msg.data.flags.roll_new_character_stats.owner_id;
-			const final_results = msg.data.flags.roll_new_character_stats.final_results;
-			const bonus_points = msg.data.flags.roll_new_character_stats.bonus_points; 
-			const other_properties_results = msg.data.flags.roll_new_character_stats.other_properties_results; 
-			FormApp_ConfigureActor(target, msgId, owner_id, final_results, bonus_points, other_properties_results);
+			const flags = msg.data.flags.roll_new_character_stats;
+
+			const owner_id = flags.owner_id;
+			const final_results = flags.final_results;
+			const bonus_points = flags.bonus_points; 
+			const other_properties_results = flags.other_properties_results;
+			const individual_rolls = flags.individual_rolls;  
+			const Over18Allowed = flags.Over18Allowed;
+			const HideResultsZone = flags.HideResultsZone;
+			const DistributionMethod = flags.DistributionMethod;
+			FormApp_ConfigureActor(target, 
+								   msgId, 
+								   owner_id, 
+								   final_results, 
+								   bonus_points, 
+								   other_properties_results, 
+								   individual_rolls, 
+								   Over18Allowed,
+								   HideResultsZone,
+								   DistributionMethod);
 		}
 	});
 }); 
@@ -72,21 +87,23 @@ function RemoveButton(msgId) {
 	chatMessage.update({ content });
 }
 
-async function FormApp_ConfigureActor(target, msgId, owner_id, final_results, bonus_points, other_properties_results) {
+async function FormApp_ConfigureActor(target, 
+									  msgId, 
+									  owner_id, 
+									  final_results, 
+									  bonus_points, 
+									  other_properties_results, 
+									  individual_rolls, 
+									  Over18Allowed,
+									  HideResultsZone,
+									  DistributionMethod) {
 
 	const _settings = new RegisteredSettings;	
 
 	// remove button? if not, don't disable either.
 	if (_settings.ChatRemoveConfigureActorButton) { RemoveButton(msgId); } else { target.disabled = false; }
 
-	// Pass settings values into message so they persist for this particular roll
-	// This is necessary for when the Configure Actor button is not removed, and we want the 
-	// the seetings at the time the message was created to still apply to this roll.
-	const Over18Allowed = _settings.Over18Allowed;
-	const DistributeResults = _settings.DistributeResults;
-	const HideResultsZone = _settings.HideResultsZone && !_settings.DistributeResults;
-
-	new ConfigureActor(owner_id, final_results, bonus_points, other_properties_results, Over18Allowed, DistributeResults, HideResultsZone).render(true);
+	new ConfigureActor(owner_id, final_results, bonus_points, other_properties_results, individual_rolls, Over18Allowed, DistributionMethod, HideResultsZone).render(true);
 
 }
 
@@ -142,6 +159,14 @@ async function ShowResultsInChatMessage(dice_roller) {
 	const final_results = dice_roller.GetFinalResults(dice_roller.result_sets);
 	const bonus_points = dice_roller.bonus_results;
 	const other_properties_results = dice_roller._other_properties_results;
+	const individual_rolls = dice_roller.GetIndividualRolls();
+
+	// Pass settings values into message so they persist for this particular roll
+	// This is necessary for when the Configure Actor button is not removed, and we want the 
+	// the seetings at the time the message was created to still apply to this roll.
+	const Over18Allowed = _settings.Over18Allowed;
+	const HideResultsZone = _settings.HideResultsZone && _settings.DistributionMethod !== "1"; // DistributionMethod(1) === Distribute Freely
+	const DistributionMethod = _settings.DistributionMethod;
 
 	// Results message header
 	let results_message = "<div class=\"dnd5e chat-card\"><header class=\"card-header\"><h3>Rolling New Actor</h3></header>"
@@ -172,8 +197,6 @@ async function ShowResultsInChatMessage(dice_roller) {
 		results_message += dice_roller.GetBonusPointsText();
 	}
 
-// TODO-MEDIUM: Add Results (other-properties) to message
-
 	// Add Note from DM to message
 	if(_settings.ChatShowNoteFromDM){
 		results_message += dice_roller.GetNoteFromDM();
@@ -200,7 +223,15 @@ async function ShowResultsInChatMessage(dice_roller) {
 		user: owner_id,
 		content: results_message,
 		speaker: speaker,
-		flags: { roll_new_character_stats: {owner_id, final_results, bonus_points, other_properties_results} }//,   occupation, equipment_list, luck 
+		flags: { roll_new_character_stats: {owner_id, 
+											final_results, 
+											bonus_points, 
+											other_properties_results, 
+											individual_rolls, 
+											Over18Allowed,
+											HideResultsZone,
+											DistributionMethod
+										} }//,   occupation, equipment_list, luck 
 	});
 
 }

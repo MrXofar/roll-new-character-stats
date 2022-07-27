@@ -12,11 +12,15 @@ const game_system_helper = new GAME_SYSTEM_Helper();
 Hooks.on('renderConfigureActor', () => {
     // Add dragstart listeners for each result element
     const dice_roller = new DiceRoller;
-    for (let i = 0; i < dice_roller._settingNumberOfRollsCount(); i++) {
+    for (let i = 0; i < dice_roller._settingNumberOfSetsRolledCount(); i++) {
         const div_final_result = document.getElementById("div_final_result" + i);
         if (div_final_result) {
             div_final_result.addEventListener("dragstart", dragstart_handler);
         }
+    }
+    const div_ring_result = document.getElementById("div_ring_final_result");
+    if (div_ring_result) {
+        div_ring_result.addEventListener("dragstart", dragstart_handler);
     }
     Intitialize();
 });
@@ -33,14 +37,15 @@ export class ConfigureActor extends FormApplication {
     // Properties
     _settings = new RegisteredSettings;
 
-    constructor(owner_id, final_results, bonus_points, other_properties_results, Over18Allowed, DistributeResults, HideResultsZone) {
+    constructor(owner_id, final_results, bonus_points, other_properties_results, individual_rolls, Over18Allowed, DistributionMethod, HideResultsZone) {
         super(); 
         this.owner_id = owner_id,
         this.final_results = final_results, 
         this.bonus_points = bonus_points,
         this.other_properties_results = other_properties_results,
+        this.individual_rolls = individual_rolls,
         this.Over18Allowed = Over18Allowed,
-        this.DistributeResults = DistributeResults,
+        this.DistributionMethod = DistributionMethod,
         this.HideResultsZone = HideResultsZone
     }
 
@@ -120,8 +125,9 @@ export class ConfigureActor extends FormApplication {
             // Data passed to ConfigureActor form application
             final_results: this.final_results,
             bonus_points: this.bonus_points,
+            individual_rolls: this.individual_rolls.map(x => x.result),
             Over18Allowed: this.Over18Allowed,
-            DistributeResults: this.DistributeResults,
+            DistributionMethod: this.DistributionMethod,
             HideResultsZone: this.HideResultsZone,
 
             // BEGIN Common Character data

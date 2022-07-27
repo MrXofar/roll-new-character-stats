@@ -76,7 +76,7 @@ export class DiceRoller {
     RollAbilities(){
         // Ability Rolls
         let roll_data = [];
-        for (let rs = 0; rs < this._settingNumberOfRollsCount(); rs++) {
+        for (let rs = 0; rs < this._settingNumberOfSetsRolledCount(); rs++) {
             const roll = new Roll(this.Formula_Abilities());
             const rolled_results = roll.evaluate({ async: false });
             this.results_abilities.push(rolled_results)
@@ -96,7 +96,7 @@ export class DiceRoller {
         }
 
 
-        // Drop Lowest Set
+        // Get index of lowest Set to drop
         if (this._settings.DropLowestSet) {
             const results = this.results_abilities.map(function (e) { return e.total; }).join(',').split(',').map(Number);
             const drop_val = Math.min(...results);
@@ -189,6 +189,25 @@ export class DiceRoller {
         return _ability_scores;
     }
 
+    GetIndividualRolls() {
+        // Get individual rolls from results_abilities[] and ignore dropped val if one exists
+        let _individual_rolls = [];
+        this.results_abilities.forEach(score => {
+            const score_index = this.results_abilities.indexOf(score);
+            if (score_index !== this.drop_val_index) {
+                for(let i = 0; i < this.results_abilities[score_index].dice[0].results.length; i += 1){
+                    let result = this.results_abilities[score_index].dice[0].results[i];
+                    //console.log(result);
+                    if(!result.rerolled && !result.discarded){                        
+                        _individual_rolls.push(result);
+                    }
+                }
+            }
+        });
+        // console.log(_individual_rolls);
+        return _individual_rolls;
+    }
+
     NumberOfActors() {
         return parseInt(this._settings.NumberOfActors);
     }
@@ -212,20 +231,22 @@ export class DiceRoller {
     }
 
     // Number of rolls details for Abilities (6 Sets, 7 Sets, etc...)
-    NumberOfRolls() {
+    NumberOfSetsRolled() {
         return [
-            num_roll(game.i18n.localize("RNCS.settings.NumberOfRolls.choices.0"), 6, 0),
-            num_roll(game.i18n.localize("RNCS.settings.NumberOfRolls.choices.1"), 7, 1)
+            num_roll(game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.0"), 6, 0),
+            num_roll(game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.1"), 7, 1),
+            num_roll(game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.2"), 8, 2),
+            num_roll(game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.3"), 9, 3)
         ];
     }
-    NumberOfRollsDesc() {
-        return this.NumberOfRolls()[parseInt(this._settings.NumberOfRolls)].description;
+    NumberOfSetsRolledDesc() {
+        return this.NumberOfSetsRolled()[parseInt(this._settings.NumberOfSetsRolled)].description;
     }
-    _settingNumberOfRollsCount() {
-        return this.NumberOfRolls()[parseInt(this._settings.NumberOfRolls)].roll_count;
+    _settingNumberOfSetsRolledCount() {
+        return this.NumberOfSetsRolled()[parseInt(this._settings.NumberOfSetsRolled)].roll_count;
     }
-    NumberOfRollsDifficulty() {
-        return this.NumberOfRolls()[parseInt(this._settings.NumberOfRolls)].difficulty;
+    NumberOfSetsRolledDifficulty() {
+        return this.NumberOfSetsRolled()[parseInt(this._settings.NumberOfSetsRolled)].difficulty;
     }
 
     // Bonus Point details
@@ -286,14 +307,14 @@ export class DiceRoller {
         method_text += "<em>" + game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices." + this._settings.AbilitiesRollMethod);
         method_text += (this._settings.DropLowestDieRoll ? game.i18n.localize("RNCS.results-text.methods.drop-lowest-die") : "");
         method_text += (this._settings.ReRollOnes ? game.i18n.localize("RNCS.results-text.methods.re-roll-ones") : "") + "</br>";
-        method_text += game.i18n.localize("RNCS.settings.NumberOfRolls.choices." + this._settings.NumberOfRolls);
+        method_text += game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices." + this._settings.NumberOfSetsRolled);
         method_text += (this._settings.DropLowestSet ? game.i18n.localize("RNCS.results-text.methods.drop-lowest-set") : "") + "</br>";
         method_text += (this._settings.BonusPoints > 0 ? "+" + game.i18n.localize("RNCS.settings.BonusPoints.choices." + this._settings.BonusPoints) + "</br>" : "");
-        if(!this._settings.Over18Allowed && (this._settings.DistributeResults || this._settings.BonusPoints > 0))
+        if(!this._settings.Over18Allowed && (this._settings.DistributionMethod > 0 || this._settings.BonusPoints > 0 || game.system.id === "dnd5e"))
         {
             method_text += game.i18n.localize("RNCS.results-text.methods.over-18-not-allowed") + "</br>"
         }
-        method_text += (this._settings.DistributeResults ? game.i18n.localize("RNCS.results-text.methods.distribute-freely") : game.i18n.localize("RNCS.results-text.methods.apply-as-rolled")) + "</em>"
+        method_text += game.i18n.localize("RNCS.settings.DistributionMethod.choices." + this._settings.DistributionMethod);
         method_text += "</p>"
         return method_text;
     }
@@ -303,15 +324,16 @@ export class DiceRoller {
         
         // Drop down selections with namedfields
         difficulty += this.AbilitiesRollMethodDifficulty();
-        difficulty += this.NumberOfRollsDifficulty();
+        difficulty += this.NumberOfSetsRolledDifficulty();
         difficulty += this.BonusPointsDifficulty();
+        difficulty += parseInt(this._settings.DistributionMethod);//0 = apply as rolled, 2 = distribute, 3 = ring method
 
         // Check Box selections
         difficulty += this._settings.ReRollOnes ? 3 : 0;
         difficulty += this._settings.DropLowestDieRoll ? 1 : 0;
         difficulty += this._settings.DropLowestSet ? 1 : 0;
         difficulty += this._settings.Over18Allowed ? 2 : 0;
-        difficulty += this._settings.DistributeResults ? 3 : 0;
+        // difficulty += this._settings.DistributeResults ? 3 : 0;
 
         let difficulty_desc = "<p><b>" + game.i18n.localize("RNCS.results-text.difficulty.label") + ":</b> ";
         // There are so many other ways to skin this cat,... 
@@ -366,7 +388,7 @@ export class DiceRoller {
             results_text += "<table><tr>";
             for (let set = 0; set < this.results_abilities.length; set++) {
                 d6_results = this.results_abilities[set].dice[0].results.map(function (e) { return e.result; }).join(', ');
-                apply_to = (att_idx < abilities.length && !this._settings.DistributeResults && this.drop_val_index !== set ? abilities[att_idx] : "R" + (set + 1));
+                apply_to = (att_idx < abilities.length && this._settings.DistributionMethod === "0" && this.drop_val_index !== set ? abilities[att_idx] : "R" + (set + 1));
                 results_text += "<td style=\"text-align: center;\">";
                 results_text += "<label class=\"rncs-ability-text\">" + (this.drop_val_index === set ? "X" : apply_to) + "</label><br>";
                 results_text += this.results_abilities[set].total
@@ -379,7 +401,7 @@ export class DiceRoller {
             // Detailed rolls
             for (let set = 0; set < this.results_abilities.length; set++) {
                 d6_results = this.results_abilities[set].dice[0].results.map(function (e) { return e.result; }).join(', ');
-                apply_to = att_idx < abilities.length && !this._settings.DistributeResults && this.drop_val_index !== set ? "<label class=\"rncs-ability-text\">" + abilities[att_idx] + "</label>: " : "";
+                apply_to = att_idx < abilities.length && this._settings.DistributionMethod === "0" && this.drop_val_index !== set ? "<label class=\"rncs-ability-text\">" + abilities[att_idx] + "</label>: " : "";
                 results_text += apply_to;
                 results_text += this.drop_val_index === set ? "Dropped => " : "";
                 results_text += this.results_abilities[set].total + " [" + d6_results + "]";
@@ -388,6 +410,13 @@ export class DiceRoller {
                 if (this.drop_val_index !== set) { att_idx++; }
             }
         }
+		results_text += "<span style=\"font-size: smaller;\">d6 = [";
+        let individual_rolls = this.GetIndividualRolls();
+		for(let i = 0; i < individual_rolls.length; i += 1)
+		{
+			results_text += individual_rolls[i].result + (i < individual_rolls.length - 1 ? ", " : "" );
+		}
+		results_text += "]</span>";
         return results_text;
     }
 
@@ -398,12 +427,25 @@ export class DiceRoller {
     GetNoteFromDM(){
         let note_from_dm = "<b>" + game.i18n.localize("RNCS.results-text.note-from-dm.label") + ":</b></br>";
         // Score distribution
-        note_from_dm += "<em>" + (this._settings.DistributeResults ? game.i18n.localize("RNCS.results-text.note-from-dm.distribute-freely") : game.i18n.localize("RNCS.results-text.note-from-dm.apply-as-rolled"));
+        note_from_dm += "<em>";
+        
+        switch (this._settings.DistributionMethod) {
+            case "0":
+                note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.apply-as-rolled")
+                break;
+            case "1":
+                note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.distribute-freely")
+                break;
+            case "2":
+                note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.ring-method")
+                break;
+        }
+
         // Bonus Point distribution - if any
         if (this._settingIsBonusPointApplied()) { note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.distribute-bonus-points"); }
 
         // Mention final score limit - if any
-        if(!this._settings.Over18Allowed && (this._settings.DistributeResults || this._settingIsBonusPointApplied()))
+        if(!this._settings.Over18Allowed && (this._settings.DistributionMethod > 0 || this._settingIsBonusPointApplied()))
         {
             note_from_dm += (this._settings.Over18Allowed ? game.i18n.localize("RNCS.results-text.note-from-dm.final-scores-may") : game.i18n.localize("RNCS.results-text.note-from-dm.final-scores-may-not")) + game.i18n.localize("RNCS.results-text.note-from-dm.above-18");
             // Mention bonus points - if any - and any other bonuses

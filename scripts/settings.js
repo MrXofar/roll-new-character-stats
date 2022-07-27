@@ -74,15 +74,17 @@ export function registerSettings() {
         default: false
     });
 
-    game.settings.register(settingsKey, "NumberOfRolls", {
-        name: game.i18n.localize("RNCS.settings.NumberOfRolls.Name"),
-        hint: game.i18n.localize("RNCS.settings.NumberOfRolls.Hint"),
+    game.settings.register(settingsKey, "NumberOfSetsRolled", {
+        name: game.i18n.localize("RNCS.settings.NumberOfSetsRolled.Name"),
+        hint: game.i18n.localize("RNCS.settings.NumberOfSetsRolled.Hint"),
         scope: "world",
         config: true,
         type: String,
         choices: {
-            "0": game.i18n.localize("RNCS.settings.NumberOfRolls.choices.0"),
-            "1": game.i18n.localize("RNCS.settings.NumberOfRolls.choices.1")
+            "0": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.0"),
+            "1": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.1"),
+            "2": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.2"),
+            "3": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.3")
         },
         default: "0"
     });
@@ -119,13 +121,27 @@ export function registerSettings() {
         default: false
     });
 
-    game.settings.register(settingsKey, "DistributeResults", {
-        name: game.i18n.localize("RNCS.settings.DistributeResults.Name"),
-        hint: game.i18n.localize("RNCS.settings.DistributeResults.Hint"),
+    // game.settings.register(settingsKey, "DistributeResults", {
+    //     name: game.i18n.localize("RNCS.settings.DistributeResults.Name"),
+    //     hint: game.i18n.localize("RNCS.settings.DistributeResults.Hint"),
+    //     scope: "world",
+    //     config: false,  // deprecated in v3.1.0
+    //     type: Boolean,
+    //     default: false
+    // });
+
+    game.settings.register(settingsKey, "DistributionMethod", {
+        name: game.i18n.localize("RNCS.settings.DistributionMethod.Name"),
+        hint: game.i18n.localize("RNCS.settings.DistributionMethod.Hint"),
         scope: "world",
         config: true,
-        type: Boolean,
-        default: false
+        type: String,
+        choices: {
+            "0": game.i18n.localize("RNCS.settings.DistributionMethod.choices.0"),
+            "1": game.i18n.localize("RNCS.settings.DistributionMethod.choices.1"),
+            "2": game.i18n.localize("RNCS.settings.DistributionMethod.choices.2")
+        },
+        default: "0"
     });
 
     game.settings.register(settingsKey, "HideResultsZone", {

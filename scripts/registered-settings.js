@@ -8,11 +8,12 @@ export class RegisteredSettings{
     AbilitiesRollMethod = game.settings.get(settingsKey, "AbilitiesRollMethod");
     DropLowestDieRoll = game.settings.get(settingsKey, "DropLowestDieRoll");
     ReRollOnes = game.settings.get(settingsKey, "ReRollOnes");
-    NumberOfRolls = game.settings.get(settingsKey, "NumberOfRolls");
+    NumberOfSetsRolled = game.settings.get(settingsKey, "NumberOfSetsRolled");
     DropLowestSet = game.settings.get(settingsKey, "DropLowestSet");
     BonusPoints = game.settings.get(settingsKey, "BonusPoints");
     Over18Allowed = game.settings.get(settingsKey, "Over18Allowed");
-    DistributeResults = game.settings.get(settingsKey, "DistributeResults");
+    // DistributeResults = game.settings.get(settingsKey, "DistributeResults");
+    DistributionMethod = game.settings.get(settingsKey, "DistributionMethod");
     HideResultsZone = game.settings.get(settingsKey, "HideResultsZone");
     ChatRemoveConfigureActorButton = game.settings.get(settingsKey, "ChatRemoveConfigureActorButton");
     ChatShowDescription = game.settings.get(settingsKey, "ChatShowDescription");

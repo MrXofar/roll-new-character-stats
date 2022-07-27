@@ -121,9 +121,12 @@ export default class dcc_ActorHelper extends base_ActorHelper {
         this.note += "<table>";
         this.note += "<tr>";
         this.note += "<td style=\"width: 28%;\">Hit Points:</td><td>" + this._hp_base;        
-        if(!this._settings.DistributeResults){
+        if(this._settings.DistributionMethod === "0"){
             this.note += " (" + (this.stamina_modifier >= 0 ? "+" : "") + this.stamina_modifier + ")</td>";
-        }else{this.note += " (+Stamina Modifier)";}
+        }
+        else{
+            this.note += " (+Stamina Modifier)";
+        }
         this.note += "</tr>";
 
         this.note += "<tr>";
@@ -151,9 +154,12 @@ export default class dcc_ActorHelper extends base_ActorHelper {
 
         this.note += "<tr>";
         this.note += "<td>Birth Augur:</td><td id=\"dcc_birth_augur\">" + this.luck;
-        if(!this._settings.DistributeResults){
+        if(this._settings.DistributionMethod === "0"){
             this.note += " (" + (this.luck_modifier >= 0 ? "+" : "") + this.luck_modifier + ")";
-        }else{this.note += " (+Luck Modifier)";}
+        }
+        else{
+            this.note += " (+Luck Modifier)";
+        }
         this.note += "</td></tr>";
         this.note += "</table>";
 

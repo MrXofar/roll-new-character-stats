@@ -1,6 +1,6 @@
   .rncs-results-header{
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+    padding-left: 7px !important;
+    padding-right: 3px !important;
     height: 3em;
     font-size: small;
     font-style: italic;
@@ -13,7 +13,7 @@
     font-style: italic;
     text-align: left;
   }
-  .rncs-ability-drop-item {
+  .rncs-ability-drop-item, .rncs-ring-ability-drop-item {
     display: inline-block;
     width: 2.5em;
     height: 2.5em;
@@ -23,7 +23,7 @@
     padding: 6px 0px 0px 0px;
     font-size: 11px;
     font-style: normal !important;
-    margin-right: 3px !important;
+    margin: -2px 1px 0px 1px !important;
   }  
   .rncs-final-score-display{
     border: none;
@@ -98,4 +98,65 @@
   }
   .rncs-div_user_input{
     width:84%;display: inline-block;
+  }
+  .rncs-ring-wrapper{ 
+    position: relative; 
+    height: 30px;
+    overflow: hidden;
+  }
+  .rncs-ring-wrapper{  
+    display: flex;
+    justify-content: center;
+  }
+  .rncs-ring-container{  
+    display: flex;
+    justify-content: center;
+    padding-top: 2px;
+  }
+  .rncs-ring-item{
+    display: inline-block;
+    width: 2.7em;
+    height: 2.7em;
+    text-align: center;
+    border: 1px solid #FFF;
+    border-radius: 5px;
+    padding: 7px 0px 0px 0px;
+    font-size: 10px;
+    font-style: normal !important;
+    margin: 3px 3px 0px 3px;
+  }
+  .rncs-ring-item-adder{
+    display: inline-block;
+    width: 2.5em;
+    height: 2.5em;
+    text-align: center;
+    border: 1px solid rgb(87, 84, 84);
+    border-radius: 5px;
+    padding: 7px 0px 0px 0px;
+    font-size: 12px;
+    font-style: normal !important;
+    margin: 2px 1px 5px 1px
+  }
+  .rncs-ring-selection{
+    color: #460fcb !important;
+    border-radius: 5px !important;
+    border: 1px solid !important;
+    padding-top: 1px !important;
+    margin-right: 1px;
+  }
+  .rncs-individual-roll-used{
+    color: #a9a39d;   
+  }
+  .rncs-individual-roll{ 
+    border: 1px solid transparent;
+    padding-top: 1px;   
+    margin-right: 1px;   
+    flex: auto;
+    text-align: center;
+  }
+  .rncs-results-container{
+    align-items: stretch;
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 0.7em;
   }

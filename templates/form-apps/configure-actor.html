@@ -1,17 +1,39 @@
 <form>
     <script>
         /* global CONFIG */
+        individual_rolls = null;
+        individual_rolls_remaining = null; // {throws: [{ dice: roll_data }] }
+        ring_start = 0;
+
         function Intitialize() {
 
             // Apply as Rolled?
             const ability_scores = document.getElementById("ability_scores");
             HideResultsZone(ability_scores.dataset.hideresultszone === "true")
+            HideRingMethodZone(ability_scores.dataset.distributionmethod !== "2");
             HideBonusPointColumn(ability_scores.dataset.bonus_points === "0");
-            ApplyAsRolled(ability_scores.dataset.distributeresults === "false");
+            if(ability_scores.dataset.distributionmethod === "0"){
+                ApplyAsRolled();
+            }
+            
+            // Wrap this in Ring Method setting
+            if(ability_scores.dataset.distributionmethod !== "3"){ // Ring Method
+                const individual_rolls_table = document.getElementById("individual_rolls_table");
+                individual_rolls = individual_rolls_table.dataset.individualrolls.split(',');
+                individual_rolls_remaining = {rolls:[]};
+                for(let i = 0; i < individual_rolls.length; i += 1)
+                {
+                    individual_rolls_remaining.rolls.push({value: individual_rolls[i], index: i})
+                }
+                FillRing();
+                GetSelectedRingTotal();      
+                HighlightIndividualRolls();      
+            }
+            // Wrap this in Ring Method setting
 
             // Game System Specific Configuration
             // If there are no bonus points, and results are applied as rolled, then we can hide the Score column - because the Result col IS the Score.
-            let hide_score_col = ability_scores.dataset.bonus_points === "0" && ability_scores.dataset.distributeresults === "false"
+            let hide_score_col = ability_scores.dataset.bonus_points === "0" && ability_scores.dataset.distributionmethod === "0"
             switch (game.system.id) {
 
                 case "dnd5e":
@@ -41,7 +63,11 @@
         }
 
         function HideResultsZone(hide) {
-            if (hide) { document.getElementById("results-table")?.classList.add("rncs-display-none"); }
+            if (hide) { document.getElementById("results_table")?.classList.add("rncs-display-none"); }
+        }
+
+        function HideRingMethodZone(hide) {
+            if (hide) { document.getElementById("individual_rolls_table")?.classList.add("rncs-display-none"); }
         }
 
         function HideRaceOptions() {
@@ -71,6 +97,13 @@
             }
         }
 
+        function dragstart_handler(ev) {
+            ev.dataTransfer.setData("text/plain", ev.target.parentElement);
+            ev.dataTransfer.setData("text/plain", ev.target.innerText); // value of element being dragged
+            ev.dataTransfer.setData("text/plain", ev.target.id);        // id of element being dragged
+            ev.dataTransfer.dropEffect = "copy";
+        }
+
         function dragover_handler(ev) {
             ev.preventDefault();
             ev.dataTransfer.dropEffect = "copy";
@@ -83,12 +116,16 @@
             const drop_item_orig_parent = document.getElementById(data).parentElement;
             const drop_zone = document.getElementById(ev.target.id);
             // Drop result in ability_drop_zone or results_drop_zone or swap results (prevent dropping multiple in one zone)
-            if (drop_item_id.includes("div_final_result")) {
+            if (drop_item_id.includes("div_final_result") || drop_item_id.includes("div_ring_final_result")) {
 
-                if (drop_zone.id === "results_drop_zone" || (drop_zone.id.includes("ability_drop_zone") && !drop_zone.querySelector(".rncs-ability-drop-item"))) {
-                    drop_zone.appendChild(document.getElementById(data));
+                if (drop_zone.id === "results_drop_zone" || (drop_zone.id.includes("ability_drop_zone") && !drop_zone.querySelector(".rncs-ability-drop-item") && !drop_zone.querySelector(".rncs-ring-ability-drop-item"))) {
+                    let result_item = document.getElementById(data)
+                    if(result_item.parentElement.id === "rncs_ring_container_ability_total"){ 
+                        UpdateRing(result_item); 
+                    }
+                    drop_zone.appendChild(result_item);
                 }
-                else if (drop_zone.id.includes("div_final_result")) {// Dropping onto existing result in any zone will swap values
+                else if (drop_zone.id.includes("div_final_result")  || drop_zone.id.includes("div_ring_final_result")) {// Dropping onto existing result in any zone will swap values
 
                     // Swap Results
                     const ability_item_drop_zone = drop_zone.parentElement;
@@ -126,12 +163,15 @@
 
             // Get rows from ability scores table
             const ability_rows = ability_scores.querySelectorAll(".rncs-ability-row");
-            let over18NotAllowed = ability_scores.dataset.over18allowed === "false" && (ability_scores.dataset.distributeresults === "true" || ability_scores.dataset.bonus_points > 0);
+            let over18NotAllowed = ability_scores.dataset.over18allowed === "false" && (ability_scores.dataset.distributionmethod > 0 || ability_scores.dataset.bonus_points > 0);
 
             let score_over_18 = false;
             for (let row = 0; row < ability_rows.length; row += 1) {
                 const ability_row = document.getElementById(ability_rows[row].id);
-                const ability_drop_item = ability_row.querySelector(".rncs-ability-drop-zone").querySelector(".rncs-ability-drop-item");
+                let ability_drop_item = ability_row.querySelector(".rncs-ability-drop-zone").querySelector(".rncs-ability-drop-item");
+                if(!ability_drop_item){
+                    ability_drop_item = ability_row.querySelector(".rncs-ability-drop-zone").querySelector(".rncs-ring-ability-drop-item");
+                }
                 const bonus_points = ability_row.querySelector(".rncs-bonus-points").querySelector(".rncs-bp");
                 const racial_mod = ability_row.querySelector(".rncs-racial-mod");
                 const final_score_unmod = ability_row.querySelector(".rncs-final-score-unmod");
@@ -186,13 +226,21 @@
         async function MoveResult(ev) {
             const result_item = document.getElementById(ev.target.id);
             const results_drop_zone = document.getElementById("results_drop_zone");
-            if (result_item.parentElement.id === "results_drop_zone") {
+            if (result_item.parentElement.id === "results_drop_zone" || result_item.parentElement.id === "rncs_ring_container_ability_total") {
+
                 const next_ability = GetNextAbilityDropZone();
+                // Update ring and get new total
+                if(next_ability && result_item.parentElement.id === "rncs_ring_container_ability_total")
+                {
+                    UpdateRing(result_item);
+                }
+                
+                // Move result_item to next empty ability drop zone
                 if (next_ability) {
                     await next_ability.appendChild(result_item);
                 }
             }
-            else if (results_drop_zone) {
+            else if (results_drop_zone && !result_item.id.includes("div_ring_final_result")) {
                 await results_drop_zone.appendChild(result_item);
             }
             RecalcFinalScores();
@@ -210,21 +258,18 @@
             return false;
         }
 
-        function ApplyAsRolled(apply_as_rolled) {
-            if (apply_as_rolled) {
-
-                const ability_drop_items = results_drop_zone.querySelectorAll(".rncs-ability-drop-item");
-                for (let item = 0; item < ability_drop_items.length; item += 1) {
-                    const next_ability = GetNextAbilityDropZone();
-                    if (next_ability) {
-                        ability_drop_items[item].removeAttribute("ondblclick");
-                        ability_drop_items[item].removeAttribute("draggable");
-                        next_ability.appendChild(ability_drop_items[item]);
-                    }
+        function ApplyAsRolled() {
+            const ability_drop_items = results_drop_zone.querySelectorAll(".rncs-ability-drop-item");
+            for (let item = 0; item < ability_drop_items.length; item += 1) {
+                const next_ability = GetNextAbilityDropZone();
+                if (next_ability) {
+                    ability_drop_items[item].removeAttribute("ondblclick");
+                    ability_drop_items[item].removeAttribute("draggable");
+                    next_ability.appendChild(ability_drop_items[item]);
                 }
-                results_drop_zone.innerHTML = "<small><em>" + game.i18n.localize("RNCS.form-app.form-text.applied-as-rolled") + "</em></small>";
-                RecalcFinalScores();
             }
+            results_drop_zone.innerHTML = "<small><em>" + game.i18n.localize("RNCS.form-app.form-text.applied-as-rolled") + "</em></small>";
+            RecalcFinalScores();
         }
 
         async function UpdateRaceBonus(ev) {
@@ -267,6 +312,102 @@
                     return data;
                 });
             return jsonDATA;
+        }
+
+        function FillRing(){
+            let ring_item = null;
+            let individual_roll_item = null;
+            let ring_item_position = 0;
+            // Clear ring items
+            for(let i = 0; i < 3; i += 1){
+                ring_item = document.getElementById("div_ring_item" + i);
+                ring_item.innerText = "";
+            }
+            // Fill ring items
+            do{
+                let ring_item_total = individual_rolls_remaining.rolls[(ring_start + ring_item_position)%individual_rolls_remaining.rolls.length]?.value;
+                ring_item = document.getElementById("div_ring_item" + ring_item_position);
+                if(ring_item_total){
+                    ring_item.innerText = ring_item_total;
+                }
+                ring_item_position += 1;
+            } while (ring_item_position < Math.min(individual_rolls_remaining.rolls.length, 3))
+            
+        }
+
+        function GetSelectedRingTotal(){
+            const rncs_ring_item_adders = document.querySelectorAll(".rncs-ring-item-adder");
+            let total = 0;
+            for(let i = 0; i < rncs_ring_item_adders.length; i += 1)
+            { 
+                total += parseInt(rncs_ring_item_adders[i].innerText); 
+            }
+            const ring_item_total = document.getElementById("div_ring_final_result");
+            ring_item_total.innerText = (total > 0 ? total : "");                        
+            if (ring_item_total.innerText !== "" && GetNextAbilityDropZone()) {
+                ring_item_total.addEventListener("dragstart", dragstart_handler);
+            }else{
+                ring_item_total.removeAttribute("ondblclick")
+                ring_item_total.removeAttribute("draggable");
+            } 
+        }
+
+        async function UpdateRing(result_item) {
+            // Create new ring item to take place of moved result_item
+            const rncs_ring_container_ability_total = document.getElementById(result_item.parentElement.id);
+            const ring_item_new = result_item.cloneNode(false);
+            await rncs_ring_container_ability_total.appendChild(ring_item_new);
+
+            // rename result_item to distinguish it from new div_ring_final_result
+            result_item.id += "-" + Math.random().toString(36).slice(2);
+
+            // update ring
+            if (individual_rolls_remaining.rolls.length - ring_start >= 3) {
+                individual_rolls_remaining.rolls.splice(ring_start, 3);
+                ring_start = (ring_start)%individual_rolls_remaining.rolls.length;
+            }
+            else {
+                let diff = individual_rolls_remaining.rolls.length - ring_start;
+                individual_rolls_remaining.rolls.splice(ring_start, diff);
+                individual_rolls_remaining.rolls.splice(0, 3 - diff);
+                ring_start = 0;
+            }
+
+            FillRing();
+            GetSelectedRingTotal();
+            HighlightIndividualRolls(true);
+        }
+
+        var individual_rolls_table = document.getElementById("individual_rolls_table");
+        individual_rolls_table.addEventListener("wheel", function (e) {
+            if (e.deltaY > 0) {
+                ring_start = (ring_start - 1 === -1 ? individual_rolls_remaining.rolls.length - 1 : ring_start - 1)%individual_rolls_remaining.rolls.length;
+            }
+            else {
+                ring_start = (ring_start + 1 === individual_rolls_remaining.rolls.length ? 0 : ring_start + 1)%individual_rolls_remaining.rolls.length;
+            }           
+
+            FillRing();
+            GetSelectedRingTotal();
+            HighlightIndividualRolls();
+        });
+
+        function HighlightIndividualRolls(highlight_used){
+            // Remove rncs-ring-selection (& highlight used rolls)
+            for(let i = 0; i < individual_rolls.length; i += 1){
+                individual_roll_item = document.getElementById("rncs_individual_rolls" + i)
+                if(highlight_used && individual_roll_item.classList.contains("rncs-ring-selection")){
+                    individual_roll_item?.classList.add("rncs-individual-roll-used")
+                }
+                individual_roll_item.classList.remove("rncs-ring-selection");
+            }
+
+            // Add rncs-ring-selection
+            for(let j = 0; j < 3; j += 1){
+                let selected_index = (ring_start + j === individual_rolls_remaining.rolls.length ? 0 : ring_start + j)%individual_rolls_remaining.rolls.length;
+                individual_roll_item = document.getElementById("rncs_individual_rolls" + individual_rolls_remaining.rolls[selected_index]?.index)
+                individual_roll_item?.classList.add("rncs-ring-selection");
+            }
         }
 
     </script>
@@ -337,22 +478,63 @@
     <!-- END GAME SYSTEM UNIQUE DATA -->
 
 
-    <table id="results-table">
+    <table id="results_table">
         <tr>
             <td class="rncs-results-header">Results:</td>
-            <td id="results_drop_zone" class="rncs-results-drop-zone" ondrop="drop_handler(event)"
-                ondragover="dragover_handler(event)">
+            <td id="results_drop_zone" class="rncs-results-drop-zone" ondrop="drop_handler(event)" ondragover="dragover_handler(event)">
                 {{#each final_results as |final_results id| }}
-                <div id="div_final_result{{id}}" class="rncs-ability-drop-item" ondblclick="MoveResult(event)"
-                    draggable="true">
+                <div id="div_final_result{{id}}" class="rncs-ability-drop-item" ondblclick="MoveResult(event)" draggable="true">
                     {{final_results}}
                 </div>
                 {{/each}}
             </td>
         </tr>
     </table>
+    
+    <!-- Wrap this in Ring Method setting -->
+    <table id="individual_rolls_table" data-individualrolls={{individual_rolls}}>
+        <tr>
+            <!-- <td class="rncs-results-header" colspan="2">Results:</td> -->
+            <td colspan="4">
+                <div class="rncs-results-container">
+                    {{#each individual_rolls as |individual_rolls id|}}
+                    <div id="rncs_individual_rolls{{id}}" class="rncs-individual-roll">
+                        {{individual_rolls}}
+                    </div>
+                    {{/each}}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="rncs_ring_container_ability_total" class="rncs-ring-container"
+                    ondragover="dragover_handler(event)">
+                    <div id="div_ring_final_result" class="rncs-ring-ability-drop-item" ondblclick="MoveResult(event)"
+                        draggable="true">
+                    </div>
+                </div>
+            </td>
+            <td>&nbsp;=&nbsp;</td>
+            <td>
+                <div id="rncs_ring_container" class="rncs-ring-container">    
+                    <div id="div_ring_item0" class="rncs-ring-item-adder">
+                    </div>
+                    <div id="div_ring_item1" class="rncs-ring-item-adder">
+                    </div>
+                    <div id="div_ring_item2" class="rncs-ring-item-adder">
+                    </div>    
+                </div>
+            </td>
+            <td>
+                <div style="font-size:0.7em; padding-left: 8px;">
+                    Ring Method: This method allows you to select three consecutive die rolls and apply them to any ability.
+                </div>    
+            </td>
+        </tr>
+    </table>
+    <!-- Wrap this in Ring Method setting -->
 
-    <table id="ability_scores" data-over18allowed={{Over18Allowed}} data-distributeresults={{DistributeResults}}
+    <table id="ability_scores" data-over18allowed={{Over18Allowed}} data-distributionmethod={{DistributionMethod}}
         data-bonus_points={{bonus_points}} data-hideresultszone={{HideResultsZone}}>
         <tr id="header_row" class="rncs-header-row">
             <th>Ability</th>
@@ -361,7 +543,7 @@
                     id="span_bp_max">{{bonus_points}}</span></th>
             <th class="rncs-race-mod-header">Race Bonus</th>
             <th class="rncs-score-header">Score
-                {{#if_AorB DistributeResults bonus_points}}
+                {{#if_AorB DistributionMethod bonus_points}}
                 {{#unless Over18Allowed}}
                 <span style="font-size: small;">
                     *
@@ -394,7 +576,7 @@
         <i class="fa fa-check"></i> {{localize "RNCS.form-app.form-text.accept-new-actor"}}
     </button>
 
-    {{#if_AorB DistributeResults bonus_points}}
+    {{#if_AorB DistributionMethod bonus_points}}
     {{#unless Over18Allowed}}
     <span style="font-size: small;">
         {{localize "RNCS.form-app.form-text.over-18-not-allowed"}}
