@@ -14,7 +14,7 @@ All Supported Game Systems:
     Ring Method*            : Select three consecutive die rolls and apply them to any ability. 
     (Watch https://www.youtube.com/watch?v=dxZ9Mk_FdNc for more info on how Ring Method works)
 
-    * Thank you @Sabre Runner for this suggestion!
+    * Thank you @SabreRunner for this suggestion!
 
 - Expanded "Number of Sets Rolled" options: Added "8 Sets" and "9 Sets".
 
