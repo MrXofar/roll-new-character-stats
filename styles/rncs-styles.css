@@ -79,7 +79,7 @@
   .rncs-over18{
     color: red;
   }
-  .rncs-input .rncs-select{
+  .rncs-input, .rncs-select{
     height: 1.8em;
     background: rgba(0, 0, 0, 0.05);
     padding: 1px 3px;
