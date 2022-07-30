@@ -43,7 +43,7 @@ export default class GAME_SYSTEM_Helper {
         }
     }
 
-    getSystemActorType() {
+    getSystemActorType() { // Is this not saved somewhere in game.system ??? Explore this when you are bored.
         switch (game.system.id) {
             case "dnd5e":
             case "pf1":

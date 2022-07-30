@@ -54,7 +54,7 @@ export class ConfigureActor extends FormApplication {
         return foundry.utils.mergeObject(super.defaultOptions, {
             title: game.i18n.localize("RNCS.dialog.results-button.configure-new-actor"),
             id: 'configure-actor',
-            template: "./modules/roll-new-character-stats/templates/form-apps/configure-actor.html",
+            template: "./modules/roll-new-character-stats/templates/form-apps/configure-actor.hbs",
             height: 610, 
             width: 375,
             closeOnSubmit: true,
@@ -181,11 +181,8 @@ export class ConfigureActor extends FormApplication {
             type: game_system_helper.getSystemActorType(),
             img: "icons/svg/mystery-man.svg"
         });
-
-        //console.log(actor);
         
         // Use [game-system]-actor-helper class to update actor
-        console.log(game.system.id);
         switch (game.system.id) {
             case "dnd5e":
                 let dnd5e_actor_helper = new dnd5e_ActorHelper(actor);

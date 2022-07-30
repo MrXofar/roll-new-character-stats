@@ -1,3 +1,36 @@
+v3.1.1 - 7/30/2022
+----------------------------------------------
+"Consolidated Settings and some misc stuff"
+
+- Consolidated "Chat Settings" into (restricted) sub menu button.
+
+- Consolidated "Roll Method & Distribution" into (restricted) sub menu button.
+
+- New Setting - "Reverse Ring Method Scrolling" (Client): 
+    check/uncheck - [check] Reverse the default mouse wheel scroll direction during Ring Method selection.
+
+- New Setting - "Die Result Set" (World):
+    check/uncheck - [check] Show all die rolls, excluding rerolled and discarded rolls, as a set in chat message. e.g. d6 = [1, 2, 3,...]
+
+- FIXED: Result Zone was not hiding for Ring Method - no reason to show Result Zone for Ring Method.
+
+- FIXED: Added "RNCS.results-text.note-from-dm.ring-method" localization to en.json.
+
+- Added "(RNCS)" to end of title to make it easier to reference in Discord and easily searchable in the Add-on-Modules form in Foundry.
+
+- Reversed the default scroll direction of Ring Method scrolling. (left < - up - down - > right) Can be reversed with "Reverse Ring Method Scrolling".
+
+- Some house cleaning and comments for new Ring Method
+
+- If someone offered to hire me to do this every day for US$96k/year - I would seriously consider their offer. :)
+
+- Additional house cleaning for diceroller. Made roll_data local to DiceRoller and created GetRollData() function.
+
+- Changed form app templates to .hbs - sytnax highlighting is more friendly to handlebars.
+
+- Changed wording on chat settings hints, "Hide Result Zone" hint and "Scores Over 18 Allowed" hint.
+
+
 v3.1.0 - 7/27/2022
 ----------------------------------------------
 "New result distribution option: Ring Method"
@@ -14,7 +47,7 @@ All Supported Game Systems:
     Ring Method*            : Select three consecutive die rolls and apply them to any ability. 
     (Watch https://www.youtube.com/watch?v=dxZ9Mk_FdNc for more info on how Ring Method works)
 
-    * Thank you @Sabre Runner for this suggestion!
+    * Thank you @SabreRunner for this suggestion!
 
 - Expanded "Number of Sets Rolled" options: Added "8 Sets" and "9 Sets".
 

@@ -14,22 +14,24 @@ const num_roll = namedfields('description', 'roll_count', 'difficulty');
 const bonus_points = namedfields('description', 'difficulty');
 
 export class DiceRoller {
+
     _settings = new RegisteredSettings;
     _other_properties_results = [];
+    _roll_data = [];
 
     constructor(
         results_abilities = [], // Results of dice rolled for abilities
         drop_val_index = -1,    // Index of roll to be displayed as "Dropped =>" from [results_abilities] 
-        bonus_results = 0,       // Result of RollBonusPoints()
+        bonus_point_total = 0,       // Result of RollBonusPoints()
     ) {
         this.results_abilities = results_abilities,
         this.drop_val_index = drop_val_index,
-        this.bonus_results = bonus_results
+        this.bonus_point_total = bonus_point_total
     }
 
     // Roll Them Dice!
     async RollThemDice() {
-        let roll_data = this.RollAbilities();
+        this.RollAbilities();    
         // Prepare formula to roll other properties
         let formula = "";
         switch (game.system.id) {
@@ -56,11 +58,9 @@ export class DiceRoller {
                 formula = "1d4/5d12/1d100/1d6/1d8/1d6/1d6/1d24/1d30";
                 break;
         }
-        let add_roll_data = [];
         if(formula !== ""){
-            add_roll_data = await this.RollOtherProperties(formula);
+            this.RollOtherProperties(formula);
         }
-        return roll_data.concat(add_roll_data);
     }
 
     Formula_Abilities() {
@@ -75,26 +75,14 @@ export class DiceRoller {
 
     RollAbilities(){
         // Ability Rolls
-        let roll_data = [];
         for (let rs = 0; rs < this._settingNumberOfSetsRolledCount(); rs++) {
             const roll = new Roll(this.Formula_Abilities());
             const rolled_results = roll.evaluate({ async: false });
             this.results_abilities.push(rolled_results)
 
             //Get roll data
-            if (this._settings.DiceSoNiceEnabled) {
-                for (let i = 0; i < rolled_results.dice[0].results.length; i += 1) {
-                    roll_data.push({
-                        result: rolled_results.dice[0].results[i].result,
-                        resultLabel: rolled_results.dice[0].results[i].result,
-                        type: "d6",
-                        vectors: [],
-                        options: {}
-                    });
-                }
-            }
+            this.GetRollData(rolled_results, 0);
         }
-
 
         // Get index of lowest Set to drop
         if (this._settings.DropLowestSet) {
@@ -106,75 +94,71 @@ export class DiceRoller {
         // Bonus Points
         switch (parseInt(this._settings.BonusPoints)) {
             case 0: //"0 Bonus Points":
-                this.bonus_results = 0;
+                this.bonus_point_total = 0;
                 break;
             case 1: //"1 Bonus Point":
-                this.bonus_results = 1;
+                this.bonus_point_total = 1;
                 break;
             case 2: //"1d4 Bonus Points":
                 const bonus = new Roll("1d4");
-                this.bonus_results = bonus.evaluate({ async: false }).total;
-                if (this._settings.DiceSoNiceEnabled) {
-                    roll_data.push({
-                        result: this.bonus_results,
-                        resultLabel: this.bonus_results,
-                        type: "d4",
-                        vectors: [],
-                        options: {}
-                    });
-                }
+                const bonus_result = bonus.evaluate({ async: false });
+                this.bonus_point_total = bonus_result.total;
+                    
+                // Get roll data
+                this.GetRollData(bonus_result, 0);
 
                 break;
             default:
         }
-        // console.log(roll_data);
-        return roll_data;
     }
 
     async RollOtherProperties(formula) {
-        let roll_data = [];
         const roll = await new Roll(formula);
         const rolled_results = await roll.evaluate({ async: false });
 
-        for (let i = 0; i < rolled_results.dice.length; i += 1) {
-            this._other_properties_results.push(rolled_results.dice[i].total);
+        for (let index = 0; index < rolled_results.dice.length; index += 1) {
+            this._other_properties_results.push(rolled_results.dice[index].total);
 
             // Get roll data
-            if (this._settings.DiceSoNiceEnabled) {
-                for (let j = 0; j < rolled_results.dice[i].results.length; j += 1) {
-                    let _result = rolled_results.dice[i].results[j].result;
-                    if (rolled_results.dice[i].faces !== 100) {
-                        roll_data.push({
-                            result: _result,
-                            resultLabel: _result,
-                            type: "d" + rolled_results.dice[i].faces,
-                            vectors: [],
-                            options: {}
-                        });
-                    } else {// Deal with d100: Seriously??? Surely this can be simplified
-                        roll_data.push({
-                            resultLabel: _result.toString().substring(0, 1) + "0",
+            this.GetRollData(rolled_results, index);
+        }
+    }
+
+    GetRollData(rolled_results, index) {
+        if (this._settings.DiceSoNiceEnabled) {
+            for (let j = 0; j < rolled_results.dice[index].results.length; j += 1) {
+                let _result = rolled_results.dice[index].results[j].result;
+                if (rolled_results.dice[index].faces !== 100) {
+                    this._roll_data.push({
+                        result: _result,
+                        resultLabel: _result,
+                        type: "d" + rolled_results.dice[index].faces,
+                        vectors: [],
+                        options: {}
+                    });
+                } else {
+                    // Deal with d100: Seriously??? Surely this can be simplified
+                    this._roll_data.push({
+                        resultLabel: _result.toString().substring(0, 1) + "0",
+                        d100Result: _result,
+                        result: _result.toString().substring(0, 1),
+                        type: "d100",
+                        vectors: [],
+                        options: {}
+                    });
+                    if (parseInt(_result) >= 10) {
+                        this._roll_data.push({
+                            resultLabel: _result.toString().substring(1, 2),
                             d100Result: _result,
-                            result: _result.toString().substring(0, 1),
-                            type: "d100",
+                            result: _result.toString().substring(1, 2),
+                            type: "d10",
                             vectors: [],
                             options: {}
                         });
-                        if (parseInt(_result) >= 10) {
-                            roll_data.push({
-                                resultLabel: _result.toString().substring(1, 2),
-                                d100Result: _result,
-                                result: _result.toString().substring(1, 2),
-                                type: "d10",
-                                vectors: [],
-                                options: {}
-                            });
-                        }
                     }
                 }
             }
         }
-        return roll_data;
     }
 
     GetFinalResults() {
@@ -197,14 +181,12 @@ export class DiceRoller {
             if (score_index !== this.drop_val_index) {
                 for(let i = 0; i < this.results_abilities[score_index].dice[0].results.length; i += 1){
                     let result = this.results_abilities[score_index].dice[0].results[i];
-                    //console.log(result);
                     if(!result.rerolled && !result.discarded){                        
                         _individual_rolls.push(result);
                     }
                 }
             }
         });
-        // console.log(_individual_rolls);
         return _individual_rolls;
     }
 
@@ -410,18 +392,21 @@ export class DiceRoller {
                 if (this.drop_val_index !== set) { att_idx++; }
             }
         }
-		results_text += "<span style=\"font-size: smaller;\">d6 = [";
-        let individual_rolls = this.GetIndividualRolls();
-		for(let i = 0; i < individual_rolls.length; i += 1)
-		{
-			results_text += individual_rolls[i].result + (i < individual_rolls.length - 1 ? ", " : "" );
-		}
-		results_text += "]</span>";
+
+        if (this._settings.ChatShowDieResultSet) {
+            results_text += "<span style=\"font-size: smaller;\">d6 = [";
+            let individual_rolls = this.GetIndividualRolls();
+            for (let i = 0; i < individual_rolls.length; i += 1) {
+                results_text += individual_rolls[i].result + (i < individual_rolls.length - 1 ? ", " : "");
+            }
+            results_text += "]</span>";
+        }
+        
         return results_text;
     }
 
     GetBonusPointsText(){
-        return (this._settingIsBonusPointApplied() ? "<p><b>" + game.i18n.localize("RNCS.results-text.bonus.label") + ":</b> " + this.bonus_results + "</p>" : "</br>");
+        return (this._settingIsBonusPointApplied() ? "<p><b>" + game.i18n.localize("RNCS.results-text.bonus.label") + ":</b> " + this.bonus_point_total + "</p>" : "</br>");
     }
 
     GetNoteFromDM(){

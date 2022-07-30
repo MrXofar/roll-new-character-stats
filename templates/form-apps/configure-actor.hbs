@@ -2,8 +2,9 @@
     <script>
         /* global CONFIG */
         individual_rolls = null;
-        individual_rolls_remaining = null; // {throws: [{ dice: roll_data }] }
+        individual_rolls_remaining = null; 
         ring_start = 0;
+        ring_reverse = game.settings.get("roll-new-character-stats", "ReverseRingMethodScrolling");
 
         function Intitialize() {
 
@@ -25,7 +26,7 @@
                 {
                     individual_rolls_remaining.rolls.push({value: individual_rolls[i], index: i})
                 }
-                FillRing();
+                FillRingItemAdders();
                 GetSelectedRingTotal();      
                 HighlightIndividualRolls();      
             }
@@ -314,37 +315,35 @@
             return jsonDATA;
         }
 
-        function FillRing(){
-            let ring_item = null;
-            let individual_roll_item = null;
-            let ring_item_position = 0;
-            // Clear ring items
-            for(let i = 0; i < 3; i += 1){
-                ring_item = document.getElementById("div_ring_item" + i);
-                ring_item.innerText = "";
-            }
-            // Fill ring items
-            do{
-                let ring_item_total = individual_rolls_remaining.rolls[(ring_start + ring_item_position)%individual_rolls_remaining.rolls.length]?.value;
-                ring_item = document.getElementById("div_ring_item" + ring_item_position);
-                if(ring_item_total){
-                    ring_item.innerText = ring_item_total;
-                }
-                ring_item_position += 1;
-            } while (ring_item_position < Math.min(individual_rolls_remaining.rolls.length, 3))
+        function FillRingItemAdders(){
+
+            // Clear ring adders
+            for(const ring_item_adder of document.getElementsByClassName("rncs-ring-item-adder")) { ring_item_adder.innerText = ""; }  
             
+            // Fill ring item adders
+            if(individual_rolls_remaining.rolls.length > 0)
+            {
+                let adder_position = 0;
+                for(const ring_item_adder of document.getElementsByClassName("rncs-ring-item-adder")) {
+                    let individual_roll_value = individual_rolls_remaining.rolls[(ring_start + adder_position)%individual_rolls_remaining.rolls.length]?.value;
+                    ring_item_adder.innerText = individual_roll_value
+                    adder_position += 1;
+                }
+            }           
         }
 
         function GetSelectedRingTotal(){
-            const rncs_ring_item_adders = document.querySelectorAll(".rncs-ring-item-adder");
+
+            // Total of the three dice in ring item adders
             let total = 0;
-            for(let i = 0; i < rncs_ring_item_adders.length; i += 1)
-            { 
-                total += parseInt(rncs_ring_item_adders[i].innerText); 
-            }
+            for(const ring_item_adder of document.querySelectorAll(".rncs-ring-item-adder")){ total += parseInt(ring_item_adder.innerText); }
+
+            // Set div_ring_final_result to total (or empty)
             const ring_item_total = document.getElementById("div_ring_final_result");
-            ring_item_total.innerText = (total > 0 ? total : "");                        
-            if (ring_item_total.innerText !== "" && GetNextAbilityDropZone()) {
+            ring_item_total.innerText = (total > 0 ? total : "");  
+
+            // Make sure div_ring_final_result is draggable (or not if empty)
+            if (total > 0 && GetNextAbilityDropZone()) {
                 ring_item_total.addEventListener("dragstart", dragstart_handler);
             }else{
                 ring_item_total.removeAttribute("ondblclick")
@@ -353,15 +352,20 @@
         }
 
         async function UpdateRing(result_item) {
-            // Create new ring item to take place of moved result_item
+            // Create result_item_new to take place of moved result_item
+            // Not sure if this needs to be done this way, but I don't know of another way to make the 
+            // item draggable, and remain in place for the new value when it is dragged and dropped or double clicked for MoveResult().
             const rncs_ring_container_ability_total = document.getElementById(result_item.parentElement.id);
-            const ring_item_new = result_item.cloneNode(false);
-            await rncs_ring_container_ability_total.appendChild(ring_item_new);
+            const result_item_new = result_item.cloneNode(false);
+            await rncs_ring_container_ability_total.appendChild(result_item_new);
 
-            // rename result_item to distinguish it from new div_ring_final_result
+            // rename result_item to distinguish it from new result_item_new
             result_item.id += "-" + Math.random().toString(36).slice(2);
 
-            // update ring
+            // Remove items from ring and update ring_start
+            // This looks a little crazy, but if - for example - the last two die
+            // and the first die are selected - we want to make sure we get the correct
+            // next three die - so we can't just splice the next three items in the array
             if (individual_rolls_remaining.rolls.length - ring_start >= 3) {
                 individual_rolls_remaining.rolls.splice(ring_start, 3);
                 ring_start = (ring_start)%individual_rolls_remaining.rolls.length;
@@ -370,32 +374,39 @@
                 let diff = individual_rolls_remaining.rolls.length - ring_start;
                 individual_rolls_remaining.rolls.splice(ring_start, diff);
                 individual_rolls_remaining.rolls.splice(0, 3 - diff);
-                ring_start = 0;
+                ring_start = 0;// Since we are splicing from both ends of individual_rolls_remaining, the new ring_start will be 0
             }
 
-            FillRing();
+            FillRingItemAdders();
             GetSelectedRingTotal();
             HighlightIndividualRolls(true);
         }
 
-        var individual_rolls_table = document.getElementById("individual_rolls_table");
         individual_rolls_table.addEventListener("wheel", function (e) {
             if (e.deltaY > 0) {
-                ring_start = (ring_start - 1 === -1 ? individual_rolls_remaining.rolls.length - 1 : ring_start - 1)%individual_rolls_remaining.rolls.length;
+                if(!ring_reverse){
+                    ring_start = (ring_start + 1 === individual_rolls_remaining.rolls.length ? 0 : ring_start + 1)%individual_rolls_remaining.rolls.length;
+                }else{
+                    ring_start = (ring_start - 1 === -1 ? individual_rolls_remaining.rolls.length - 1 : ring_start - 1)%individual_rolls_remaining.rolls.length;
+                }
             }
             else {
-                ring_start = (ring_start + 1 === individual_rolls_remaining.rolls.length ? 0 : ring_start + 1)%individual_rolls_remaining.rolls.length;
+                if(!ring_reverse){
+                    ring_start = (ring_start - 1 === -1 ? individual_rolls_remaining.rolls.length - 1 : ring_start - 1)%individual_rolls_remaining.rolls.length;
+                }else{
+                    ring_start = (ring_start + 1 === individual_rolls_remaining.rolls.length ? 0 : ring_start + 1)%individual_rolls_remaining.rolls.length;
+                }
             }           
 
-            FillRing();
+            FillRingItemAdders();
             GetSelectedRingTotal();
-            HighlightIndividualRolls();
+            HighlightIndividualRolls(false);
         });
 
         function HighlightIndividualRolls(highlight_used){
+
             // Remove rncs-ring-selection (& highlight used rolls)
-            for(let i = 0; i < individual_rolls.length; i += 1){
-                individual_roll_item = document.getElementById("rncs_individual_rolls" + i)
+            for(const individual_roll_item of document.querySelectorAll(".rncs-individual-roll")){
                 if(highlight_used && individual_roll_item.classList.contains("rncs-ring-selection")){
                     individual_roll_item?.classList.add("rncs-individual-roll-used")
                 }
@@ -491,7 +502,6 @@
         </tr>
     </table>
     
-    <!-- Wrap this in Ring Method setting -->
     <table id="individual_rolls_table" data-individualrolls={{individual_rolls}}>
         <tr>
             <!-- <td class="rncs-results-header" colspan="2">Results:</td> -->
@@ -527,20 +537,22 @@
             </td>
             <td>
                 <div style="font-size:0.7em; padding-left: 8px;">
-                    Ring Method: This method allows you to select three consecutive die rolls and apply them to any ability.
+                    {{localize "RNCS.form-app.form-text.ring-method"}}
                 </div>    
             </td>
         </tr>
     </table>
-    <!-- Wrap this in Ring Method setting -->
 
-    <table id="ability_scores" data-over18allowed={{Over18Allowed}} data-distributionmethod={{DistributionMethod}}
-        data-bonus_points={{bonus_points}} data-hideresultszone={{HideResultsZone}}>
+    <table id="ability_scores" 
+        data-over18allowed={{Over18Allowed}} 
+        data-distributionmethod={{DistributionMethod}}
+        data-bonus_points={{bonus_points}} 
+        data-hideresultszone={{HideResultsZone}}>
+
         <tr id="header_row" class="rncs-header-row">
             <th>Ability</th>
             <th>Result</th>
-            <th class="rncs-bonus-header">Bonus&nbsp;</span><span id="span_bp_remaining">{{bonus_points}}</span>/<span
-                    id="span_bp_max">{{bonus_points}}</span></th>
+            <th class="rncs-bonus-header">Bonus&nbsp;</span><span id="span_bp_remaining">{{bonus_points}}</span>/<span id="span_bp_max">{{bonus_points}}</span></th>
             <th class="rncs-race-mod-header">Race Bonus</th>
             <th class="rncs-score-header">Score
                 {{#if_AorB DistributionMethod bonus_points}}
@@ -553,21 +565,25 @@
             </th>
             <th class="rncs-modifier-header">Mod</th>
         </tr>
+        
         {{#each abilities as |abilities id|}}
         <tr id="{{abilities}}_row" class="rncs-ability-row">
             <td class="rncs-ability-text">{{abilities}}</td>
-            <td id="{{abilities}}_ability_drop_zone" class="rncs-ability-drop-zone"
-                ondrop="drop_handler(event)" ondragover="dragover_handler(event)">
+            <td id="{{abilities}}_ability_drop_zone" class="rncs-ability-drop-zone" ondrop="drop_handler(event)" ondragover="dragover_handler(event)">
             </td>
-            <td class="rncs-bonus-points"><span id="{{abilities}}_bp_minus" class="rncs-bp-button rncs-bp-button-minus"
-                    onclick="BPchange(event)">-</span><span class="rncs-bp">0</span><span id="{{abilities}}_bp_plus"
-                    class="rncs-bp-button rncs-bp-button-plus" onclick="BPchange(event)">+</span></td>
+            <td class="rncs-bonus-points">
+                <span id="{{abilities}}_bp_minus" class="rncs-bp-button rncs-bp-button-minus" onclick="BPchange(event)">-</span>
+                <span class="rncs-bp">0</span>
+                <span id="{{abilities}}_bp_plus"  class="rncs-bp-button rncs-bp-button-plus"  onclick="BPchange(event)">+</span>
+            </td>
             <td id="{{abilities}}_racial_mod" class="rncs-racial-mod">0</td>
             <td class="rncs-final-score" id="{{abilities}}_final_score">
-                <input name="{{abilities}}_final_score_unmod" class="rncs-final-score-unmod" value="0" />
+                <input name="{{abilities}}_final_score_unmod"   class="rncs-final-score-unmod"   value="0" />
                 <input name="{{abilities}}_final_score_display" class="rncs-final-score-display" value="0" />
             </td>
-            <td id="{{abilities}}_mod"><input name="{{abilities}}_modifier" class="rncs-modifier" value="-5" /></td>
+            <td id="{{abilities}}_mod">
+                <input name="{{abilities}}_modifier" class="rncs-modifier" value="-5" />
+            </td>
         </tr>
         {{/each}}
     </table>

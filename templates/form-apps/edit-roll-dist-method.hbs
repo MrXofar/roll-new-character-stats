@@ -1,0 +1,109 @@
+<form>
+
+    <div class="rncs-display-none">
+        <div>AbilitiesRollMethod_value      :{{AbilitiesRollMethod_value}}</div>
+        <div>DropLowestDieRoll_value        :{{DropLowestDieRoll_value}}</div>
+        <div>ReRollOnes_value               :{{ReRollOnes_value}}</div>
+        <div>NumberOfSetsRolled_value       :{{NumberOfSetsRolled_value}}</div>
+        <div>DropLowestSet_value            :{{DropLowestSet_value}}</div>
+        <div>BonusPoints_value              :{{BonusPoints_value}}</div>
+        <div>Over18Allowed_value            :{{Over18Allowed_value}}</div>
+        <div>DistributionMethod_value       :{{DistributionMethod_value}}</div>
+    </div>
+
+    {{!-- AbilitiesRollMethod --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.AbilitiesRollMethod.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <select name="rncs_AbilitiesRollMethod" class="rncs-select">
+                {{selectOptions AbilitiesRollMethod_choices selected=AbilitiesRollMethod_value localized=true}}
+            </select>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.AbilitiesRollMethod.Hint"}}</p>
+    </div>
+
+    {{!-- DropLowestDieRoll --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.DropLowestDieRoll.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <input type="checkbox" name="rncs_DropLowestDieRoll"
+                value="{{DropLowestDieRoll_value}}" data-dtype="Boolean" {{checked DropLowestDieRoll_value}}>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.DropLowestDieRoll.Hint"}}</p>
+    </div>
+
+    {{!-- ReRollOnes --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.ReRollOnes.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <input type="checkbox" name="rncs_ReRollOnes"
+                value="{{ReRollOnes_value}}" data-dtype="Boolean" {{checked ReRollOnes_value}}>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.ReRollOnes.Hint"}}</p>
+    </div>
+
+    {{!-- NumberOfSetsRolled --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.NumberOfSetsRolled.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <select name="rncs_NumberOfSetsRolled" class="rncs-select">
+                {{selectOptions NumberOfSetsRolled_choices selected=NumberOfSetsRolled_value localized=true}}
+            </select>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.NumberOfSetsRolled.Hint"}}</p>
+    </div>
+
+    {{!-- DropLowestSet --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.DropLowestSet.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <input type="checkbox" name="rncs_DropLowestSet"
+                value="{{DropLowestSet_value}}" data-dtype="Boolean" {{checked DropLowestSet_value}}>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.DropLowestSet.Hint"}}</p>
+    </div>
+
+    {{!-- BonusPoints --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.BonusPoints.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <select name="rncs_BonusPoints" class="rncs-select">
+                {{selectOptions BonusPoints_choices selected=BonusPoints_value localized=true}}
+            </select>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.BonusPoints.Hint"}}</p>
+    </div>
+
+    {{!-- Over18Allowed --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.Over18Allowed.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <input type="checkbox" name="rncs_Over18Allowed"
+                value="{{Over18Allowed_value}}" data-dtype="Boolean" {{checked Over18Allowed_value}}>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.Over18Allowed.Hint"}}</p>
+    </div>
+
+    {{!-- DistributionMethod --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.DistributionMethod.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <select name="rncs_DistributionMethod" class="rncs-select">
+                {{selectOptions DistributionMethod_choices selected=DistributionMethod_value localized=true}}
+            </select>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.DistributionMethod.Hint"}}</p>
+    </div>
+
+
+    
+    <div class="rncs-flex-row">
+        <button type="submit" id="submit">
+            <i class="fa fa-save"></i> Save Changes
+        </button>
+        <button type="cancel" id="cancel" data-cancel>
+            <i class="fa fa-ban"></i> Cancel
+        </button>
+    </div>
+
+</form>

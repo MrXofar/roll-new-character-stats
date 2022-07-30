@@ -3,7 +3,7 @@ export default class pf1_ActorHelper extends base_ActorHelper {
     
     // OPR_CONSTANTS
     
-    // base properties
+    // base property overrides
 
     // game system unique properties
 

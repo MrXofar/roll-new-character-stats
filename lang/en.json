@@ -19,8 +19,20 @@
           "3": "Random"
         }     
       },
+      "HideResultsZone": {
+        "Name": "Hide Results Zone",
+        "Hint": "This setting will hide Results Zone when \"Apply as Rolled\" is selected."      
+      },
+      "ReverseRingMethodScrolling": {
+        "Name": "Reverse Ring Method Scrolling",
+        "Hint": "Reverse the default mouse wheel scroll direction during Ring Method selection."    
+      },
+      "RollMethodAndDistribution": {
+        "Name": "Roll Method & Distribution",
+        "Hint": "Select how many dice to roll, how many sets to roll, how to distribute results and other roll method and distribution rules."    
+      },
       "AbilitiesRollMethod": {
-        "Name": "Number of d6's Rolled",
+        "Name": "Number of d6 Rolled",
         "Hint": "Select how many d6 are to be rolled",
         "choices":{
           "0": "3d6",
@@ -30,11 +42,11 @@
       },
       "DropLowestDieRoll": {
         "Name": "Drop Lowest Die Roll",
-        "Hint": "This setting will drop the lowest die roll."      
+        "Hint": "Drop the lowest die roll from the number of d6 rolled."      
       },
       "ReRollOnes": {
         "Name": "Reroll Ones",
-        "Hint": "This setting will cause 1's to be rerolled until a 1 is not rolled."      
+        "Hint": "Reroll 1's until a 1 is not rolled."      
       },
       "NumberOfSetsRolled": {
         "Name": "Number of Sets Rolled",
@@ -48,7 +60,7 @@
       },
       "DropLowestSet": {
         "Name": "Drop Lowest Set",
-        "Hint": "This setting will drop the lowest set of die rolls."      
+        "Hint": "Drop the lowest set from the number of sets rolled."      
       },
       "BonusPoints": {
         "Name": "Bonus Points",
@@ -61,7 +73,7 @@
       },
       "Over18Allowed": {        
         "Name": "Scores Over 18 Allowed",
-        "Hint": "Checking this setting will allow scores over 18 when distributing rolled scores and/or bonuses. Setting is ignored when Distribute Results is unchecked - and no Bonus Points are awarded."    
+        "Hint": "Checking this setting will allow scores over 18 when distributing rolled scores and/or bonuses. Setting is ignored when Distribute Method selected is \"Apply as Rolled\" - and no Bonus Points are awarded."    
       },
       "DistributeResults": {
         "Name": "Distribute Results",
@@ -76,41 +88,45 @@
           "2": "Ring Method"
         }          
       },
-      "HideResultsZone": {
-        "Name": "Hide Results Zone",
-        "Hint": "This setting will hide Results Zone when \"Apply as Rolled\" or \"Ring Method\" is selected."      
-      },
       "ChatRemoveConfigureActorButton": {
         "Name": "Remove Configure Actor Button",
         "Hint": "This setting will remove the Configure Actor button when clicked."      
       },
+      "ChatSettings": {
+        "Name": "Chat Settings",
+        "Hint": "Select which information to hide or show in chat log."    
+      },
       "ChatShowDescription":{
-        "Name": "Show Description",
-        "Hint": "Hide/Show character description in chat message."
+        "Name": "Description",
+        "Hint": "Show character description - if any."
       },
       "ChatShowMethodText":{
-        "Name": "Show Method Text",
-        "Hint": "Hide/Show Method text in chat message"
+        "Name": "Method",
+        "Hint": "Show the method used to roll the dice and other rules."
       },
       "ChatShowResultsText":{
-        "Name": "Show Results Text",
-        "Hint": "Hide/Show Results text in chat message"
+        "Name": "Ability Results",
+        "Hint": "Show results of ability rolls"
       },
       "ChatShowCondensedResults":{
-        "Name": "Show Condensed Ability Results",
-        "Hint": "Display Ability results in condensed form if Show Results Text is checked."
+        "Name": "Condensed Ability Results",
+        "Hint": "Display ability results in condensed form if Ability Results is checked."
+      },
+      "ChatShowDieResultSet":{
+        "Name": "Die Result Set",
+        "Hint": "Show all die rolls, excluding rerolled and discarded rolls, as a set in chat message. e.g. d6 = [1, 2, 3,...]."
       },
       "ChatShowBonusPointsText":{
-        "Name": "Show Bonus Points Text",
-        "Hint": "Hide/Show Bonus Points text in chat message"
+        "Name": "Bonus Points",
+        "Hint": "Show Bonus Points."
       },
       "ChatShowDifficultyText":{
-        "Name": "Show Difficulty Text",
-        "Hint": "Hide/Show Difficulty text in chat message"
+        "Name": "Difficulty",
+        "Hint": "Show Difficulty text - this is just a fun way of showing the probability of rolling high numbers."
       },
       "ChatShowNoteFromDM":{
-        "Name": "Show Note From DM",
-        "Hint": "Hide/Show Note From DM in chat message"
+        "Name": "Note From DM",
+        "Hint": "A simple - automated - note from DM which explains the distribution and score limit rules to players."
       }
     },
 
@@ -144,8 +160,9 @@
       },
       "note-from-dm": {
         "label": "Note from DM",
-        "distribute-freely": "You may distribute these scores among your abilities as you desire. ",
         "apply-as-rolled": "Each result will be applied to abilities in the order they were rolled. ",
+        "distribute-freely": "You may distribute these scores among your abilities as you desire. ",
+        "ring-method": "You may select three consecutive die rolls and apply them to any ability. ",
         "distribute-bonus-points": "The Bonus Point(s) may be distributed among any of your scores. ",
         "final-scores-may": "Final scores may ",
         "final-scores-may-not": "Final scores may <b>not</b> ",
@@ -159,7 +176,7 @@
       "confirm-roll":{
         "Title": "Roll Abilities",
         "Method": "New abilities are rolled using the following method:",
-        "Content": "Roll abilities for {0} new {1}?"
+        "Content": "Roll dice for {0} new {1}?"
       },
       "results-button":{
         "configure-new-actor": "Configure Actor"
@@ -169,7 +186,8 @@
       "form-text":{
         "applied-as-rolled": "Applied as rolled. ",
         "over-18-not-allowed": "* No scores over 18 allowed.",
-        "accept-new-actor": "Accept New Actor"
+        "accept-new-actor": "Accept New Actor",
+        "ring-method": "Ring Method: This method allows you to select three consecutive die rolls and apply them to any ability."
       }
     }
   }

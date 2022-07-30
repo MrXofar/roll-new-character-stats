@@ -3,7 +3,6 @@ import { RegisteredSettings } from "./registered-settings.js";
 import { DiceRoller}  from './dice-roller.js';
 import { Controls } from './controls.js';
 import { ConfigureActor } from './form-apps/configure-actor.js';
-// import { abilities } from './character-properties.js';
 
 Hooks.once("init", () => {
 	console.log(RollNewCharacterStats.ID + " | Initialized")
@@ -33,8 +32,8 @@ Hooks.on('getSceneControlButtons', (controls) => {
 
 
 Hooks.on("renderChatMessage", (app, [html]) => {
-	//Hide buttons with class "card-buttons configure-new-actor"
-	const button = html.querySelectorAll(".configure-new-actor")
+	//Hide buttons with class "card-buttons rncs-configure-new-actor"
+	const button = html.querySelectorAll(".rncs-configure-new-actor")
 	if (!game.user.isGM && !game.user.testUserPermission(game.user, CONST.USER_PERMISSIONS.ACTOR_CREATE)) {
 		for (let i = 0; i < button.length; i += 1) {
 			button[i].classList.add("rncs-display-none");
@@ -103,7 +102,14 @@ async function FormApp_ConfigureActor(target,
 	// remove button? if not, don't disable either.
 	if (_settings.ChatRemoveConfigureActorButton) { RemoveButton(msgId); } else { target.disabled = false; }
 
-	new ConfigureActor(owner_id, final_results, bonus_points, other_properties_results, individual_rolls, Over18Allowed, DistributionMethod, HideResultsZone).render(true);
+	new ConfigureActor(owner_id, 
+					   final_results, 
+					   bonus_points, 
+					   other_properties_results, 
+					   individual_rolls, 
+					   Over18Allowed, 
+					   DistributionMethod, 
+					   HideResultsZone).render(true);
 
 }
 
@@ -136,13 +142,12 @@ export async function RollStats() {
 		for (let _actor = 0; _actor < dice_roller.NumberOfActors(); _actor += 1) {
 			// Roll abilities
 			dice_roller = new DiceRoller()
-			let roll_data = await dice_roller.RollThemDice();
-
+			await dice_roller.RollThemDice();
+			console.log(dice_roller._roll_data);
 			// Show results
 			const _settings = new RegisteredSettings;
 			if (_settings.DiceSoNiceEnabled) {
-				let data = { throws: [{ dice: roll_data }] };
-				//console.log(data);
+				let data = { throws: [{ dice: dice_roller._roll_data }] };
 				await game.dice3d?.show(data)
 			}
 			ShowResultsInChatMessage(dice_roller);
@@ -157,7 +162,7 @@ async function ShowResultsInChatMessage(dice_roller) {
 	const speaker = ChatMessage.getSpeaker();
 	const owner_id = game.user.id;
 	const final_results = dice_roller.GetFinalResults(dice_roller.result_sets);
-	const bonus_points = dice_roller.bonus_results;
+	const bonus_points = dice_roller.bonus_point_total;
 	const other_properties_results = dice_roller._other_properties_results;
 	const individual_rolls = dice_roller.GetIndividualRolls();
 
@@ -165,7 +170,7 @@ async function ShowResultsInChatMessage(dice_roller) {
 	// This is necessary for when the Configure Actor button is not removed, and we want the 
 	// the seetings at the time the message was created to still apply to this roll.
 	const Over18Allowed = _settings.Over18Allowed;
-	const HideResultsZone = _settings.HideResultsZone && _settings.DistributionMethod !== "1"; // DistributionMethod(1) === Distribute Freely
+	const HideResultsZone = (_settings.HideResultsZone && _settings.DistributionMethod !== "1") || _settings.DistributionMethod === "2"; // DistributionMethod(1) === Distribute Freely
 	const DistributionMethod = _settings.DistributionMethod;
 
 	// Results message header
@@ -210,7 +215,7 @@ async function ShowResultsInChatMessage(dice_roller) {
 		case "ose":
 		case "archmage":
 		case "dcc":
-			results_message += "<div class=\"card-buttons configure-new-actor\"><button data-action=\"configure_new_actor\">";
+			results_message += "<div class=\"card-buttons rncs-configure-new-actor\"><button data-action=\"configure_new_actor\">";
 			results_message += game.i18n.localize("RNCS.dialog.results-button.configure-new-actor");
 			results_message += "</button></div></div>"
 			break;

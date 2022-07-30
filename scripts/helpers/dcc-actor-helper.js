@@ -15,7 +15,7 @@ const opr = {
 
 export default class dcc_ActorHelper extends base_ActorHelper {
 
-    // base properties
+    // base property overrides
     _hp_modifier_ability = "sta";
 
     // dcc unique properties
@@ -48,6 +48,7 @@ export default class dcc_ActorHelper extends base_ActorHelper {
     //     this. = this._RollDiceForTotal("1d6");
     // }
 
+    // UNIQUE DATA
     async RollOccupation() {
 
         const rolltable_doc = await this._GetDocumentFromCompendium("dcc-core-book.dcc-core-tables", "Table 1-3: Occupation"); // Premium Pack

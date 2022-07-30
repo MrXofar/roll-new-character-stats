@@ -4,7 +4,7 @@ import { RegisteredSettings } from "../registered-settings.js";
 
 export class base_ActorHelper {
 
-    // Base Properties
+    // base property overrides
     _owner_id = null;
     _settings = new RegisteredSettings;
     _game_system_helper = new GAME_SYSTEM_Helper();

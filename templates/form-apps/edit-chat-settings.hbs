@@ -1,0 +1,107 @@
+<form>
+
+    <div class="rncs-display-none">
+        <div>ChatRemoveConfigureActorButton_value   :{{ChatRemoveConfigureActorButton_value   }}</div>
+        <div>ChatShowDescription_value              :{{ChatShowDescription_value              }}</div>
+        <div>ChatShowMethodText_value               :{{ChatShowMethodText_value               }}</div>
+        <div>ChatShowResultsText_value              :{{ChatShowResultsText_value              }}</div>
+        <div>ChatShowCondensedResults_value         :{{ChatShowCondensedResults_value         }}</div>
+        <div>ChatShowDieResultSet_value             :{{ChatShowDieResultSet_value         }}</div>
+        <div>ChatShowBonusPointsText_value          :{{ChatShowBonusPointsText_value          }}</div>
+        <div>ChatShowDifficultyText_value           :{{ChatShowDifficultyText_value           }}</div>
+        <div>ChatShowNoteFromDM_value               :{{ChatShowNoteFromDM_value              }}</div>
+    </div> 
+
+    {{!-- ChatRemoveConfigureActorButton --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.ChatRemoveConfigureActorButton.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <input type="checkbox" name="rncs_ChatRemoveConfigureActorButton"
+                value="{{ChatRemoveConfigureActorButton_value}}" data-dtype="Boolean" {{checked
+                ChatRemoveConfigureActorButton_value}}>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.ChatRemoveConfigureActorButton.Hint"}}</p>
+    </div>
+
+    {{!-- ChatShowDescription --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.ChatShowDescription.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <input type="checkbox" name="rncs_ChatShowDescription" value="{{ChatShowDescription_value}}" data-dtype="Boolean" {{checked ChatShowDescription_value}}>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.ChatShowDescription.Hint"}}</p>
+    </div>
+    
+    {{!-- ChatShowMethodText --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.ChatShowMethodText.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <input type="checkbox" name="rncs_ChatShowMethodText" value="{{ChatShowMethodText_value}}" data-dtype="Boolean" {{checked ChatShowMethodText_value}}>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.ChatShowMethodText.Hint"}}</p>
+    </div>
+
+    {{!-- ChatShowResultsText --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.ChatShowResultsText.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <input type="checkbox" name="rncs_ChatShowResultsText" value="{{ChatShowResultsText_value}}" data-dtype="Boolean" {{checked ChatShowResultsText_value}}>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.ChatShowResultsText.Hint"}}</p>
+    </div>
+    
+    {{!-- ChatShowCondensedResults --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.ChatShowCondensedResults.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <input type="checkbox" name="rncs_ChatShowCondensedResults" value="{{ChatShowCondensedResults_value}}" data-dtype="Boolean" {{checked ChatShowCondensedResults_value}}>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.ChatShowCondensedResults.Hint"}}</p>
+    </div>
+    
+    {{!-- ChatShowDieResultSet --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.ChatShowDieResultSet.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <input type="checkbox" name="rncs_ChatShowDieResultSet" value="{{ChatShowDieResultSet_value}}" data-dtype="Boolean" {{checked ChatShowDieResultSet_value}}>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.ChatShowDieResultSet.Hint"}}</p>
+    </div>
+    
+    {{!-- ChatShowBonusPointsText --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.ChatShowBonusPointsText.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <input type="checkbox" name="rncs_ChatShowBonusPointsText" value="{{ChatShowBonusPointsText_value}}" data-dtype="Boolean" {{checked ChatShowBonusPointsText_value}}>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.ChatShowBonusPointsText.Hint"}}</p>
+    </div>
+    
+    {{!-- ChatShowDifficultyText --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.ChatShowDifficultyText.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <input type="checkbox" name="rncs_ChatShowDifficultyText" value="{{ChatShowDifficultyText_value}}" data-dtype="Boolean" {{checked ChatShowDifficultyText_value}}>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.ChatShowDifficultyText.Hint"}}</p>
+    </div>
+    
+    {{!-- ChatShowNoteFromDM --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.ChatShowNoteFromDM.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <input type="checkbox" name="rncs_ChatShowNoteFromDM" value="{{ChatShowNoteFromDM_value}}" data-dtype="Boolean" {{checked ChatShowNoteFromDM_value}}>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.ChatShowNoteFromDM.Hint"}}</p>
+    </div>
+    
+    <div class="rncs-flex-row">
+        <button type="submit" id="submit">
+            <i class="fa fa-save"></i> Save Changes
+        </button>
+        <button type="cancel" id="cancel" data-cancel>
+            <i class="fa fa-ban"></i> Cancel
+        </button>
+    </div>
+
+</form>
