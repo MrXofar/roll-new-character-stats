@@ -34,7 +34,7 @@ Hooks.on('getSceneControlButtons', (controls) => {
 Hooks.on("renderChatMessage", (app, [html]) => {
 	//Hide buttons with class "card-buttons rncs-configure-new-actor"
 	const button = html.querySelectorAll(".rncs-configure-new-actor")
-	if (!game.user.isGM && !game.user.testUserPermission(game.user, CONST.USER_PERMISSIONS.ACTOR_CREATE)) {
+	if (!game.user.can("ACTOR_CREATE")) {
 		for (let i = 0; i < button.length; i += 1) {
 			button[i].classList.add("rncs-display-none");
 		}

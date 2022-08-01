@@ -1,3 +1,10 @@
+
+v3.1.2 - x/x/2022
+----------------------------------------------
+- FIXED: Players with "Create Actor" permission will now see the [Configure Actor] button.
+- FIXED: Text box css style for Actor Name.
+
+
 v3.1.1 - 7/30/2022
 ----------------------------------------------
 "Consolidated Settings and some misc stuff"
