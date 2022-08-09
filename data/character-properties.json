@@ -13,7 +13,7 @@
                 "races": [
                     {
                         "race": "Race Unknown",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -23,7 +23,7 @@
                     },
                     {
                         "race": "Aarakocra",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -33,7 +33,7 @@
                     },
                     {
                         "race": "Aasimar",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -43,7 +43,7 @@
                     },
                     {
                         "race": "Aasimar (Fallen)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "1",
                         "dex": "0",
                         "con": "0",
@@ -53,7 +53,7 @@
                     },
                     {
                         "race": "Aasimar (Protector)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -63,7 +63,7 @@
                     },
                     {
                         "race": "Aasimar (Scourge)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "1",
@@ -73,7 +73,7 @@
                     },
                     {
                         "race": "Alseid",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -83,7 +83,7 @@
                     },
                     {
                         "race": "Aven (Hawk)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -93,7 +93,7 @@
                     },
                     {
                         "race": "Aven (Ibis)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -103,7 +103,7 @@
                     },
                     {
                         "race": "Bugbear",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "1",
                         "con": "0",
@@ -113,7 +113,7 @@
                     },
                     {
                         "race": "Centaur",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "0",
@@ -123,7 +123,7 @@
                     },
                     {
                         "race": "Dragonborn",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "0",
@@ -133,7 +133,7 @@
                     },
                     {
                         "race": "Dragonkin (Edjet/Soldier)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "1",
                         "con": "0",
@@ -143,7 +143,7 @@
                     },
                     {
                         "race": "Dragonkin (Flame/Fire)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "1",
                         "dex": "0",
                         "con": "0",
@@ -153,7 +153,7 @@
                     },
                     {
                         "race": "Dragonkin (Stone/Cave)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "1",
@@ -163,7 +163,7 @@
                     },
                     {
                         "race": "Dragonkin (Wave/Tide)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -173,7 +173,7 @@
                     },
                     {
                         "race": "Dragonkin (Wind/Storm)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -183,7 +183,7 @@
                     },
                     {
                         "race": "Dwarf (Duergar)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "1",
                         "dex": "0",
                         "con": "2",
@@ -193,7 +193,7 @@
                     },
                     {
                         "race": "Dwarf (Hill)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",
@@ -203,7 +203,7 @@
                     },
                     {
                         "race": "Dwarf (Kaladesh)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",
@@ -213,7 +213,7 @@
                     },
                     {
                         "race": "Dwarf (Mountain)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "2",
@@ -223,7 +223,7 @@
                     },
                     {
                         "race": "Elf (Drow)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -233,7 +233,7 @@
                     },
                     {
                         "race": "Elf (Eladrin, High)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -243,7 +243,7 @@
                     },
                     {
                         "race": "Elf (Kaladesh)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -253,7 +253,7 @@
                     },
                     {
                         "race": "Elf (Sea, Shadar-Kai)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "1",
@@ -263,7 +263,7 @@
                     },
                     {
                         "race": "Elf (Shadow Fey)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -273,7 +273,7 @@
                     },
                     {
                         "race": "Elf (Wood)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -283,7 +283,7 @@
                     },
                     {
                         "race": "Elf (Zendikar Joraga)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "1",
                         "con": "0",
@@ -293,7 +293,7 @@
                     },
                     {
                         "race": "Elf (Zendikar Mul Daya)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "1",
                         "dex": "0",
                         "con": "0",
@@ -303,7 +303,7 @@
                     },
                     {
                         "race": "Elf (Zendikar Tajuru)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -313,7 +313,7 @@
                     },
                     {
                         "race": "Firbolg",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "1",
                         "dex": "0",
                         "con": "0",
@@ -323,7 +323,7 @@
                     },
                     {
                         "race": "Genasi (Air)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "1",
                         "con": "2",
@@ -333,7 +333,7 @@
                     },
                     {
                         "race": "Genasi (Earth)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "1",
                         "dex": "0",
                         "con": "2",
@@ -343,7 +343,7 @@
                     },
                     {
                         "race": "Genasi (Fire)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",
@@ -353,7 +353,7 @@
                     },
                     {
                         "race": "Genasi (Water)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",
@@ -363,7 +363,7 @@
                     },
                     {
                         "race": "Githyanki",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "0",
@@ -373,7 +373,7 @@
                     },
                     {
                         "race": "Githzerai",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -383,7 +383,7 @@
                     },
                     {
                         "race": "Gnoll (Civilized)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "1",
@@ -393,7 +393,7 @@
                     },
                     {
                         "race": "Gnoll (Savage)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "0",
@@ -403,7 +403,7 @@
                     },
                     {
                         "race": "Gnome (Deep, Forest)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "1",
                         "con": "0",
@@ -413,7 +413,7 @@
                     },
                     {
                         "race": "Gnome (Rock)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "1",
@@ -423,7 +423,7 @@
                     },
                     {
                         "race": "Goblin",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "1",
@@ -433,7 +433,7 @@
                     },
                     {
                         "race": "Goblin (Ixalan, Zendikar)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",
@@ -443,7 +443,7 @@
                     },
                     {
                         "race": "Goliath",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "1",
@@ -453,7 +453,7 @@
                     },
                     {
                         "race": "Half-Orc",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "1",
@@ -463,7 +463,7 @@
                     },
                     {
                         "race": "Halfling (Lightfoot)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -473,7 +473,7 @@
                     },
                     {
                         "race": "Halfling (Stout)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "1",
@@ -483,7 +483,7 @@
                     },
                     {
                         "race": "Hobgoblin",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",
@@ -493,7 +493,7 @@
                     },
                     {
                         "race": "Human",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "1",
                         "dex": "1",
                         "con": "1",
@@ -502,8 +502,38 @@
                         "cha": "1"
                     },
                     {
+                        "race": "Human - Variant",
+                        "asi_any": ["1","1"],
+                        "str": "0",
+                        "dex": "0",
+                        "con": "0",
+                        "int": "0",
+                        "wis": "0",
+                        "cha": "0"
+                    },
+                    {
+                        "race": "Harengon",
+                        "asi_any": ["1","1","1"],
+                        "str": "0",
+                        "dex": "0",
+                        "con": "0",
+                        "int": "0",
+                        "wis": "0",
+                        "cha": "0"
+                    },
+                    {
+                        "race": "Harengon - Variant",
+                        "asi_any": ["2","1"],
+                        "str": "0",
+                        "dex": "1",
+                        "con": "0",
+                        "int": "0",
+                        "wis": "0",
+                        "cha": "0"
+                    },
+                    {
                         "race": "Kenku",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -513,7 +543,7 @@
                     },
                     {
                         "race": "Khenra",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "1",
                         "dex": "2",
                         "con": "0",
@@ -523,7 +553,7 @@
                     },
                     {
                         "race": "Kobold",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "-2",
                         "dex": "2",
                         "con": "0",
@@ -533,7 +563,7 @@
                     },
                     {
                         "race": "Kobold (Midgard)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -543,7 +573,7 @@
                     },
                     {
                         "race": "Kor",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -553,7 +583,7 @@
                     },
                     {
                         "race": "Lizardfolk (Southlands)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "0",
@@ -563,7 +593,7 @@
                     },
                     {
                         "race": "Lizardfolk (Volo's)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",
@@ -573,7 +603,7 @@
                     },
                     {
                         "race": "Merfolk (Cosi/Trickster)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -583,7 +613,7 @@
                     },
                     {
                         "race": "Merfolk (Emeria/Wind)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -593,7 +623,7 @@
                     },
                     {
                         "race": "Merfolk (Ixalan Blue)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -603,7 +633,7 @@
                     },
                     {
                         "race": "Merfolk (Ixalan Green)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -613,7 +643,7 @@
                     },
                     {
                         "race": "Merfolk (Ula/Water)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -623,7 +653,7 @@
                     },
                     {
                         "race": "Minotaur (Amonkhet)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "1",
@@ -633,7 +663,7 @@
                     },
                     {
                         "race": "Minotaur (Midgard, Southlands)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "1",
@@ -643,7 +673,7 @@
                     },
                     {
                         "race": "Naga",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",
@@ -653,7 +683,7 @@
                     },
                     {
                         "race": "Orc",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "1",
@@ -663,7 +693,7 @@
                     },
                     {
                         "race": "Orc (Ixalan)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "1",
@@ -673,7 +703,7 @@
                     },
                     {
                         "race": "Ravenfolk",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "1",
@@ -683,7 +713,7 @@
                     },
                     {
                         "race": "Shifter (Beasthide)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "1",
                         "con": "2",
@@ -693,7 +723,7 @@
                     },
                     {
                         "race": "Shifter (Longtooth)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "1",
                         "con": "0",
@@ -703,7 +733,7 @@
                     },
                     {
                         "race": "Shifter (Swiftstride)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -713,7 +743,7 @@
                     },
                     {
                         "race": "Shifter (Wildhunt)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "1",
                         "con": "0",
@@ -723,7 +753,7 @@
                     },
                     {
                         "race": "Siren",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -733,7 +763,7 @@
                     },
                     {
                         "race": "Tabaxi",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -743,7 +773,7 @@
                     },
                     {
                         "race": "Tiefling",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -753,7 +783,7 @@
                     },
                     {
                         "race": "Tiefling (all other MTF)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -763,7 +793,7 @@
                     },
                     {
                         "race": "Tiefling (Dispater, Glasya)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "1",
                         "con": "0",
@@ -773,7 +803,7 @@
                     },
                     {
                         "race": "Tiefling (Feral Variant)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -783,7 +813,7 @@
                     },
                     {
                         "race": "Tiefling (Fierna)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -793,7 +823,7 @@
                     },
                     {
                         "race": "Tiefling (Levistus)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "1",
@@ -803,7 +833,7 @@
                     },
                     {
                         "race": "Tiefling (Zariel)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "1",
                         "dex": "0",
                         "con": "0",
@@ -813,7 +843,7 @@
                     },
                     {
                         "race": "Triton",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "1",
                         "dex": "0",
                         "con": "1",
@@ -823,7 +853,7 @@
                     },
                     {
                         "race": "Trollkin (Night Whisper)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",
@@ -833,7 +863,7 @@
                     },
                     {
                         "race": "Trollkin (Stonehide)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "1",
                         "dex": "0",
                         "con": "2",
@@ -843,7 +873,7 @@
                     },
                     {
                         "race": "Vampire (Ixalan)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -853,7 +883,7 @@
                     },
                     {
                         "race": "Vampire (Zendikar)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -863,7 +893,7 @@
                     },
                     {
                         "race": "Vedalken",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -873,7 +903,7 @@
                     },
                     {
                         "race": "Warforged (Juggernaut)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "1",
@@ -883,7 +913,7 @@
                     },
                     {
                         "race": "Warforged (Skirmisher)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "1",
@@ -893,7 +923,7 @@
                     },
                     {
                         "race": "Werelion",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "1",
                         "dex": "0",
                         "con": "0",
@@ -903,7 +933,7 @@
                     },
                     {
                         "race": "Yuan-Ti Pureblood",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -925,7 +955,7 @@
                 "races": [
                     {
                         "race": "Race Unknown",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -935,7 +965,7 @@
                     },
                     {
                         "race": "Aasimar",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -945,7 +975,7 @@
                     },
                     {
                         "race": "Adaro",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "2",
                         "con": "2",
@@ -955,7 +985,7 @@
                     },
                     {
                         "race": "Android",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -965,7 +995,7 @@
                     },
                     {
                         "race": "Aphorite",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "-2",
                         "con": "0",
@@ -975,7 +1005,7 @@
                     },
                     {
                         "race": "Aquatic Elf",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "-2",
@@ -985,7 +1015,7 @@
                     },
                     {
                         "race": "Astomoi",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "-2",
@@ -995,7 +1025,7 @@
                     },
                     {
                         "race": "Caligni",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "2",
@@ -1005,7 +1035,7 @@
                     },
                     {
                         "race": "Catfolk",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -1015,7 +1045,7 @@
                     },
                     {
                         "race": "Cecaelia",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -1025,7 +1055,7 @@
                     },
                     {
                         "race": "Changeling",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "-2",
@@ -1035,7 +1065,7 @@
                     },
                     {
                         "race": "Deep One Hybrid",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "-2",
                         "con": "2",
@@ -1045,7 +1075,7 @@
                     },
                     {
                         "race": "Denizen of Leng",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "2",
@@ -1055,7 +1085,7 @@
                     },
                     {
                         "race": "Dhampir",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "-2",
@@ -1065,7 +1095,7 @@
                     },
                     {
                         "race": "Drow",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "-2",
@@ -1075,7 +1105,7 @@
                     },
                     {
                         "race": "Drow Noble",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "4",
                         "con": "-2",
@@ -1085,7 +1115,7 @@
                     },
                     {
                         "race": "Duergar",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",
@@ -1095,7 +1125,7 @@
                     },
                     {
                         "race": "Duskwalker",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "-2",
@@ -1105,7 +1135,7 @@
                     },
                     {
                         "race": "Dwarf",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",
@@ -1115,7 +1145,7 @@
                     },
                     {
                         "race": "Elf",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "-2",
@@ -1125,7 +1155,7 @@
                     },
                     {
                         "race": "Fetchling",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -1135,7 +1165,7 @@
                     },
                     {
                         "race": "Ganzi",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",
@@ -1145,7 +1175,7 @@
                     },
                     {
                         "race": "Gathlain",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "-2",
@@ -1155,7 +1185,7 @@
                     },
                     {
                         "race": "Ghoran",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",
@@ -1165,7 +1195,7 @@
                     },
                     {
                         "race": "Gillman",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",
@@ -1175,7 +1205,7 @@
                     },
                     {
                         "race": "Gnome",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "-2",
                         "dex": "0",
                         "con": "2",
@@ -1185,7 +1215,7 @@
                     },
                     {
                         "race": "Goblin",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "-2",
                         "dex": "4",
                         "con": "0",
@@ -1195,7 +1225,7 @@
                     },
                     {
                         "race": "Green Martian",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "4",
                         "dex": "-2",
                         "con": "0",
@@ -1205,7 +1235,7 @@
                     },
                     {
                         "race": "Grindylow",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "4",
                         "con": "0",
@@ -1215,7 +1245,7 @@
                     },
                     {
                         "race": "Grippli",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "-2",
                         "dex": "2",
                         "con": "0",
@@ -1225,7 +1255,7 @@
                     },
                     {
                         "race": "Half-Elf",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -1235,7 +1265,7 @@
                     },
                     {
                         "race": "Half-Orc",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -1245,7 +1275,7 @@
                     },
                     {
                         "race": "Halfling",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "-2",
                         "dex": "2",
                         "con": "0",
@@ -1254,8 +1284,28 @@
                         "cha": "2"
                     },
                     {
+                        "race": "Harengon",
+                        "asi_any": ["1","1","1"],
+                        "str": "0",
+                        "dex": "0",
+                        "con": "0",
+                        "int": "0",
+                        "wis": "0",
+                        "cha": "0"
+                    },
+                    {
+                        "race": "Harengon - Variant",
+                        "asi_any": ["2","1"],
+                        "str": "0",
+                        "dex": "1",
+                        "con": "0",
+                        "int": "0",
+                        "wis": "0",
+                        "cha": "0"
+                    },
+                    {
                         "race": "Hobgoblin",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "2",
@@ -1265,7 +1315,7 @@
                     },
                     {
                         "race": "Human",
-                        "bonus_any": "0",
+                        "asi_any": ["2"],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -1275,7 +1325,7 @@
                     },
                     {
                         "race": "Ifrit",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -1285,7 +1335,7 @@
                     },
                     {
                         "race": "Kasatha",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -1295,7 +1345,7 @@
                     },
                     {
                         "race": "Kitsune",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "-2",
                         "dex": "2",
                         "con": "0",
@@ -1305,7 +1355,7 @@
                     },
                     {
                         "race": "Kobold",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "-4",
                         "dex": "2",
                         "con": "-2",
@@ -1315,7 +1365,7 @@
                     },
                     {
                         "race": "Kuru",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "2",
@@ -1325,7 +1375,7 @@
                     },
                     {
                         "race": "Lashunta (Male)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "0",
@@ -1335,7 +1385,7 @@
                     },
                     {
                         "race": "Lashunta (Female)",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "-2",
@@ -1345,7 +1395,7 @@
                     },
                     {
                         "race": "Locathah",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -1355,7 +1405,7 @@
                     },
                     {
                         "race": "Merfolk",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "2",
@@ -1365,7 +1415,7 @@
                     },
                     {
                         "race": "Monkey Goblin",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "4",
                         "con": "0",
@@ -1375,7 +1425,7 @@
                     },
                     {
                         "race": "Munavri",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "-2",
                         "dex": "4",
                         "con": "2",
@@ -1385,7 +1435,7 @@
                     },
                     {
                         "race": "Nagaji",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "0",
@@ -1395,7 +1445,7 @@
                     },
                     {
                         "race": "Naiad",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "-2",
                         "dex": "2",
                         "con": "0",
@@ -1405,7 +1455,7 @@
                     },
                     {
                         "race": "Ogre",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "6",
                         "dex": "-2",
                         "con": "2",
@@ -1415,7 +1465,7 @@
                     },
                     {
                         "race": "Orang-Pendak",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "0",
@@ -1425,7 +1475,7 @@
                     },
                     {
                         "race": "Orc",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "4",
                         "dex": "0",
                         "con": "0",
@@ -1435,7 +1485,7 @@
                     },
                     {
                         "race": "Oread",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "0",
@@ -1445,7 +1495,7 @@
                     },
                     {
                         "race": "Ratfolk",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "-2",
                         "dex": "2",
                         "con": "0",
@@ -1455,7 +1505,7 @@
                     },
                     {
                         "race": "Reborn Samsaran",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "-2",
@@ -1465,7 +1515,7 @@
                     },
                     {
                         "race": "Reptoid",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "-2",
                         "con": "0",
@@ -1475,7 +1525,7 @@
                     },
                     {
                         "race": "Rougarou",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "0",
@@ -1485,7 +1535,7 @@
                     },
                     {
                         "race": "Sahuagin",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "0",
@@ -1495,7 +1545,7 @@
                     },
                     {
                         "race": "Samsaran",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "-2",
@@ -1505,7 +1555,7 @@
                     },
                     {
                         "race": "Shabti",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",
@@ -1515,7 +1565,7 @@
                     },
                     {
                         "race": "Skinwalker",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "0",
@@ -1525,7 +1575,7 @@
                     },
                     {
                         "race": "Strix",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -1535,7 +1585,7 @@
                     },
                     {
                         "race": "Suli",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "0",
                         "con": "0",
@@ -1545,7 +1595,7 @@
                     },
                     {
                         "race": "Svirfneblin",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "-2",
                         "dex": "2",
                         "con": "0",
@@ -1555,7 +1605,7 @@
                     },
                     {
                         "race": "Sylph",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "-2",
@@ -1565,7 +1615,7 @@
                     },
                     {
                         "race": "Syrinx",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "-2",
                         "con": "0",
@@ -1575,7 +1625,7 @@
                     },
                     {
                         "race": "Tengu",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "-2",
@@ -1585,7 +1635,7 @@
                     },
                     {
                         "race": "Tiefling",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -1595,7 +1645,7 @@
                     },
                     {
                         "race": "Triaxian",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "-2",
                         "dex": "0",
                         "con": "2",
@@ -1605,7 +1655,7 @@
                     },
                     {
                         "race": "Triton",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "2",
                         "dex": "-2",
                         "con": "0",
@@ -1615,7 +1665,7 @@
                     },
                     {
                         "race": "Trox",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "8",
                         "dex": "-2",
                         "con": "0",
@@ -1625,7 +1675,7 @@
                     },
                     {
                         "race": "Undine",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "-2",
                         "dex": "2",
                         "con": "0",
@@ -1635,7 +1685,7 @@
                     },
                     {
                         "race": "Vanara",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -1645,7 +1695,7 @@
                     },
                     {
                         "race": "Vine Leshy",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",
@@ -1655,7 +1705,7 @@
                     },
                     {
                         "race": "Vishkanya",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -1665,7 +1715,7 @@
                     },
                     {
                         "race": "Wayang",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -1675,7 +1725,7 @@
                     },
                     {
                         "race": "Wyrwood",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -1685,7 +1735,7 @@
                     },
                     {
                         "race": "Wyvaran",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "2",
                         "con": "0",
@@ -1695,7 +1745,7 @@
                     },
                     {
                         "race": "Yaddithian",
-                        "bonus_any": "0",
+                        "asi_any": [],
                         "str": "0",
                         "dex": "0",
                         "con": "2",

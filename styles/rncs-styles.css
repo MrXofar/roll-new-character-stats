@@ -13,7 +13,7 @@
     font-style: italic;
     text-align: left;
   }
-  .rncs-ability-drop-item, .rncs-ring-ability-drop-item {
+  .rncs-ability-drop-item, .rncs-ring-ability-drop-item, .rncs-variant-mod-drop-item {
     display: inline-block;
     width: 2.5em;
     height: 2.5em;
@@ -96,10 +96,10 @@
   .rncs-select{    
     width: 100%;
   }
-  .rncs-div_lable{
+  .rncs-div-label{
     width:15%;display: inline-block;
   }
-  .rncs-div_user_input{
+  .rncs-div-user-input{
     width:84%;display: inline-block;
   }
   .rncs-ring-wrapper{ 
@@ -189,4 +189,9 @@
   }
   .rncs-form-group > * {
     flex: 3;
+  }
+  .rncs-form-group-indent {
+    font-size: smaller;
+    padding-left: 25px !important;
+    flex: 1 !important;
   }

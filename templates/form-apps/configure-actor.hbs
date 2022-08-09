@@ -111,11 +111,13 @@
         }
 
         function drop_handler(ev) {
+
             ev.preventDefault();
             const data = ev.dataTransfer.getData("text/plain");
             const drop_item_id = document.getElementById(data).id
             const drop_item_orig_parent = document.getElementById(data).parentElement;
             const drop_zone = document.getElementById(ev.target.id);
+
             // Drop result in ability_drop_zone or results_drop_zone or swap results (prevent dropping multiple in one zone)
             if (drop_item_id.includes("div_final_result") || drop_item_id.includes("div_ring_final_result")) {
 
@@ -133,8 +135,22 @@
                     drop_item_orig_parent.appendChild(drop_zone);
                     ability_item_drop_zone.appendChild(document.getElementById(data));
                 }
-                RecalcFinalScores();
+            }// Drop variant ability score increase modifier
+            else if(drop_item_id.includes("div_variant_mod")){
+                if(drop_zone.id.includes("racial_mod") && !drop_zone.querySelector(".rncs-variant-mod-drop-item"))//(prevent dropping multiple in one zone)
+                {
+                    let variant_mod = document.getElementById(data)
+                    drop_zone.appendChild(variant_mod);
+                }
+                else if (drop_zone.id.includes("div_variant_mod")) {// Dropping onto existing variant_mod in Racial Bonus Zone will swap values
+
+                    // Swap values
+                    const variant_item_drop_zone = drop_zone.parentElement;
+                    drop_item_orig_parent.appendChild(drop_zone);
+                    variant_item_drop_zone.appendChild(document.getElementById(data));
+                }
             }
+            RecalcFinalScores();
         }
 
         // Increment or Decrement ability with Bonus Points
@@ -183,7 +199,7 @@
                 // Calculate final score
                 final_result = parseInt(ability_drop_item ? ability_drop_item.innerText : 0);
                 bonus_result = parseInt(bonus_points.innerText);
-                racial_mod_result = parseInt(racial_mod.innerText);
+                racial_mod_result = parseInt(racial_mod.innerText.length > 0 ? racial_mod.innerText : "0");
                 final_score_unmod.value = final_result + bonus_result;// Exclude racial modifiers
                 final_score_display.value = final_result + bonus_result + racial_mod_result;
 
@@ -221,7 +237,7 @@
             // character_name has nothing to do with scores, I am just being lazy with submit.disable 
             const character_name = document.getElementById("character_name");
             const bp_remaining = parseInt(span_bp_remaining.innerText);
-            submit.disabled = (character_name.value.length === 0 || GetNextAbilityDropZone() || bp_remaining > 0 || (score_over_18 && over18NotAllowed));
+            submit.disabled = (character_name.value.length === 0 || GetNextEmptyDropZone(".rncs-ability-drop-zone") || bp_remaining > 0 || (score_over_18 && over18NotAllowed));
         }
 
         async function MoveResult(ev) {
@@ -229,7 +245,7 @@
             const results_drop_zone = document.getElementById("results_drop_zone");
             if (result_item.parentElement.id === "results_drop_zone" || result_item.parentElement.id === "rncs_ring_container_ability_total") {
 
-                const next_ability = GetNextAbilityDropZone();
+                const next_ability = GetNextEmptyDropZone(".rncs-ability-drop-zone");
                 // Update ring and get new total
                 if(next_ability && result_item.parentElement.id === "rncs_ring_container_ability_total")
                 {
@@ -247,13 +263,13 @@
             RecalcFinalScores();
         }
 
-        function GetNextAbilityDropZone() {
+        function GetNextEmptyDropZone(drop_zone_class) {
             const ability_rows = ability_scores.querySelectorAll(".rncs-ability-row")
             for (let row = 0; row < ability_rows.length; row += 1) {
                 const ability_row = document.getElementById(ability_rows[row].id);
-                const ability_drop_zone = ability_row.querySelector(".rncs-ability-drop-zone")
-                if (ability_drop_zone.innerText === "") {
-                    return ability_drop_zone;
+                const target_drop_zone = ability_row.querySelector(drop_zone_class)
+                if (target_drop_zone.innerText === "") {
+                    return target_drop_zone;
                 }
             }
             return false;
@@ -262,7 +278,7 @@
         function ApplyAsRolled() {
             const ability_drop_items = results_drop_zone.querySelectorAll(".rncs-ability-drop-item");
             for (let item = 0; item < ability_drop_items.length; item += 1) {
-                const next_ability = GetNextAbilityDropZone();
+                const next_ability = GetNextEmptyDropZone(".rncs-ability-drop-zone");
                 if (next_ability) {
                     ability_drop_items[item].removeAttribute("ondblclick");
                     ability_drop_items[item].removeAttribute("draggable");
@@ -294,14 +310,34 @@
                 default:// Default to dnd5e for now
                     race_bonuses = jsonDATA.game_system[0].dnd5e.races[select.selectedIndex]
             }
+
             // Update Race Bonus column
+            // TODO: Allow hybrid - some hard wired ASI and some variant ASI
             const ability_rows = ability_scores.querySelectorAll(".rncs-ability-row")
             for (let row = 0; row < ability_rows.length; row += 1) {
                 const ability_row = document.getElementById(ability_rows[row].id);
-                const ability_text = ability_row.querySelector(".rncs-ability-text").innerText.toLowerCase();
                 const racial_mod = ability_row.querySelector(".rncs-racial-mod");
-                racial_mod.innerText = race_bonuses[ability_text];
+                if(race_bonuses.asi_any.length === 0){
+                    const ability_text = ability_row.querySelector(".rncs-ability-text").innerText.toLowerCase();
+                    racial_mod.innerText = race_bonuses[ability_text];
+                }
+                else{           
+                    // Clear current innerText         
+                    racial_mod.innerText = ""; 
+
+                    // Add next asi_any bonus drag-n-drop item to Race Bonus column
+                    const variant_mod = document.createElement("div");
+                    variant_mod.id = "div_variant_mod_" + Math.random().toString(36).slice(2);
+                    variant_mod.setAttribute("draggable", "true");
+                    variant_mod.classList.add("rncs-variant-mod-drop-item");
+                    variant_mod.addEventListener("dragstart", dragstart_handler);
+                    if(race_bonuses.asi_any[row]){
+                        variant_mod.innerText = (race_bonuses.asi_any[row]);
+                        racial_mod.appendChild(variant_mod);
+                    }
+                }
             }
+
             RecalcFinalScores();
         }
 
@@ -343,7 +379,7 @@
             ring_item_total.innerText = (total > 0 ? total : "");  
 
             // Make sure div_ring_final_result is draggable (or not if empty)
-            if (total > 0 && GetNextAbilityDropZone()) {
+            if (total > 0 && GetNextEmptyDropZone(".rncs-ability-drop-zone")) {
                 ring_item_total.addEventListener("dragstart", dragstart_handler);
             }else{
                 ring_item_total.removeAttribute("ondblclick")
@@ -383,6 +419,8 @@
         }
 
         individual_rolls_table.addEventListener("wheel", function (e) {
+
+            // TODO: Simplify
             if (e.deltaY > 0) {
                 if(!ring_reverse){
                     ring_start = (ring_start + 1 === individual_rolls_remaining.rolls.length ? 0 : ring_start + 1)%individual_rolls_remaining.rolls.length;
@@ -424,16 +462,16 @@
     </script>
 
     <div style="margin-bottom:5px;">
-        <div class="rncs-div_lable">Name:</div>
+        <div class="rncs-div-label">Name:</div>
         <!-- Name has nothing to do with scores, I am just being lazy with submit.disable -->
-        <div class="rncs-div_user_input">
+        <div class="rncs-div-user-input">
             <input class="rncs-input" id="character_name" name="character_name" onchange="RecalcFinalScores()" type="String"
                 value="{{character_name}}" />
         </div>
     </div>
     <div id="race-selector">
-        <div class="rncs-div_lable">Race:</div>
-        <div class="rncs-div_user_input">
+        <div class="rncs-div-label">Race:</div>
+        <div class="rncs-div-user-input">
             <select id="select_race" name="select_race" onchange="UpdateRaceBonus(event)" style="width:100%;">
                 {{selectOptions races selected=value nameAttr="race" labelAttr="race"}}
             </select>
@@ -517,11 +555,8 @@
         </tr>
         <tr>
             <td>
-                <div id="rncs_ring_container_ability_total" class="rncs-ring-container"
-                    ondragover="dragover_handler(event)">
-                    <div id="div_ring_final_result" class="rncs-ring-ability-drop-item" ondblclick="MoveResult(event)"
-                        draggable="true">
-                    </div>
+                <div id="rncs_ring_container_ability_total" class="rncs-ring-container" ondragover="dragover_handler(event)">
+                    <div id="div_ring_final_result" class="rncs-ring-ability-drop-item" ondblclick="MoveResult(event)" draggable="true"></div>
                 </div>
             </td>
             <td>&nbsp;=&nbsp;</td>
@@ -576,7 +611,7 @@
                 <span class="rncs-bp">0</span>
                 <span id="{{abilities}}_bp_plus"  class="rncs-bp-button rncs-bp-button-plus"  onclick="BPchange(event)">+</span>
             </td>
-            <td id="{{abilities}}_racial_mod" class="rncs-racial-mod">0</td>
+            <td id="{{abilities}}_racial_mod" class="rncs-racial-mod" ondrop="drop_handler(event)" ondragover="dragover_handler(event)">0</td>
             <td class="rncs-final-score" id="{{abilities}}_final_score">
                 <input name="{{abilities}}_final_score_unmod"   class="rncs-final-score-unmod"   value="0" />
                 <input name="{{abilities}}_final_score_display" class="rncs-final-score-display" value="0" />

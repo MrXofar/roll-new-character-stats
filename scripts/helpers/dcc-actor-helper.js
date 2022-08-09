@@ -131,37 +131,75 @@ export default class dcc_ActorHelper extends base_ActorHelper {
         this.note += "</tr>";
 
         this.note += "<tr>";
-        this.note += "<td>Occupation:</td><td>" + (this.farmer_type !== "" ? this.farmer_type + " " : "") + this.occupation_desc + "</td>";
+        this.note += "<td>Occupation:</td>";
+        this.note += "<td>";   
+        if (this._settings.ShowOtherPropertyResults === "in-place-of") {
+            this.note += this.other_properties_results[opr.OCCUPATION];
+        } else {
+            this.note += (this.farmer_type !== "" ? this.farmer_type + " " : "") + this.occupation_desc;
+        }
+        
+        this.note += "</td><td style=\"width: 1.5em;\">";
+        if (this._settings.ShowOtherPropertyResults === "with-result") {
+            this.note += this.other_properties_results[opr.OCCUPATION];
+        }
+        this.note += "</td>";
+        this.note += "</tr>";
+
+        if (this._settings.ShowOtherPropertyResults !== "in-place-of") {
+            this.note += "<tr>";
+            this.note += "<td>Weapon:</td><td>";
+            this.note += (this.trade_weapon.toLowerCase().includes("dart") ? this.trade_weapon_ammo_qty + "x " : "");
+            this.note += this.trade_weapon;
+            this.note += (!this.trade_weapon.toLowerCase().includes("dart") && this.trade_weapon_ammo !== "" ? " with " + this.trade_weapon_ammo_qty + " " + this.trade_weapon_ammo : "");
+            this.note += "</td><td></td></tr>";
+
+            this.note += "<tr>";
+            this.note += "<td>Trade Good:</td><td>" + this.trade_good + (this.contents > 0 ? " with " + this.cart_content : "");
+            this.note += "</td><td></td></tr>";
+        }
+
+        this.note += "<tr>";
+        this.note += "<td>Equipment:</td>"; 
+        this.note += "<td>";
+        if (this._settings.ShowOtherPropertyResults === "in-place-of") {
+            this.note += this.other_properties_results[opr.EQUIPMENT];
+        }
+        else{
+            this.note += this.equipment;
+        }
+        this.note += "</td><td style=\"width: 1.5em;\">";
+        if (this._settings.ShowOtherPropertyResults === "with-result") {
+            this.note += this.other_properties_results[opr.EQUIPMENT];
+        }
+        this.note += "</td>"
         this.note += "</tr>";
 
         this.note += "<tr>";
-        this.note += "<td>Weapon:</td><td>";
-        this.note += (this.trade_weapon.toLowerCase().includes("dart") ? this.trade_weapon_ammo_qty + "x " :""); 
-        this.note += this.trade_weapon; 
-        this.note += (!this.trade_weapon.toLowerCase().includes("dart") && this.trade_weapon_ammo !== "" ? " with " + this.trade_weapon_ammo_qty + " " + this.trade_weapon_ammo : "");
-        this.note += "</td></tr>";
-
-        this.note += "<tr>";
-        this.note += "<td>Trade Good:</td><td>" + this.trade_good + (this.contents > 0 ? " with " + this.cart_content : "");        
-        this.note += "</td></tr>";
-
-        this.note += "<tr>";
-        this.note += "<td>Equipment:</td><td>" + this.equipment;
-        this.note += "</td></tr>";
-
-        this.note += "<tr>";
         this.note += "<td>Money:</td><td>" + this._currency_cp + " cp";
-        this.note += "</td></tr>";
+        this.note += "</td><td></td></tr>";
 
         this.note += "<tr>";
-        this.note += "<td>Birth Augur:</td><td id=\"dcc_birth_augur\">" + this.luck;
-        if(this._settings.DistributionMethod === "0"){
-            this.note += " (" + (this.luck_modifier >= 0 ? "+" : "") + this.luck_modifier + ")";
+        this.note += "<td>Birth Augur:</td>";
+        this.note += "<td id=\"dcc_birth_augur\">";        
+        if (this._settings.ShowOtherPropertyResults === "in-place-of") { 
+            this.note += this.other_properties_results[opr.LUCK_STORE];
         }
-        else{
-            this.note += " (+Luck Modifier)";
+        else {
+            this.note += this.luck;
+            if (this._settings.DistributionMethod === "0") {
+                this.note += " (" + (this.luck_modifier >= 0 ? "+" : "") + this.luck_modifier + ")";
+            }
+            else {
+                this.note += " (+Luck Modifier)";
+            }
+        }        
+        this.note += "</td><td style=\"width: 1.5em;\">";
+        if (this._settings.ShowOtherPropertyResults === "with-result") {
+            this.note += this.other_properties_results[opr.LUCK_STORE];
         }
-        this.note += "</td></tr>";
+        this.note += "</td>"
+        this.note += "</tr>";
         this.note += "</table>";
 
         return this.note;
@@ -380,7 +418,7 @@ export default class dcc_ActorHelper extends base_ActorHelper {
             'data.abilities.int.max': data.int_final_score_display,
             'data.abilities.lck.max': data.lck_final_score_display,
             'data.details.occupation.value': (data.dcc_farmer_type ? data.dcc_farmer_type + " " : "") + data.dcc_occupation_desc,
-            'data.details.notes.value': data.dcc_description,
+            'data.details.notes.value': this._settings.IncludeResultDescription ? data.dcc_description : "",
             'data.details.birthAugur': data.dcc_luck
         });
     }

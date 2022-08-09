@@ -1,7 +1,36 @@
+v3.1.3 - 8/8/2022
+----------------------------------------------
+- Added "variant" ability score interface to Configure Actor form. Races with variant ability score increases can now move those values around.
+  Currently these only include Humans and Harengon on "dnd5e" and "pf1" support. 
+  If you find any races that should have variant ability score increases, please let me know.
+
+- FIXED: Show Die Result Set was only showing if Ability Results was checked. You can now show them separately.
+
+- Cleaned up ability results message text.
+
+- House cleaning of course.
+
+- Added Distribution Method descriptions below setting.
+
+- Changed GetNextAbilityDropZone() to GetNextEmptyDropZone(drop_zone_class) to work with other drop zones.
+  Gets next empty drop zone identified by drop_zone_class
+
+Enhanced Support:
+- New Setting: Show Other Property Results
+    Select how you want Other Property Results displayed with Result Description. 
+    Other Properties Results are other rolls executed by Enhanced Support for things like class, equipment, weapons, armor, etc.
+    Choices: "Do not show"
+             "With result description"
+             "In place of result description"
+
+- New Setting: Include Result Description
+    This setting will include result description from Other Property Results on character sheet; such as in Biography, Backstory or Notes.
+
 
 v3.1.2 - 8/1/2022
 ----------------------------------------------
 - FIXED: Players with "Create Actor" permission will now see the [Configure Actor] button.
+
 - FIXED: Text box css style for Actor Name.
 
 

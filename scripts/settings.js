@@ -1,4 +1,4 @@
-import { RollNewCharacterStats } from "./main.js";
+import { RNCS } from "./main.js";
 export const settingsKey = "roll-new-character-stats";
 
 // ***********************************************************************************************
@@ -11,8 +11,8 @@ export function registerSettings() {
     
 	game.settings.registerMenu(settingsKey, "ChatSettings", {
 		name: "",
-		hint: "RNCS.settings.ChatSettings.Hint",
-		label: "RNCS.settings.ChatSettings.Name",
+		hint: game.i18n.localize("RNCS.settings.ChatSettings.Hint"),
+		label: game.i18n.localize("RNCS.settings.ChatSettings.Name"),
 		icon: "fas fa-comments",
 		type: ChatSettings,
 		restricted: true,
@@ -20,10 +20,10 @@ export function registerSettings() {
     
 	game.settings.registerMenu(settingsKey, "RollMethodAndDistribution", {
 		name: "",
-		hint: "RNCS.settings.RollMethodAndDistribution.Hint",
-		label: "RNCS.settings.RollMethodAndDistribution.Name",
+		hint: game.i18n.localize("RNCS.settings.RollMethodAndDistribution.Hint"),
+		label: game.i18n.localize("RNCS.settings.RollMethodAndDistribution.Name"),
 		icon: "fas fa-dice",
-		type: RollAndDistributionMethod,
+		type: RollAndDistributionMethodSettings,
 		restricted: true,
 	})
 
@@ -78,6 +78,30 @@ export function registerSettings() {
         type: Boolean,
         default: false
     });
+
+    game.settings.register(settingsKey, "ShowOtherPropertyResults", {
+        name: game.i18n.localize("RNCS.settings.ShowOtherPropertyResults.Name"),
+        hint: game.i18n.localize("RNCS.settings.ShowOtherPropertyResults.Hint"),
+        scope: "world",
+        config: game.system.id === "dcc",
+        type: String,
+        choices: {
+            "do-not-show": game.i18n.localize("RNCS.settings.ShowOtherPropertyResults.choices.do-not-show"),
+            "with-result": game.i18n.localize("RNCS.settings.ShowOtherPropertyResults.choices.with-result"),
+            "in-place-of": game.i18n.localize("RNCS.settings.ShowOtherPropertyResults.choices.in-place-of")
+        },
+        default: "do-not-show"
+    });
+
+    game.settings.register(settingsKey, "IncludeResultDescription", {
+        name: game.i18n.localize("RNCS.settings.IncludeResultDescription.Name"),
+        hint: game.i18n.localize("RNCS.settings.IncludeResultDescription.Hint"),
+        scope: "client",
+        config: game.system.id === "dcc",
+        type: Boolean,
+        default: true
+    });
+
     // END Config Actor Settings
 
     // BEGIN Chat Settings 
@@ -290,7 +314,7 @@ export function registerSettings() {
     //     default: "0"
     // });
 
-	console.log(RollNewCharacterStats.ID + " | Registered Settings");
+	console.log(RNCS.ID + " | Registered Settings");
 }
     
 class ChatSettings extends FormApplication {
@@ -335,7 +359,7 @@ class ChatSettings extends FormApplication {
     }
 }
 
-class RollAndDistributionMethod extends FormApplication {
+class RollAndDistributionMethodSettings extends FormApplication {
 
     AbilitiesRollMethod_choices = {
         "0": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.0"),

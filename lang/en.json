@@ -27,6 +27,19 @@
         "Name": "Reverse Ring Method Scrolling",
         "Hint": "Reverse the default mouse wheel scroll direction during Ring Method selection."    
       },
+      "ShowOtherPropertyResults": {
+        "Name": "Show Other Property Results",
+        "Hint": "Select how you want Other Property Results displayed with Result Description. Other Properties Results are other rolls executed by Enhanced Support for things like class, equipment, weapons, armor, etc." ,
+        "choices":{
+          "do-not-show": "Do not show",
+          "with-result": "With result description",
+          "in-place-of": "In place of result description"
+        }     
+      },
+      "IncludeResultDescription": {
+        "Name": "Include Result Description",
+        "Hint": "This setting will include result description from Other Property Results on character sheet; such as in Biography, Backstory or Notes."    
+      },
       "RollMethodAndDistribution": {
         "Name": "Roll Method & Distribution",
         "Hint": "Select how many dice to roll, how many sets to roll, how to distribute results and other roll method and distribution rules."    
@@ -73,7 +86,7 @@
       },
       "Over18Allowed": {        
         "Name": "Scores Over 18 Allowed",
-        "Hint": "Checking this setting will allow scores over 18 when distributing rolled scores and/or bonuses. Setting is ignored when Distribute Method selected is \"Apply as Rolled\" - and no Bonus Points are awarded."    
+        "Hint": "Checking this setting will allow scores over 18 when distributing rolled scores and/or bonuses. Setting is ignored when Distribution Method selected is \"Apply as Rolled\" - and no Bonus Points are awarded."    
       },
       "DistributeResults": {
         "Name": "Distribute Results",
@@ -101,8 +114,8 @@
         "Hint": "Show character description - if any."
       },
       "ChatShowMethodText":{
-        "Name": "Method",
-        "Hint": "Show the method used to roll the dice and other rules."
+        "Name": "Roll Method & Distribution",
+        "Hint": "Show the Roll Method & Distribution rules for new abilities."
       },
       "ChatShowResultsText":{
         "Name": "Ability Results",
@@ -132,7 +145,7 @@
 
     "results-text": {
       "methods":{
-        "label": "Method",
+        "label": "Roll Method & Distribution",
         "drop-lowest-die": " - drop lowest die",
         "re-roll-ones": " - reroll ones",
         "drop-lowest-set": " - drop lowest set",
@@ -174,8 +187,7 @@
     
     "dialog":{
       "confirm-roll":{
-        "Title": "Roll Abilities",
-        "Method": "New abilities are rolled using the following method:",
+        "Title": "Roll New Character Stats",
         "Content": "Roll dice for {0} new {1}?"
       },
       "results-button":{

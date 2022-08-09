@@ -1,8 +1,10 @@
 import { base_ActorHelper } from './_base-actor-helper.js';
+
+// OPR_CONSTANTS
+const opr = {}
+
 export default class dnd5e_ActorHelper extends base_ActorHelper {
 
-    // OPR_CONSTANTS
-    
     // base property overrides
 
     // game system unique properties

@@ -5,7 +5,6 @@ import { Controls } from './controls.js';
 import { ConfigureActor } from './form-apps/configure-actor.js';
 
 Hooks.once("init", () => {
-	console.log(RollNewCharacterStats.ID + " | Initialized")
 	registerSettings();
 
 	// Register Handlebars helpers
@@ -23,6 +22,7 @@ Hooks.once("init", () => {
 	Handlebars.registerHelper("if_AorB", function (a, b, options) {
 		if (a || b){return options.fn(this);}else{options.inverse(this);}
 	});
+	console.log(RNCS.ID + " | Initialized")
 
 });
 
@@ -71,7 +71,7 @@ Hooks.on("renderChatLog", (app, [html]) => {
 	});
 }); 
 
-export class RollNewCharacterStats {
+export class RNCS {
 	static ID = 'roll-new-character-stats';
 }
 
@@ -143,9 +143,7 @@ export async function RollStats() {
 			// Roll abilities
 			dice_roller = new DiceRoller()
 			await dice_roller.RollThemDice();
-			console.log(dice_roller._roll_data);
 			// Show results
-			const _settings = new RegisteredSettings;
 			if (_settings.DiceSoNiceEnabled) {
 				let data = { throws: [{ dice: dice_roller._roll_data }] };
 				await game.dice3d?.show(data)
@@ -197,6 +195,11 @@ async function ShowResultsInChatMessage(dice_roller) {
 		results_message += await dice_roller.GetResultsAbilitiesText();
 	}
 
+	// Add Die Results Set (Abilitites) to message
+	if(_settings.ChatShowDieResultSet){
+		results_message += await dice_roller.GetDieResultSet();
+	}
+
 	// Add Bonus Point(s) to message
 	if(_settings.ChatShowBonusPointsText){
 		results_message += dice_roller.GetBonusPointsText();
@@ -220,7 +223,7 @@ async function ShowResultsInChatMessage(dice_roller) {
 			results_message += "</button></div></div>"
 			break;
 		default:
-			console.log(RollNewCharacterStats.ID + " | unable to add [" + game.i18n.localize("RNCS.dialog.results-button.configure-new-actor") + "] button to chat card. Game system not supported yet.");
+			console.log(RNCS.ID + " | unable to add [" + game.i18n.localize("RNCS.dialog.results-button.configure-new-actor") + "] button to chat card. Game system not supported yet.");
 	}
 
 	ChatMessage.create({

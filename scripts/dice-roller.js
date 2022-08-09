@@ -357,7 +357,7 @@ export class DiceRoller {
         // Abilities
         const system_helper = new GAME_SYSTEM_Helper();
         const abilities = await system_helper.getSystemAbilities();
-        let results_text = "<b>" + game.i18n.localize("RNCS.results-text.results.label") + ":</b> " + game.i18n.localize("RNCS.results-text.results.abilities") + "</br>";
+        let results_text = "<p>";
         let apply_to = "";
         let att_idx = 0;
         let d6_results = []
@@ -381,32 +381,46 @@ export class DiceRoller {
         }
         else {
             // Detailed rolls
+            results_text += "<table>";
+            results_text += "<th>" + (this._settings.DistributionMethod === "0" ? "Ability" : "Roll") + "</th>"
+            results_text += "<th>" + (this._settings.DistributionMethod === "0" ? "Score" : "Total") + "</th>"
+            results_text += "<th>Die Results</th>"
             for (let set = 0; set < this.results_abilities.length; set++) {
                 d6_results = this.results_abilities[set].dice[0].results.map(function (e) { return e.result; }).join(', ');
-                apply_to = att_idx < abilities.length && this._settings.DistributionMethod === "0" && this.drop_val_index !== set ? "<label class=\"rncs-ability-text\">" + abilities[att_idx] + "</label>: " : "";
-                results_text += apply_to;
-                results_text += this.drop_val_index === set ? "Dropped => " : "";
-                results_text += this.results_abilities[set].total + " [" + d6_results + "]";
+                apply_to = att_idx < abilities.length && this._settings.DistributionMethod === "0" && this.drop_val_index !== set ? "<label class=\"rncs-ability-text\">" + abilities[att_idx] + "</label>: " : "R" + (set + 1);
+                
+                results_text += "<tr>";
+                results_text += "<td>" + (this.drop_val_index === set ? "Dropped" : apply_to) + "</td>";
+                results_text += "<td>" + this.results_abilities[set].total; 
                 if (this.drop_val_index !== set && this.results_abilities[set].total === 18) { results_text += " - Booyah!"; }
-                if (set < this.results_abilities.length - 1) { results_text += "<br />"; }
+                results_text += "</td>";
+                results_text += "<td>" + d6_results + "</td>";
+                results_text += "</tr>";
+                
                 if (this.drop_val_index !== set) { att_idx++; }
             }
+            results_text += "</table>";
         }
-
-        if (this._settings.ChatShowDieResultSet) {
-            results_text += "<span style=\"font-size: smaller;\">d6 = [";
-            let individual_rolls = this.GetIndividualRolls();
-            for (let i = 0; i < individual_rolls.length; i += 1) {
-                results_text += individual_rolls[i].result + (i < individual_rolls.length - 1 ? ", " : "");
-            }
-            results_text += "]</span>";
-        }
+        results_text += "</p>";
         
         return results_text;
     }
 
+    GetDieResultSet() {
+
+        let results_text = "</p>";
+        results_text += "<span style=\"font-size: smaller;\">d6 = [";
+        let individual_rolls = this.GetIndividualRolls();
+        for (let i = 0; i < individual_rolls.length; i += 1) {
+            results_text += individual_rolls[i].result + (i < individual_rolls.length - 1 ? ", " : "");
+        }
+        results_text += "]</span>";
+        results_text += "<p>";
+        return results_text;
+    }
+
     GetBonusPointsText(){
-        return (this._settingIsBonusPointApplied() ? "<p><b>" + game.i18n.localize("RNCS.results-text.bonus.label") + ":</b> " + this.bonus_point_total + "</p>" : "</br>");
+        return (this._settingIsBonusPointApplied() ? "<p><b>" + game.i18n.localize("RNCS.results-text.bonus.label") + ":</b> " + this.bonus_point_total + "</p>" : "");
     }
 
     GetNoteFromDM(){

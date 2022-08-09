@@ -8,6 +8,8 @@ export class RegisteredSettings{
     NameFormat = game.settings.get(settingsKey, "NameFormat");
     HideResultsZone = game.settings.get(settingsKey, "HideResultsZone");
     ReverseRingMethodScrolling = game.settings.get(settingsKey, "ReverseRingMethodScrolling");
+    ShowOtherPropertyResults = game.settings.get(settingsKey, "ShowOtherPropertyResults");
+    IncludeResultDescription = game.settings.get(settingsKey, "IncludeResultDescription");
 
     AbilitiesRollMethod = game.settings.get(settingsKey, "AbilitiesRollMethod");
     DropLowestDieRoll = game.settings.get(settingsKey, "DropLowestDieRoll");
