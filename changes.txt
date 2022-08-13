@@ -1,3 +1,20 @@
+v3.1.4 - 8/12/2022
+----------------------------------------------
+- "Reconfigured Settings"
+
+- Removed need for namedfields in constants.js
+
+- Changed all numerical setting choice id's to human friendly id's.
+    This is going to cause some issues with current settings. 
+    You will be prompted to restore the module to default settings when you update to v3.1.4 or a later version from v3.1.3 or earlier version.
+    Not restoring to default settings may cause unwanted results. Sorry for any inconvenience.
+
+    Full Disclosure: I had several settings that were id'd with labels like "0", "1", "2", etc. 
+    This was beginning to become unmanageable - so I got in front of it now instead of when I had a list of choices 20+ deep.
+    Future settings will have a human friendly name going forward. If the value represents a number (like NumberOfSetsRolled), 
+    then it will be labeled as such. i.e. "6", "7", "8", "9"...
+
+
 v3.1.3 - 8/8/2022
 ----------------------------------------------
 - Added "variant" ability score interface to Configure Actor form. Races with variant ability score increases can now move those values around.

@@ -5,28 +5,22 @@
  */
 
 import { RegisteredSettings } from "./registered-settings.js";
-import { namedfields } from "./constants.js";
 import GAME_SYSTEM_Helper from "../data/game-system-helper.js";
 import dcc_ActorHelper from "./helpers/dcc-actor-helper.js";
-
-const num_dice = namedfields('description', 'die', 'difficulty');
-const num_roll = namedfields('description', 'roll_count', 'difficulty');
-const bonus_points = namedfields('description', 'difficulty');
 
 export class DiceRoller {
 
     _settings = new RegisteredSettings;
     _other_properties_results = [];
     _roll_data = [];
+    _bonus_point_total = 0;
 
     constructor(
         results_abilities = [], // Results of dice rolled for abilities
         drop_val_index = -1,    // Index of roll to be displayed as "Dropped =>" from [results_abilities] 
-        bonus_point_total = 0,       // Result of RollBonusPoints()
     ) {
         this.results_abilities = results_abilities,
-        this.drop_val_index = drop_val_index,
-        this.bonus_point_total = bonus_point_total
+        this.drop_val_index = drop_val_index
     }
 
     // Roll Them Dice!
@@ -92,17 +86,17 @@ export class DiceRoller {
         }
 
         // Bonus Points
-        switch (parseInt(this._settings.BonusPoints)) {
-            case 0: //"0 Bonus Points":
-                this.bonus_point_total = 0;
+        switch (this._settings.BonusPoints) {
+            case "zero-points":
+                this._bonus_point_total = 0;
                 break;
-            case 1: //"1 Bonus Point":
-                this.bonus_point_total = 1;
+            case "one-point":
+                this._bonus_point_total = 1;
                 break;
-            case 2: //"1d4 Bonus Points":
+            case "one-d-four":
                 const bonus = new Roll("1d4");
                 const bonus_result = bonus.evaluate({ async: false });
-                this.bonus_point_total = bonus_result.total;
+                this._bonus_point_total = bonus_result.total;
                     
                 // Get roll data
                 this.GetRollData(bonus_result, 0);
@@ -190,63 +184,20 @@ export class DiceRoller {
         return _individual_rolls;
     }
 
-    NumberOfActors() {
+    _settingNumberOfActors() {
         return parseInt(this._settings.NumberOfActors);
     }
     
-    // Roll method details for Abilities (3d6, 4d6, 2d6+6, etc...)
-    AbilitiesRollMethod() {
-        return [
-            num_dice(game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.0"), 3, 0),
-            num_dice(game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.1"), 4, 1),
-            num_dice(game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.2"), 2, 2)
-        ];
-    }
-    AbilitiesRollMethodDesc() {
-        return this.AbilitiesRollMethod()[parseInt(this._settings.AbilitiesRollMethod)].description;
-    }
     _settingAbilitiesRollMethodNumDie() {
-        return this.AbilitiesRollMethod()[parseInt(this._settings.AbilitiesRollMethod)].die;
-    }
-    AbilitiesRollMethodDifficulty() {
-        return this.AbilitiesRollMethod()[parseInt(this._settings.AbilitiesRollMethod)].difficulty;
+        return parseInt(this._settings.AbilitiesRollMethod);
     }
 
-    // Number of rolls details for Abilities (6 Sets, 7 Sets, etc...)
-    NumberOfSetsRolled() {
-        return [
-            num_roll(game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.0"), 6, 0),
-            num_roll(game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.1"), 7, 1),
-            num_roll(game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.2"), 8, 2),
-            num_roll(game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.3"), 9, 3)
-        ];
-    }
-    NumberOfSetsRolledDesc() {
-        return this.NumberOfSetsRolled()[parseInt(this._settings.NumberOfSetsRolled)].description;
-    }
     _settingNumberOfSetsRolledCount() {
-        return this.NumberOfSetsRolled()[parseInt(this._settings.NumberOfSetsRolled)].roll_count;
-    }
-    NumberOfSetsRolledDifficulty() {
-        return this.NumberOfSetsRolled()[parseInt(this._settings.NumberOfSetsRolled)].difficulty;
+        return parseInt(this._settings.NumberOfSetsRolled);
     }
 
-    // Bonus Point details
-    BonusPoints() {
-        return [
-            bonus_points(game.i18n.localize("RNCS.settings.BonusPoints.choices.0"), 0),
-            bonus_points(game.i18n.localize("RNCS.settings.BonusPoints.choices.1"), 1),
-            bonus_points(game.i18n.localize("RNCS.settings.BonusPoints.choices.2"), 3)
-        ];
-    }
-    BonusPointsDesc() {
-        return this.BonusPoints()[parseInt(this._settings.BonusPoints)].description;
-    }
-    BonusPointsDifficulty() {
-        return this.BonusPoints()[parseInt(this._settings.BonusPoints)].difficulty;
-    }
     _settingIsBonusPointApplied() {
-        return parseInt(this._settings.BonusPoints) > 0;
+        return this._settings.BonusPoints !== "zero-points";
     }
 
     // Get Other Properties Results description
@@ -291,8 +242,8 @@ export class DiceRoller {
         method_text += (this._settings.ReRollOnes ? game.i18n.localize("RNCS.results-text.methods.re-roll-ones") : "") + "</br>";
         method_text += game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices." + this._settings.NumberOfSetsRolled);
         method_text += (this._settings.DropLowestSet ? game.i18n.localize("RNCS.results-text.methods.drop-lowest-set") : "") + "</br>";
-        method_text += (this._settings.BonusPoints > 0 ? "+" + game.i18n.localize("RNCS.settings.BonusPoints.choices." + this._settings.BonusPoints) + "</br>" : "");
-        if(!this._settings.Over18Allowed && (this._settings.DistributionMethod > 0 || this._settings.BonusPoints > 0 || game.system.id === "dnd5e"))
+        method_text += (this._settingIsBonusPointApplied() ? "+" + game.i18n.localize("RNCS.settings.BonusPoints.choices." + this._settings.BonusPoints) + "</br>" : "");        
+        if(!this._settings.Over18Allowed && (this._settings.DistributionMethod !== "apply-as-rolled" || this._settingIsBonusPointApplied() || game.system.id === "dnd5e"))
         {
             method_text += game.i18n.localize("RNCS.results-text.methods.over-18-not-allowed") + "</br>"
         }
@@ -302,20 +253,33 @@ export class DiceRoller {
     }
     GetDifficultyDesc() {
 
+        // AbilitiesRollMethod
         let difficulty = 0;
-        
-        // Drop down selections with namedfields
-        difficulty += this.AbilitiesRollMethodDifficulty();
-        difficulty += this.NumberOfSetsRolledDifficulty();
-        difficulty += this.BonusPointsDifficulty();
-        difficulty += parseInt(this._settings.DistributionMethod);//0 = apply as rolled, 2 = distribute, 3 = ring method
+        difficulty += this._settings.AbilitiesRollMethod === "3" ? 0 : 0;
+        difficulty += this._settings.AbilitiesRollMethod === "4" ? 1 : 0;
+        difficulty += this._settings.AbilitiesRollMethod === "2" ? 2 : 0;
+
+        // NumberOfSetsRolled
+        difficulty += this._settings.NumberOfSetsRolled === "6" ? 0 : 0;
+        difficulty += this._settings.NumberOfSetsRolled === "7" ? 1 : 0;
+        difficulty += this._settings.NumberOfSetsRolled === "8" ? 2 : 0;
+        difficulty += this._settings.NumberOfSetsRolled === "9" ? 3 : 0;
+
+        // BonusPoints
+        difficulty += this._settings.BonusPoints === "zero-points" ? 0 : 0;
+        difficulty += this._settings.BonusPoints === "one-point" ? 1 : 0;
+        difficulty += this._settings.BonusPoints === "one-d-four" ? 3 : 0;
+
+        // DistributionMethod
+        difficulty += this._settings.DistributionMethod === "apply as rolled" ? 0 : 0;   
+        difficulty += this._settings.DistributionMethod === "distribute-freely" ? 2 : 0;  
+        difficulty += this._settings.DistributionMethod === "ring-method" ? 3 : 0;        
 
         // Check Box selections
         difficulty += this._settings.ReRollOnes ? 3 : 0;
         difficulty += this._settings.DropLowestDieRoll ? 1 : 0;
         difficulty += this._settings.DropLowestSet ? 1 : 0;
         difficulty += this._settings.Over18Allowed ? 2 : 0;
-        // difficulty += this._settings.DistributeResults ? 3 : 0;
 
         let difficulty_desc = "<p><b>" + game.i18n.localize("RNCS.results-text.difficulty.label") + ":</b> ";
         // There are so many other ways to skin this cat,... 
@@ -343,6 +307,9 @@ export class DiceRoller {
             case 13:
             case 14:
             case 15:
+            case 16:
+            case 17:
+            case 18:
                 difficulty_desc += game.i18n.localize("RNCS.results-text.difficulty.level.Yawn");
                 break;
             default:
@@ -370,7 +337,7 @@ export class DiceRoller {
             results_text += "<table><tr>";
             for (let set = 0; set < this.results_abilities.length; set++) {
                 d6_results = this.results_abilities[set].dice[0].results.map(function (e) { return e.result; }).join(', ');
-                apply_to = (att_idx < abilities.length && this._settings.DistributionMethod === "0" && this.drop_val_index !== set ? abilities[att_idx] : "R" + (set + 1));
+                apply_to = (att_idx < abilities.length && this._settings.DistributionMethod === "apply-as-rolled" && this.drop_val_index !== set ? abilities[att_idx] : "R" + (set + 1));
                 results_text += "<td style=\"text-align: center;\">";
                 results_text += "<label class=\"rncs-ability-text\">" + (this.drop_val_index === set ? "X" : apply_to) + "</label><br>";
                 results_text += this.results_abilities[set].total
@@ -382,12 +349,12 @@ export class DiceRoller {
         else {
             // Detailed rolls
             results_text += "<table>";
-            results_text += "<th>" + (this._settings.DistributionMethod === "0" ? "Ability" : "Roll") + "</th>"
-            results_text += "<th>" + (this._settings.DistributionMethod === "0" ? "Score" : "Total") + "</th>"
+            results_text += "<th>" + (this._settings.DistributionMethod === "apply-as-rolled" ? "Ability" : "Roll") + "</th>"
+            results_text += "<th>" + (this._settings.DistributionMethod === "apply-as-rolled" ? "Score" : "Total") + "</th>"
             results_text += "<th>Die Results</th>"
             for (let set = 0; set < this.results_abilities.length; set++) {
                 d6_results = this.results_abilities[set].dice[0].results.map(function (e) { return e.result; }).join(', ');
-                apply_to = att_idx < abilities.length && this._settings.DistributionMethod === "0" && this.drop_val_index !== set ? "<label class=\"rncs-ability-text\">" + abilities[att_idx] + "</label>: " : "R" + (set + 1);
+                apply_to = att_idx < abilities.length && this._settings.DistributionMethod === "apply-as-rolled" && this.drop_val_index !== set ? "<label class=\"rncs-ability-text\">" + abilities[att_idx] + "</label>: " : "R" + (set + 1);
                 
                 results_text += "<tr>";
                 results_text += "<td>" + (this.drop_val_index === set ? "Dropped" : apply_to) + "</td>";
@@ -420,7 +387,7 @@ export class DiceRoller {
     }
 
     GetBonusPointsText(){
-        return (this._settingIsBonusPointApplied() ? "<p><b>" + game.i18n.localize("RNCS.results-text.bonus.label") + ":</b> " + this.bonus_point_total + "</p>" : "");
+        return (this._settingIsBonusPointApplied() ? "<p><b>" + game.i18n.localize("RNCS.results-text.bonus.label") + ":</b> " + this._bonus_point_total + "</p>" : "");
     }
 
     GetNoteFromDM(){
@@ -429,13 +396,13 @@ export class DiceRoller {
         note_from_dm += "<em>";
         
         switch (this._settings.DistributionMethod) {
-            case "0":
+            case "apply-as-rolled":
                 note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.apply-as-rolled")
                 break;
-            case "1":
+            case "distribute-freely":
                 note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.distribute-freely")
                 break;
-            case "2":
+            case "ring-method":
                 note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.ring-method")
                 break;
         }
@@ -444,7 +411,7 @@ export class DiceRoller {
         if (this._settingIsBonusPointApplied()) { note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.distribute-bonus-points"); }
 
         // Mention final score limit - if any
-        if(!this._settings.Over18Allowed && (this._settings.DistributionMethod > 0 || this._settingIsBonusPointApplied()))
+        if(!this._settings.Over18Allowed && (this._settings.DistributionMethod !== "apply-as-rolled" || this._settingIsBonusPointApplied()))
         {
             note_from_dm += (this._settings.Over18Allowed ? game.i18n.localize("RNCS.results-text.note-from-dm.final-scores-may") : game.i18n.localize("RNCS.results-text.note-from-dm.final-scores-may-not")) + game.i18n.localize("RNCS.results-text.note-from-dm.above-18");
             // Mention bonus points - if any - and any other bonuses

@@ -1,6 +1,10 @@
 {
   "RNCS": {
     "settings": {
+      "version": {
+        "title": "Module update detected",
+        "content": "<p>Thank you for updating!</p><p>Settings configurations have been changed since your last update and will need to be restored to default settings.</p><p>Please read v3.1.4 <a href=\"https://github.com/MrXofar/roll-new-character-stats/blob/master/changes.txt\">changes.txt</a> to find out more.</p>"
+      },
       "NumberOfActors": {
         "Name": "Number of Actors",
         "Hint": "Enter how many actors do you want rolled. Use with CAUTION if Dice So Nice! is enabled."    
@@ -13,10 +17,10 @@
         "Name": "Name Format",
         "Hint": "Character Name format if no name is provided." ,
         "choices":{
-          "0": "Player (Occupation)",
-          "1": "Occupation (Player)",
-          "2": "Occupation",
-          "3": "Random"
+          "player-occupation": "Player (Occupation)",
+          "occupation-player": "Occupation (Player)",
+          "occupation"       : "Occupation",
+          "random"           : "Random"
         }     
       },
       "HideResultsZone": {
@@ -48,8 +52,8 @@
         "Name": "Number of d6 Rolled",
         "Hint": "Select how many d6 are to be rolled",
         "choices":{
-          "0": "3d6",
-          "1": "4d6",
+          "3": "3d6",
+          "4": "4d6",
           "2": "2d6+6"
         }        
       },
@@ -65,10 +69,10 @@
         "Name": "Number of Sets Rolled",
         "Hint": "Select how many sets of die are to be rolled",
         "choices":{
-          "0":"6 Sets",
-          "1":"7 Sets",
-          "2":"8 Sets",
-          "3":"9 Sets"
+          "6": "6 Sets",
+          "7": "7 Sets",
+          "8": "8 Sets",
+          "9": "9 Sets"
         }        
       },
       "DropLowestSet": {
@@ -79,9 +83,9 @@
         "Name": "Bonus Points",
         "Hint": "Select how many bonus points are to be awarded",
         "choices":{
-          "0": "0 Bonus Points",
-          "1": "1 Bonus Point",
-          "2": "1d4 Bonus Points"
+          "zero-points" : "0 Bonus Points",
+          "one-point"   : "1 Bonus Point",
+          "one-d-four"  : "1d4 Bonus Points"
         }        
       },
       "Over18Allowed": {        
@@ -96,9 +100,9 @@
         "Name": "Distribution Method",
         "Hint": "Choose how results will be distributed among abilities.",
         "choices":{
-          "0": "Apply as Rolled",
-          "1": "Distribute Freely",
-          "2": "Ring Method"
+          "apply-as-rolled"  : "Apply as Rolled",
+          "distribute-freely": "Distribute Freely",
+          "ring-method"      : "Ring Method"
         }          
       },
       "ChatRemoveConfigureActorButton": {

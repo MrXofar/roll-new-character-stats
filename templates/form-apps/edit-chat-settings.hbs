@@ -1,4 +1,11 @@
 <form>
+    <script>
+        function Intitialize() {            
+            if(game.system.id !== "dcc"){
+                document.getElementById("rncs_chat_show_description")?.classList.add("rncs-display-none");
+            }
+        }
+    </script>
 
     <div class="rncs-display-none">
         <div>ChatRemoveConfigureActorButton_value   :{{ChatRemoveConfigureActorButton_value   }}</div>
@@ -24,7 +31,7 @@
     </div>
 
     {{!-- ChatShowDescription --}}
-    <div class="rncs-form-group rncs-chat-show-description">
+    <div id="rncs_chat_show_description" class="rncs-form-group">
         <label><span>{{localize "RNCS.settings.ChatShowDescription.Name"}}</span></label>
         <div class="rncs-form-fields">
             <input type="checkbox" name="rncs_ChatShowDescription" value="{{ChatShowDescription_value}}" data-dtype="Boolean" {{checked ChatShowDescription_value}}>

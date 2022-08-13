@@ -30,7 +30,6 @@ Hooks.on('getSceneControlButtons', (controls) => {
 	new Controls().initializeControls(controls);
 });
 
-
 Hooks.on("renderChatMessage", (app, [html]) => {
 	//Hide buttons with class "card-buttons rncs-configure-new-actor"
 	const button = html.querySelectorAll(".rncs-configure-new-actor")
@@ -40,7 +39,6 @@ Hooks.on("renderChatMessage", (app, [html]) => {
 		}
 	}
 });
-
 
 Hooks.on("renderChatLog", (app, [html]) => {
 	html.addEventListener("click", ({ target }) => {
@@ -71,8 +69,55 @@ Hooks.on("renderChatLog", (app, [html]) => {
 	});
 }); 
 
+Hooks.on("ready", () => {	
+	if(game.user.isGM) { VersionUpdateValidation(); }
+});
+
+async function VersionUpdateValidation(){
+
+	// Report current module.json version
+	let module_version = game.modules.get(RNCS.ID).data.version;
+	console.log("RNCS | current module.json version:" + module_version);
+
+	// Report old version; game.settings.version.default === "0.0.0"
+	let old_version = game.settings.get(RNCS.ID, "version");
+	if(old_version !== module_version){
+		console.log("RNCS | game.setting old version:" + old_version);
+	}
+	
+	// v3.1.4 - game.setting "BonusPoints" choices (and some others) were converted to human friendly values 
+	// replacing their numerical values; such as "0", "1", "2" etc.
+	// If a setting value !isNaN, then that means it is numeric and settings need to be restored to default.
+	// A notification will popup to inform the user.
+	if(!isNaN(game.settings.get(RNCS.ID, "BonusPoints"))){	
+		console.log("RNCS | ForceDefaultSettings...");	
+		await game.settings.set(RNCS.ID, "ForceDefaultSettings", true);
+	}
+
+	// PLACEHOLDER COMMENT
+	// Do things based on module version change here if they need to be complete prior to the version setting onChange event.
+	//
+	
+	// game.settings.register(RNCS.ID, "version", {...}); listens for this onChange
+	if (old_version !== module_version) {
+		await game.settings.set(RNCS.ID, "version", module_version);
+		console.log("RNCS | game.setting new version:" + game.settings.get(RNCS.ID, "version"));
+	}
+}
+
 export class RNCS {
 	static ID = 'roll-new-character-stats';
+
+	// Restores default settings
+	static async restoreDefaultSettings() {
+		if (!game.user.isGM) return;
+		const rncs_settings = Array.from(game.settings["settings"]).filter(x => x[1].namespace === RNCS.ID 
+																			 && x[1].key !== "version");
+		for (const setting of rncs_settings) {
+			console.log("RNCS | Restoring " + setting[1].key + " to default setting value " + setting[1].default);
+			await game.settings.set(RNCS.ID, setting[1].key);
+		}
+	}
 }
 
 function RemoveButton(msgId) {
@@ -127,6 +172,9 @@ String.prototype.format = function () {
 
 export async function RollStats() {	
 
+	// release all tokens first so it does not look like a character or NPC rolled.
+	canvas.tokens.releaseAll()
+
 	// Roll them dice!
 	const _settings = new RegisteredSettings;
 	let dice_roller = new DiceRoller();	
@@ -139,7 +187,7 @@ export async function RollStats() {
 	  });
 
 	if (confirmed) {
-		for (let _actor = 0; _actor < dice_roller.NumberOfActors(); _actor += 1) {
+		for (let _actor = 0; _actor < dice_roller._settingNumberOfActors(); _actor += 1) {
 			// Roll abilities
 			dice_roller = new DiceRoller()
 			await dice_roller.RollThemDice();
@@ -160,7 +208,7 @@ async function ShowResultsInChatMessage(dice_roller) {
 	const speaker = ChatMessage.getSpeaker();
 	const owner_id = game.user.id;
 	const final_results = dice_roller.GetFinalResults(dice_roller.result_sets);
-	const bonus_points = dice_roller.bonus_point_total;
+	const bonus_points = dice_roller._bonus_point_total;
 	const other_properties_results = dice_roller._other_properties_results;
 	const individual_rolls = dice_roller.GetIndividualRolls();
 
@@ -168,7 +216,7 @@ async function ShowResultsInChatMessage(dice_roller) {
 	// This is necessary for when the Configure Actor button is not removed, and we want the 
 	// the seetings at the time the message was created to still apply to this roll.
 	const Over18Allowed = _settings.Over18Allowed;
-	const HideResultsZone = (_settings.HideResultsZone && _settings.DistributionMethod !== "1") || _settings.DistributionMethod === "2"; // DistributionMethod(1) === Distribute Freely
+	const HideResultsZone = (_settings.HideResultsZone && _settings.DistributionMethod !== "distribute-freely") || _settings.DistributionMethod === "ring-method"; // DistributionMethod(1) === Distribute Freely
 	const DistributionMethod = _settings.DistributionMethod;
 
 	// Results message header
@@ -241,5 +289,4 @@ async function ShowResultsInChatMessage(dice_roller) {
 											DistributionMethod
 										} }//,   occupation, equipment_list, luck 
 	});
-
 }

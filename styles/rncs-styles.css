@@ -37,7 +37,7 @@
     display: none;
   }
   .rncs-display-none{    
-    display: none;
+    display: none !important;
   }
   .rncs-modifier{
     border: none;

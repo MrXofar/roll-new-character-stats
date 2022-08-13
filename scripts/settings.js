@@ -8,7 +8,37 @@ export const settingsKey = "roll-new-character-stats";
 // ***********************************************************************************************
 
 export function registerSettings() {
-    
+
+    game.settings.register(settingsKey, "ForceDefaultSettings", {
+        scope: "world",
+        config: false,
+        type: Boolean,
+        default: false
+    });
+
+    game.settings.register(RNCS.ID, "version", {
+		scope: "world",
+		config: false,
+		default: "0.0.0",
+		type: String,
+		onChange: () => {
+			if (!game.user.isGM || game.settings.get(RNCS.ID,"ForceDefaultSettings") === false) return;
+			new Dialog({
+				title: `RNCS | ${game.i18n.localize("RNCS.settings.version.title")}`,
+				content: game.i18n.localize("RNCS.settings.version.content"),
+				buttons: {
+					yes: {
+						label: game.i18n.localize("OK"),
+						callback: () => {
+							RNCS.restoreDefaultSettings();
+						},
+					},
+				},
+				default: "yes",
+			}).render(true);
+		},
+	});    
+
 	game.settings.registerMenu(settingsKey, "ChatSettings", {
 		name: "",
 		hint: game.i18n.localize("RNCS.settings.ChatSettings.Hint"),
@@ -33,7 +63,7 @@ export function registerSettings() {
         scope: "client",
         config: true,
         type: Number,
-        default: "1"
+        default: 1
     });
 
     game.settings.register(settingsKey, "DiceSoNiceEnabled", {
@@ -53,12 +83,12 @@ export function registerSettings() {
         config: game.system.id === "dcc",
         type: String,
         choices: {
-            "0": game.i18n.localize("RNCS.settings.NameFormat.choices.0"),
-            "1": game.i18n.localize("RNCS.settings.NameFormat.choices.1"),
-            "2": game.i18n.localize("RNCS.settings.NameFormat.choices.2"),
-            "3": game.i18n.localize("RNCS.settings.NameFormat.choices.3")
+            "player-occupation": game.i18n.localize("RNCS.settings.NameFormat.choices.player-occupation"),
+            "occupation-player": game.i18n.localize("RNCS.settings.NameFormat.choices.occupation-player"),
+            "occupation"       : game.i18n.localize("RNCS.settings.NameFormat.choices.occupation"),
+            "random"           : game.i18n.localize("RNCS.settings.NameFormat.choices.random")
         },
-        default: "0"
+        default: "player-occupation"
     });
 
     game.settings.register(settingsKey, "HideResultsZone", {
@@ -101,7 +131,6 @@ export function registerSettings() {
         type: Boolean,
         default: true
     });
-
     // END Config Actor Settings
 
     // BEGIN Chat Settings 
@@ -193,13 +222,13 @@ export function registerSettings() {
         hint: game.i18n.localize("RNCS.settings.AbilitiesRollMethod.Hint"),
         scope: "world",
         config: false,
-        type: String,
+        type: Number,
         choices: {
-            "0": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.0"),
-            "1": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.1"),
+            "3": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.3"),
+            "4": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.4"),
             "2": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.2")
         },
-        default: "0"
+        default: 3
     });
 
     game.settings.register(settingsKey, "DropLowestDieRoll", {
@@ -225,14 +254,14 @@ export function registerSettings() {
         hint: game.i18n.localize("RNCS.settings.NumberOfSetsRolled.Hint"),
         scope: "world",
         config: false,
-        type: String,
+        type: Number,
         choices: {
-            "0": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.0"),
-            "1": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.1"),
-            "2": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.2"),
-            "3": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.3")
+            "6": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.6"),
+            "7": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.7"),
+            "8": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.8"),
+            "9": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.9")
         },
-        default: "0"
+        default: 6
     });
 
     game.settings.register(settingsKey, "DropLowestSet", {
@@ -251,11 +280,11 @@ export function registerSettings() {
         config: false,
         type: String,
         choices: {
-            "0": game.i18n.localize("RNCS.settings.BonusPoints.choices.0"),
-            "1": game.i18n.localize("RNCS.settings.BonusPoints.choices.1"),
-            "2": game.i18n.localize("RNCS.settings.BonusPoints.choices.2")
+            "zero-points": game.i18n.localize("RNCS.settings.BonusPoints.choices.zero-points"),
+            "one-point"  : game.i18n.localize("RNCS.settings.BonusPoints.choices.one-point"),
+            "one-d-four" : game.i18n.localize("RNCS.settings.BonusPoints.choices.one-d-four")
         },
-        default: "0"
+        default: "zero-points"
     });
 
     game.settings.register(settingsKey, "Over18Allowed", {
@@ -267,15 +296,6 @@ export function registerSettings() {
         default: false
     });
 
-    // game.settings.register(settingsKey, "DistributeResults", {
-    //     name: game.i18n.localize("RNCS.settings.DistributeResults.Name"),
-    //     hint: game.i18n.localize("RNCS.settings.DistributeResults.Hint"),
-    //     scope: "world",
-    //     config: false,  // deprecated in v3.1.0
-    //     type: Boolean,
-    //     default: false
-    // });
-
     game.settings.register(settingsKey, "DistributionMethod", {
         name: game.i18n.localize("RNCS.settings.DistributionMethod.Name"),
         hint: game.i18n.localize("RNCS.settings.DistributionMethod.Hint"),
@@ -283,39 +303,43 @@ export function registerSettings() {
         config: false,
         type: String,
         choices: {
-            "0": game.i18n.localize("RNCS.settings.DistributionMethod.choices.0"),
-            "1": game.i18n.localize("RNCS.settings.DistributionMethod.choices.1"),
-            "2": game.i18n.localize("RNCS.settings.DistributionMethod.choices.2")
+            "apply-as-rolled"  : game.i18n.localize("RNCS.settings.DistributionMethod.choices.apply-as-rolled"  ),
+            "distribute-freely": game.i18n.localize("RNCS.settings.DistributionMethod.choices.distribute-freely"),
+            "ring-method"      : game.i18n.localize("RNCS.settings.DistributionMethod.choices.ring-method"      )
         },
-        default: "0"
+        default: "apply-as-rolled"
     });
     // END Roll & Distribution Method Settings
     
-    // game.settings.register(settingsKey, "setting_name", {
-    //     name: game.i18n.localize("RNCS.settings.setting_name.Name"),
-    //     hint: game.i18n.localize("RNCS.settings.setting_name.Hint"),
+    // game.settings.register(settingsKey, "SettingName", {
+    //     name: game.i18n.localize("RNCS.settings.SettingName.Name"),
+    //     hint: game.i18n.localize("RNCS.settings.SettingName.Hint"),
     //     scope: "world",
     //     config: true,
     //     type: Boolean,
     //     default: false
     // });
 
-    // game.settings.register(settingsKey, "setting_name", {
-    //     name: game.i18n.localize("RNCS.settings.setting_name.Name"),
-    //     hint: game.i18n.localize("RNCS.settings.setting_name.Hint"),
+    // game.settings.register(settingsKey, "SettingName", {
+    //     name: game.i18n.localize("RNCS.settings.SettingName.Name"),
+    //     hint: game.i18n.localize("RNCS.settings.SettingName.Hint"),
     //     scope: "world",
     //     config: true,
     //     type: String,
     //     choices: {
-    //         "0": game.i18n.localize("RNCS.settings.setting_name.choices.0"),
-    //         "1": game.i18n.localize("RNCS.settings.setting_name.choices.1"),
-    //         "2": game.i18n.localize("RNCS.settings.setting_name.choices.2")
+    //         "0": game.i18n.localize("RNCS.settings.SettingName.choices.0"),
+    //         "1": game.i18n.localize("RNCS.settings.SettingName.choices.1"),
+    //         "2": game.i18n.localize("RNCS.settings.SettingName.choices.2")
     //     },
     //     default: "0"
     // });
 
 	console.log(RNCS.ID + " | Registered Settings");
 }
+
+Hooks.on('renderChatSettings', () => {
+    Intitialize();
+});
     
 class ChatSettings extends FormApplication {
 
@@ -346,44 +370,44 @@ class ChatSettings extends FormApplication {
     
     async _updateObject(event, formData) {
         if(event.submitter.id !== "cancel"){
-            game.settings.set("roll-new-character-stats", "ChatRemoveConfigureActorButton", formData.rncs_ChatRemoveConfigureActorButton),
-            game.settings.set("roll-new-character-stats", "ChatShowDescription", formData.rncs_ChatShowDescription),
-            game.settings.set("roll-new-character-stats", "ChatShowMethodText", formData.rncs_ChatShowMethodText),
-            game.settings.set("roll-new-character-stats", "ChatShowResultsText", formData.rncs_ChatShowResultsText),
-            game.settings.set("roll-new-character-stats", "ChatShowCondensedResults", formData.rncs_ChatShowCondensedResults),
-            game.settings.set("roll-new-character-stats", "ChatShowDieResultSet", formData.rncs_ChatShowDieResultSet),
-            game.settings.set("roll-new-character-stats", "ChatShowBonusPointsText", formData.rncs_ChatShowBonusPointsText),
-            game.settings.set("roll-new-character-stats", "ChatShowDifficultyText", formData.rncs_ChatShowDifficultyText),
-            game.settings.set("roll-new-character-stats", "ChatShowNoteFromDM", formData.rncs_ChatShowNoteFromDM)
+            game.settings.set(settingsKey, "ChatRemoveConfigureActorButton", formData.rncs_ChatRemoveConfigureActorButton),
+            game.settings.set(settingsKey, "ChatShowDescription", formData.rncs_ChatShowDescription),
+            game.settings.set(settingsKey, "ChatShowMethodText", formData.rncs_ChatShowMethodText),
+            game.settings.set(settingsKey, "ChatShowResultsText", formData.rncs_ChatShowResultsText),
+            game.settings.set(settingsKey, "ChatShowCondensedResults", formData.rncs_ChatShowCondensedResults),
+            game.settings.set(settingsKey, "ChatShowDieResultSet", formData.rncs_ChatShowDieResultSet),
+            game.settings.set(settingsKey, "ChatShowBonusPointsText", formData.rncs_ChatShowBonusPointsText),
+            game.settings.set(settingsKey, "ChatShowDifficultyText", formData.rncs_ChatShowDifficultyText),
+            game.settings.set(settingsKey, "ChatShowNoteFromDM", formData.rncs_ChatShowNoteFromDM)
         }
     }
 }
 
 class RollAndDistributionMethodSettings extends FormApplication {
 
-    AbilitiesRollMethod_choices = {
-        "0": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.0"),
-        "1": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.1"),
+    AbilitiesRollMethod_choices = {// choices.# represents number of d6
+        "3": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.3"),
+        "4": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.4"),
         "2": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.2"),
     }
 
     NumberOfSetsRolled_choices = {
-        "0": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.0"),
-        "1": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.1"),
-        "2": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.2"),
-        "3": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.3")
+        "6": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.6" ),
+        "7": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.7"),
+        "8": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.8"),
+        "9": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.9")
     }
 
     BonusPoints_choices = {
-        "0": game.i18n.localize("RNCS.settings.BonusPoints.choices.0"),
-        "1": game.i18n.localize("RNCS.settings.BonusPoints.choices.1"),
-        "2": game.i18n.localize("RNCS.settings.BonusPoints.choices.2"),
+        "zero-points": game.i18n.localize("RNCS.settings.BonusPoints.choices.zero-points"),
+        "one-point"  : game.i18n.localize("RNCS.settings.BonusPoints.choices.one-point"),
+        "one-d-four" : game.i18n.localize("RNCS.settings.BonusPoints.choices.one-d-four"),
     }
 
     DistributionMethod_choices = {
-        "0": game.i18n.localize("RNCS.settings.DistributionMethod.choices.0"),
-        "1": game.i18n.localize("RNCS.settings.DistributionMethod.choices.1"),
-        "2": game.i18n.localize("RNCS.settings.DistributionMethod.choices.2"),
+        "apply-as-rolled"  : game.i18n.localize("RNCS.settings.DistributionMethod.choices.apply-as-rolled"  ),
+        "distribute-freely": game.i18n.localize("RNCS.settings.DistributionMethod.choices.distribute-freely"),
+        "ring-method"      : game.i18n.localize("RNCS.settings.DistributionMethod.choices.ring-method"      ),
     }
 
     static get defaultOptions() {
@@ -416,14 +440,14 @@ class RollAndDistributionMethodSettings extends FormApplication {
     
     async _updateObject(event, formData) {
         if(event.submitter.id !== "cancel"){
-            game.settings.set("roll-new-character-stats", "AbilitiesRollMethod",  formData.rncs_AbilitiesRollMethod),
-            game.settings.set("roll-new-character-stats", "DropLowestDieRoll",    formData.rncs_DropLowestDieRoll),
-            game.settings.set("roll-new-character-stats", "ReRollOnes",           formData.rncs_ReRollOnes),
-            game.settings.set("roll-new-character-stats", "NumberOfSetsRolled",   formData.rncs_NumberOfSetsRolled),
-            game.settings.set("roll-new-character-stats", "DropLowestSet",        formData.rncs_DropLowestSet),
-            game.settings.set("roll-new-character-stats", "BonusPoints",          formData.rncs_BonusPoints),
-            game.settings.set("roll-new-character-stats", "Over18Allowed",        formData.rncs_Over18Allowed),
-            game.settings.set("roll-new-character-stats", "DistributionMethod",   formData.rncs_DistributionMethod)
+            game.settings.set(settingsKey, "AbilitiesRollMethod",  formData.rncs_AbilitiesRollMethod),
+            game.settings.set(settingsKey, "DropLowestDieRoll",    formData.rncs_DropLowestDieRoll),
+            game.settings.set(settingsKey, "ReRollOnes",           formData.rncs_ReRollOnes),
+            game.settings.set(settingsKey, "NumberOfSetsRolled",   formData.rncs_NumberOfSetsRolled),
+            game.settings.set(settingsKey, "DropLowestSet",        formData.rncs_DropLowestSet),
+            game.settings.set(settingsKey, "BonusPoints",          formData.rncs_BonusPoints),
+            game.settings.set(settingsKey, "Over18Allowed",        formData.rncs_Over18Allowed),
+            game.settings.set(settingsKey, "DistributionMethod",   formData.rncs_DistributionMethod)
         }
     }
 }

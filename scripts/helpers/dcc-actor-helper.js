@@ -110,7 +110,8 @@ export default class dcc_ActorHelper extends base_ActorHelper {
 
     BuildDescription(){
 
-        // Example:
+        // Examples:
+        // Show description only (default)
         // Hit Points HP: 3 (+1) || (+Stamina Modifier)
         // Occupation: Rope maker
         // Weapon: Knife (as dagger)
@@ -119,10 +120,28 @@ export default class dcc_ActorHelper extends base_ActorHelper {
         // Money: 28 cp
         // Birth Augur: Lived through famine: Fortitude saving throws (+1) || (+Luck Modifier)
 
+        //OR
+        // Show result with description
+        // Hit Points HP: 3 (+1) || (+Stamina Modifier)
+        // Occupation: Ditch Digger                                         17
+        // Weapon: Knife (as dagger)
+        // Trade Good: Rope, 100’
+        // Equipment: Holy Symbol                                           11
+        // Money: 28 cp
+        // Birth Augur: Born under the loom: ... (+1) || (+Luck Modifier)   10
+
+        // OR
+        // Show results in place of description
+        // Hit Points HP: 3 (+1) || (+Stamina Modifier)
+        // Occupation: 99
+        // Equipment: 4
+        // Money: 28 cp
+        // Birth Augur: 16
+
         this.note += "<table>";
         this.note += "<tr>";
         this.note += "<td style=\"width: 28%;\">Hit Points:</td><td>" + this._hp_base;        
-        if(this._settings.DistributionMethod === "0"){
+        if(this._settings.DistributionMethod === "apply-as-rolled"){
             this.note += " (" + (this.stamina_modifier >= 0 ? "+" : "") + this.stamina_modifier + ")</td>";
         }
         else{
@@ -187,7 +206,7 @@ export default class dcc_ActorHelper extends base_ActorHelper {
         }
         else {
             this.note += this.luck;
-            if (this._settings.DistributionMethod === "0") {
+            if (this._settings.DistributionMethod === "apply-as-rolled") {
                 this.note += " (" + (this.luck_modifier >= 0 ? "+" : "") + this.luck_modifier + ")";
             }
             else {
@@ -315,19 +334,19 @@ export default class dcc_ActorHelper extends base_ActorHelper {
 
         if (character_name === "New Actor") {            
             switch (this._settings.NameFormat) {
-                case "0":
+                case "player-occupation":
                     // Player (Occupation)
                     this._character_name = game.users.get(this._owner_id)?.name + " (" + (farmer_type !== "" ? farmer_type + " " : "") + occupation_desc + ")"
                     break;
-                case "1":
+                case "occupation-player":
                     // Occupation (Player)
                     this._character_name = (farmer_type !== "" ? farmer_type + " " : "") + occupation_desc + " (" + game.users.get(this._owner_id)?.name + ")"
                     break;
-                case "2":
+                case "occupation":
                     // Occupation
                     this._character_name = (farmer_type !== "" ? farmer_type + " " : "") + occupation_desc;
                     break;
-                case "3":
+                case "random":
                     // Random name from "Appendix S: Sobriquets"
                     const rolltable_doc = await this._GetDocumentFromCompendium("dcc-core-book.dcc-core-tables", "Appendix S: Sobriquets"); // Premium Pack
                     let result = await rolltable_doc?.roll();

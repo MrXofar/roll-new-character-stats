@@ -11,14 +11,14 @@
             // Apply as Rolled?
             const ability_scores = document.getElementById("ability_scores");
             HideResultsZone(ability_scores.dataset.hideresultszone === "true")
-            HideRingMethodZone(ability_scores.dataset.distributionmethod !== "2");
+            HideRingMethodZone(ability_scores.dataset.distributionmethod !== "ring-method");
             HideBonusPointColumn(ability_scores.dataset.bonus_points === "0");
-            if(ability_scores.dataset.distributionmethod === "0"){
+            if(ability_scores.dataset.distributionmethod === "apply-as-rolled"){
                 ApplyAsRolled();
             }
             
             // Wrap this in Ring Method setting
-            if(ability_scores.dataset.distributionmethod !== "3"){ // Ring Method
+            if(ability_scores.dataset.distributionmethod === "ring-method"){ // Ring Method
                 const individual_rolls_table = document.getElementById("individual_rolls_table");
                 individual_rolls = individual_rolls_table.dataset.individualrolls.split(',');
                 individual_rolls_remaining = {rolls:[]};
@@ -34,7 +34,7 @@
 
             // Game System Specific Configuration
             // If there are no bonus points, and results are applied as rolled, then we can hide the Score column - because the Result col IS the Score.
-            let hide_score_col = ability_scores.dataset.bonus_points === "0" && ability_scores.dataset.distributionmethod === "0"
+            let hide_score_col = ability_scores.dataset.bonus_points === "0" && ability_scores.dataset.distributionmethod === "apply-as-rolled"
             switch (game.system.id) {
 
                 case "dnd5e":
@@ -180,7 +180,7 @@
 
             // Get rows from ability scores table
             const ability_rows = ability_scores.querySelectorAll(".rncs-ability-row");
-            let over18NotAllowed = ability_scores.dataset.over18allowed === "false" && (ability_scores.dataset.distributionmethod > 0 || ability_scores.dataset.bonus_points > 0);
+            let over18NotAllowed = ability_scores.dataset.over18allowed === "false" && (ability_scores.dataset.distributionmethod !== "apply-as-rolled" || ability_scores.dataset.bonus_points > 0);
 
             let score_over_18 = false;
             for (let row = 0; row < ability_rows.length; row += 1) {
