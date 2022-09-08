@@ -20,13 +20,13 @@ export default class dnd5e_ActorHelper extends base_ActorHelper {
 
         // _final_score_display includes Racial Mod - will revisit this when dnd5e implements race items (see pf1).
         await this._actor.update({
-            'data.details.race': data.select_race,
-            'data.abilities.str.value': data.str_final_score_display,
-            'data.abilities.dex.value': data.dex_final_score_display,
-            'data.abilities.con.value': data.con_final_score_display,
-            'data.abilities.int.value': data.int_final_score_display,
-            'data.abilities.wis.value': data.wis_final_score_display,
-            'data.abilities.cha.value': data.cha_final_score_display
+            'system.details.race': data.select_race,
+            'system.abilities.str.value': data.str_final_score_display,
+            'system.abilities.dex.value': data.dex_final_score_display,
+            'system.abilities.con.value': data.con_final_score_display,
+            'system.abilities.int.value': data.int_final_score_display,
+            'system.abilities.wis.value': data.wis_final_score_display,
+            'system.abilities.cha.value': data.cha_final_score_display
         });
     }
 }
