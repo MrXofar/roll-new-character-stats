@@ -53,7 +53,7 @@ export class DiceRoller {
                 break;
         }
         if(formula !== ""){
-            this.RollOtherProperties(formula);
+            await this.RollOtherProperties(formula);
         }
     }
 
@@ -324,7 +324,7 @@ export class DiceRoller {
         // Abilities
         const system_helper = new GAME_SYSTEM_Helper();
         const abilities = await system_helper.getSystemAbilities();
-        let results_text = "<p>";
+        let results_text = "";
         let apply_to = "";
         let att_idx = 0;
         let d6_results = []
@@ -368,21 +368,20 @@ export class DiceRoller {
             }
             results_text += "</table>";
         }
-        results_text += "</p>";
         
         return results_text;
     }
 
     GetDieResultSet() {
 
-        let results_text = "</p>";
+        let results_text = "<p>";
         results_text += "<span style=\"font-size: smaller;\">d6 = [";
         let individual_rolls = this.GetIndividualRolls();
         for (let i = 0; i < individual_rolls.length; i += 1) {
             results_text += individual_rolls[i].result + (i < individual_rolls.length - 1 ? ", " : "");
         }
         results_text += "]</span>";
-        results_text += "<p>";
+        results_text += "</p>";
         return results_text;
     }
 

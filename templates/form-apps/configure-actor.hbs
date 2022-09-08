@@ -4,7 +4,6 @@
         individual_rolls = null;
         individual_rolls_remaining = null; 
         ring_start = 0;
-        ring_reverse = game.settings.get("roll-new-character-stats", "ReverseRingMethodScrolling");
 
         function Intitialize() {
 
@@ -420,6 +419,7 @@
 
         individual_rolls_table.addEventListener("wheel", function (e) {
 
+            ring_reverse = game.settings.get("roll-new-character-stats", "ReverseRingMethodScrolling");
             // TODO: Simplify
             if (e.deltaY > 0) {
                 if(!ring_reverse){

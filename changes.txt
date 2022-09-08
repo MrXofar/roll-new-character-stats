@@ -1,3 +1,28 @@
+v3.1.5 - x/x/2022
+----------------------------------------------
+
+- v10 Compatible
+
+- FIXED: Enhanced DCC Support - Descriptions not showing in chat when Dice so Nice! disabled.
+
+- WORKAROUND
+The following Trade Weapons and Goods do not match up between the Occupation roll table and the Occupation Items table in the DCC system.
+I have temporarily implemented a workaround so the items are properly saved to the chanracter sheet when Accept Actor is clicked.
+
+// Pole (as staff) 		- Trade Weapon - Does not exist in either Weapons or Occupation Items (Will be added to character as "Staff")
+// Hammer				- Trade Weapon - "Hammer (as club)" in Occupation Items
+// Trowel (as dagger)	- Trade Weapon - "Trowel (as Dagger)" in Occupation Items
+// Hand axe				- Trade Weapon - "Handaxe" in Weapons and in Occupation Items
+// Tarot deck			- Trade Good   - "Tarot Deck" in Occupation Items
+// Herding dog**		- Trade Good   - "Herding Dog**" in Occupation Items
+// Deer pelt			- Trade Good   - "Deer Pelt" in Occupation Items
+// Hide armor			- Trade Good   - "Hide Armor" in Occupation Items
+// 4 gp, 14 sp, 27 cp	- Trade Good   - "4gp, 14 sp, 27 cp" in Occupation Items
+// Ukulele				- Trade Good   - "Ukelele" in Occupation Items
+// Leather armor		- Trade Good   - "Leather Armor" in Occupation Items
+// Rope, 100’			- Trade Good   - "Rope, 100'" in Occupation Items
+
+
 v3.1.4 - 8/12/2022
 ----------------------------------------------
 - "Reconfigured Settings"

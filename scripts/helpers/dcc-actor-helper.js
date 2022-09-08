@@ -56,9 +56,9 @@ export default class dcc_ActorHelper extends base_ActorHelper {
 
         if(this.other_properties_results){
             // let test = 36
-            // rolled_occupation = rolltable_doc?.results.contents.filter(x => x.data.range[0] === test && x.data.range[1] >= test)[0];
-            rolled_occupation = rolltable_doc?.results.contents.filter(x => x.data.range[0] <= this.other_properties_results[opr.OCCUPATION] && 
-                                                                         x.data.range[1] >= this.other_properties_results[opr.OCCUPATION])[0];
+            // rolled_occupation = rolltable_doc?.results.contents.filter(x => x.range[0] === test && x.range[1] >= test)[0];
+            rolled_occupation = rolltable_doc?.results.contents.filter(x => x.range[0] <= this.other_properties_results[opr.OCCUPATION] && 
+                                                                         x.range[1] >= this.other_properties_results[opr.OCCUPATION])[0];
         }else{
             let result = await rolltable_doc?.roll(); 
             rolled_occupation = result?.results[0];
@@ -66,15 +66,85 @@ export default class dcc_ActorHelper extends base_ActorHelper {
         }
 
         if (rolled_occupation) { // no further rolls if no Premium Pack
-            this.occupation = rolled_occupation.data.text;
+            this.occupation = rolled_occupation.text;
 
             // Parse out the details
-            // NOTE: This will need to be revisited if roll table "Table 1-3: Occupation" is ever changed. 
+            // NOTE: This will need to be revisited if roll table "Table 1-3: Occupation" is ever changed.
+
             let pattern = /(?<=<td>)(.+?)(?=<\/td>)/g;
             this.occupation_details = this.occupation.match(pattern);
             this.occupation_desc = this.occupation_details[0];  
-            this.trade_weapon = this.occupation_details[1];     
-            this.trade_good = this.occupation_details[2];       
+
+            this.trade_weapon = this.occupation_details[1];
+            // Pole (as staff) 		- Trade Weapon - Does not exist in either Weapons or Occupation Items
+            // Hammer				- Trade Weapon - Hammer (as club) in Occupation Items
+            // Trowel (as dagger)	- Trade Weapon - Trowel (as Dagger) in Occupation Items
+            // Hand axe				- Trade Weapon - Handaxe in Weapons and in Occupation Items 
+            // Workaround until above items are corrected in DCC game system
+            let trade_item_temp = null;
+            trade_item_temp = await this._GetDocumentFromCompendium("dcc-core-book.dcc-core-occupation-items", this.trade_weapon);
+            if (!trade_item_temp) {
+                switch (this.trade_weapon) {
+                    case "Pole (as staff)":
+                        this.trade_weapon = "Staff"; 
+                        break;
+                    case "Hammer":
+                        this.trade_weapon = "Hammer (as club)"; 
+                        break;
+                    case "Trowel (as dagger)":
+                        this.trade_weapon = "Trowel (as Dagger)";
+                        break;
+                    case "Hand axe":
+                        this.trade_weapon = "Handaxe";
+                        break;
+                    default:
+                    // No change	
+                }
+            }
+            
+
+            this.trade_good = this.occupation_details[2];
+            // Tarot deck			- Trade Good   - Tarot Deck in Occupation Items
+            // Herding dog**		- Trade Good   - Herding Dog** in Occupation Items
+            // Deer pelt			- Trade Good   - Deer Pelt in Occupation Items
+            // Hide armor			- Trade Good   - Hide Armor in Occupation Items
+            // 4 gp, 14 sp, 27 cp	- Trade Good   - 4gp, 14 sp, 27 cp in Occupation Items
+            // Ukulele				- Trade Good   - Ukelele in Occupation Items
+            // Leather armor		- Trade Good   - Leather Armor in Occupation Items
+            // Rope, 100’			- Trade Good   - Rope, 100' in Occupation Items
+            // Workaround until above items are corrected in DCC game system
+            trade_item_temp = null;
+            trade_item_temp = await this._GetDocumentFromCompendium("dcc-core-book.dcc-core-occupation-items", this.trade_good);
+            if (!trade_item_temp) {
+                switch (this.trade_good) {
+                    case "Tarot deck":
+                        this.trade_good = "Tarot Deck";
+                        break;
+                    case "Herding dog**":
+                        this.trade_good = "Herding Dog**";
+                        break;
+                    case "Deer pelt":
+                        this.trade_good = "Deer Pelt";
+                        break;
+                    case "Hide armor":
+                        this.trade_good = "Hide Armor";
+                        break;
+                    case "4 gp, 14 sp, 27 cp":
+                        this.trade_good = "4gp, 14 sp, 27 cp";
+                        break;
+                    case "Ukulele":
+                        this.trade_good = "Ukelele";
+                        break;
+                    case "Leather armor":
+                        this.trade_good = "Leather Aarmor";
+                        break;
+                    case "Rope, 100’":
+                        this.trade_good = "Rope, 100'";
+                        break;
+                    default:
+                    // No change			
+                }
+            }
 
             // Some of the following functions are small enough to include inline, but I think this is more readable.
 
@@ -229,8 +299,8 @@ export default class dcc_ActorHelper extends base_ActorHelper {
         let rolled_equipment = null;
 
         if(this.other_properties_results){
-            rolled_equipment = rolltable_doc?.results.contents.filter(x => x.data.range[0] <= this.other_properties_results[opr.EQUIPMENT] && 
-                                                                           x.data.range[1] >= this.other_properties_results[opr.EQUIPMENT])[0];
+            rolled_equipment = rolltable_doc?.results.contents.filter(x => x.range[0] <= this.other_properties_results[opr.EQUIPMENT] && 
+                                                                           x.range[1] >= this.other_properties_results[opr.EQUIPMENT])[0];
         }else{
             let result = await rolltable_doc?.roll()
             rolled_equipment = result?.results[0]
@@ -238,7 +308,7 @@ export default class dcc_ActorHelper extends base_ActorHelper {
         }
 
         if (rolled_equipment) {
-            this.equipment = rolled_equipment.data.text.replace("&amp;", "&"); // Repalce &amp; with & - otherwise, item won't be found in equipment rolltable_doc
+            this.equipment = rolled_equipment.text.replace("&amp;", "&"); // Repalce &amp; with & - otherwise, item won't be found in equipment rolltable_doc
         }
     }
 
@@ -247,8 +317,8 @@ export default class dcc_ActorHelper extends base_ActorHelper {
         let rolled_luck = null;
 
         if(this.other_properties_results){
-            rolled_luck = rolltable_doc?.results.contents.filter(x => x.data.range[0] <= this.other_properties_results[opr.LUCK_STORE] && 
-                                                                      x.data.range[1] >= this.other_properties_results[opr.LUCK_STORE])[0];
+            rolled_luck = rolltable_doc?.results.contents.filter(x => x.range[0] <= this.other_properties_results[opr.LUCK_STORE] && 
+                                                                      x.range[1] >= this.other_properties_results[opr.LUCK_STORE])[0];
         }else{
             let result = await rolltable_doc?.roll();
             rolled_luck = result?.results[0];
@@ -256,7 +326,7 @@ export default class dcc_ActorHelper extends base_ActorHelper {
         }
 
         if (rolled_luck) {
-            this.luck = rolled_luck.data.text;
+            this.luck = rolled_luck.text;
         }
     }
 
@@ -286,9 +356,9 @@ export default class dcc_ActorHelper extends base_ActorHelper {
 
     SetFarmAnimal() {
         // First check to see if there are other farmers || herders
-        const farmers = game.actors.filter(i => new RegExp(/\sFarmer\*/).test(i.data.data.details.occupation.value));
-        const herders = game.actors.filter(i => i.data.data.details.occupation.value === "Herder")
-        const dwarven_herders = game.actors.filter(i => i.data.data.details.occupation.value === "Dwarven herder");
+        const farmers = game.actors.filter(i => new RegExp(/\sFarmer\*/).test(i.system.details.occupation.value));
+        const herders = game.actors.filter(i => i.system.details.occupation.value === "Herder")
+        const dwarven_herders = game.actors.filter(i => i.system.details.occupation.value === "Dwarven herder");
         if ((farmers.length > 0 && this.occupation_desc === "Farmer*") ||
             (herders.length > 0 && this.occupation_desc === "Herder") ||
             (dwarven_herders.length > 0 && this.occupation_desc === "Dwarven herder")) {
@@ -355,7 +425,7 @@ export default class dcc_ActorHelper extends base_ActorHelper {
                         //if (this._settings.DiceSoNiceEnabled) { game.dice3d?.showForRoll(result?.roll); }
                         // Parse out the names
                         let pattern = /(?<=<td>)(.+?)(?=<\/td>)/g;
-                        let name_list = rolled_names.data.text.match(pattern);
+                        let name_list = rolled_names.text.match(pattern);
                         let name_id = this._RollDiceForTotal("1d4", true);
                         this._character_name = name_list[name_id - 1];// Pick from Random Column
                     }
@@ -420,7 +490,7 @@ export default class dcc_ActorHelper extends base_ActorHelper {
             'data.attributes.hp.max': hit_points,
             'data.attributes.ac.value':10 + parseInt(data.agl_modifier),
             'data.attributes.init.value':data.agl_modifier,
-            'data.currency.cp': this._actor.data.data.currency.cp + data.currency_cp,
+            'data.currency.cp': this._actor.system.currency.cp + data.currency_cp,
             'data.saves.frt.value':data.sta_modifier,
             'data.saves.ref.value':data.agl_modifier,
             'data.saves.wil.value':data.per_modifier,

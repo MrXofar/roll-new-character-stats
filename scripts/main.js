@@ -45,7 +45,7 @@ Hooks.on("renderChatLog", (app, [html]) => {
 		const msgId = target.closest(".chat-message[data-message-id]")?.dataset.messageId;
 		if (msgId && target.matches(".chat-card button") && target.dataset.action === "configure_new_actor") {
 			const msg = game.messages.get(msgId);
-			const flags = msg.data.flags.roll_new_character_stats;
+			const flags = msg.flags.roll_new_character_stats;
 
 			const owner_id = flags.owner_id;
 			const final_results = flags.final_results;
@@ -76,7 +76,7 @@ Hooks.on("ready", () => {
 async function VersionUpdateValidation(){
 
 	// Report current module.json version
-	let module_version = game.modules.get(RNCS.ID).data.version;
+	let module_version = game.modules.get(RNCS.ID).version;
 	console.log("RNCS | current module.json version:" + module_version);
 
 	// Report old version; game.settings.version.default === "0.0.0"
@@ -125,7 +125,7 @@ function RemoveButton(msgId) {
 	let chatMessage = game.messages?.get(msgId);
 	if (!chatMessage)
 		return;
-	let content = chatMessage && duplicate(chatMessage.data.content);
+	let content = chatMessage && duplicate(chatMessage.content);
 	const configure_actor_button = /<button data-action="configure_new_actor">[^<]*<\/button>/;
 	content = content?.replace(configure_actor_button, "");
 	chatMessage.update({ content });
@@ -228,7 +228,7 @@ async function ShowResultsInChatMessage(dice_roller) {
 	}
 
 	// Add Method to message
-	results_message += "<div style=\"font-size: small !important;\"><p>"
+	results_message += "<div style=\"font-size: small !important;\">"
 	if(_settings.ChatShowMethodText){
 		results_message += dice_roller.GetMethodText();
 	}
@@ -257,7 +257,7 @@ async function ShowResultsInChatMessage(dice_roller) {
 	if(_settings.ChatShowNoteFromDM){
 		results_message += dice_roller.GetNoteFromDM();
 	}	
-	results_message += "</p></div>"
+	results_message += "</div>"
 
 	// Add Chat Card Button
 	switch (game.system.id) {

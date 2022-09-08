@@ -75,8 +75,8 @@ export class base_ActorHelper {
         const item_doc = await this._GetDocumentFromCompendium(pack_id, item_name);
         // Nothing will become embedded if the pack is not present
         if (item_doc) {
-            const obj_item = item_doc.data.toObject();
-            obj_item.data.quantity = qty;
+            const obj_item = item_doc.toObject();
+            obj_item.quantity = qty;
             await this._actor.createEmbeddedDocuments("Item", [obj_item]);
         }
     }
@@ -88,11 +88,11 @@ export class base_ActorHelper {
         // Nothing will become embedded if the pack is not present
         if (item_doc) {
             // Add weapon modifiers
-            const obj_item = item_doc.data.toObject();
+            const obj_item = item_doc.toObject();
             // NOTE: This works fine for now (for dcc), but may need to be refined for other game systems in the future.
-            obj_item.data.toHit = (hit_mod !== "0" ? hit_mod : "+0");
-            obj_item.data.damage += (dmg_mod !== "0" ? dmg_mod : "");
-            obj_item.data.quantity = qty;            
+            obj_item.toHit = (hit_mod !== "0" ? hit_mod : "+0");
+            obj_item.damage += (dmg_mod !== "0" ? dmg_mod : "");
+            obj_item.quantity = qty;            
             await this._actor.createEmbeddedDocuments("Item", [obj_item]);
         }
     }
