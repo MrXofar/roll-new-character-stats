@@ -179,6 +179,15 @@ export function registerSettings() {
         default: true
     });
 
+    game.settings.register(settingsKey, "ChatShowTotalAbilityScore", {
+        name: game.i18n.localize("RNCS.settings.ChatShowTotalAbilityScore.Name"),
+        hint: game.i18n.localize("RNCS.settings.ChatShowTotalAbilityScore.Hint"),
+        scope: "world",
+        config: false,
+        type: Boolean,
+        default: true
+    });
+
     game.settings.register(settingsKey, "ChatShowDieResultSet", {
         name: game.i18n.localize("RNCS.settings.ChatShowDieResultSet.Name"),
         hint: game.i18n.localize("RNCS.settings.ChatShowDieResultSet.Hint"),
@@ -296,6 +305,26 @@ export function registerSettings() {
         default: false
     });
 
+    game.settings.register(settingsKey, "MinimumAbilityTotal", {
+        name: game.i18n.localize("RNCS.settings.MinimumAbilityTotal.Name"),
+        hint: game.i18n.localize("RNCS.settings.MinimumAbilityTotal.Hint"),
+        scope: "world",
+        config: false,
+        type: Number,
+        default: 0,
+		restricted: true,
+    });
+
+    game.settings.register(settingsKey, "MaximumAbilityTotal", {
+        name: game.i18n.localize("RNCS.settings.MaximumAbilityTotal.Name"),
+        hint: game.i18n.localize("RNCS.settings.MaximumAbilityTotal.Hint"),
+        scope: "world",
+        config: false,
+        type: Number,
+        default: 0,
+		restricted: true,
+    });
+
     game.settings.register(settingsKey, "DistributionMethod", {
         name: game.i18n.localize("RNCS.settings.DistributionMethod.Name"),
         hint: game.i18n.localize("RNCS.settings.DistributionMethod.Hint"),
@@ -360,6 +389,7 @@ class ChatSettings extends FormApplication {
             ChatShowDescription_value:            game.settings.get(settingsKey, "ChatShowDescription"),
             ChatShowMethodText_value:             game.settings.get(settingsKey, "ChatShowMethodText"),
             ChatShowResultsText_value:            game.settings.get(settingsKey, "ChatShowResultsText"),
+            ChatShowTotalAbilityScore_value:      game.settings.get(settingsKey, "ChatShowTotalAbilityScore"),
             ChatShowCondensedResults_value:       game.settings.get(settingsKey, "ChatShowCondensedResults"),
             ChatShowDieResultSet_value:           game.settings.get(settingsKey, "ChatShowDieResultSet"),
             ChatShowBonusPointsText_value:        game.settings.get(settingsKey, "ChatShowBonusPointsText"),
@@ -374,6 +404,7 @@ class ChatSettings extends FormApplication {
             game.settings.set(settingsKey, "ChatShowDescription", formData.rncs_ChatShowDescription),
             game.settings.set(settingsKey, "ChatShowMethodText", formData.rncs_ChatShowMethodText),
             game.settings.set(settingsKey, "ChatShowResultsText", formData.rncs_ChatShowResultsText),
+            game.settings.set(settingsKey, "ChatShowTotalAbilityScore", formData.rncs_ChatShowTotalAbilityScore),
             game.settings.set(settingsKey, "ChatShowCondensedResults", formData.rncs_ChatShowCondensedResults),
             game.settings.set(settingsKey, "ChatShowDieResultSet", formData.rncs_ChatShowDieResultSet),
             game.settings.set(settingsKey, "ChatShowBonusPointsText", formData.rncs_ChatShowBonusPointsText),
@@ -433,6 +464,8 @@ class RollAndDistributionMethodSettings extends FormApplication {
             BonusPoints_choices             :this.BonusPoints_choices,
             BonusPoints_value               :game.settings.get(settingsKey, "BonusPoints"),
             Over18Allowed_value             :game.settings.get(settingsKey, "Over18Allowed"),
+            MinimumAbilityTotal_value       :game.settings.get(settingsKey, "MinimumAbilityTotal"),
+            MaximumAbilityTotal_value       :game.settings.get(settingsKey, "MaximumAbilityTotal"),
             DistributionMethod_choices      :this.DistributionMethod_choices,
             DistributionMethod_value        :game.settings.get(settingsKey, "DistributionMethod")
         }
@@ -447,6 +480,8 @@ class RollAndDistributionMethodSettings extends FormApplication {
             game.settings.set(settingsKey, "DropLowestSet",        formData.rncs_DropLowestSet),
             game.settings.set(settingsKey, "BonusPoints",          formData.rncs_BonusPoints),
             game.settings.set(settingsKey, "Over18Allowed",        formData.rncs_Over18Allowed),
+            game.settings.set(settingsKey, "MinimumAbilityTotal",  formData.rncs_MinimumAbilityTotal),
+            game.settings.set(settingsKey, "MaximumAbilityTotal",  formData.rncs_MaximumAbilityTotal),
             game.settings.set(settingsKey, "DistributionMethod",   formData.rncs_DistributionMethod)
         }
     }

@@ -67,43 +67,61 @@ export class DiceRoller {
         return formula;
     }
 
-    RollAbilities(){
-        // Ability Rolls
-        for (let rs = 0; rs < this._settingNumberOfSetsRolledCount(); rs++) {
-            const roll = new Roll(this.Formula_Abilities());
-            const rolled_results = roll.evaluate({ async: false });
-            this.results_abilities.push(rolled_results)
+    RollAbilities() {
 
-            //Get roll data
-            this.GetRollData(rolled_results, 0);
-        }
+        let result_set_total = 0;
+        let tries_remaining = 20; // Prevent infinite loop for unachievable results
+        let check_minmax = (this._settings.MinimumAbilityTotal > 0 || this._settings.MaximumAbilityTotal > 0);
+        do {
 
-        // Get index of lowest Set to drop
-        if (this._settings.DropLowestSet) {
-            const results = this.results_abilities.map(function (e) { return e.total; }).join(',').split(',').map(Number);
-            const drop_val = Math.min(...results);
-            this.drop_val_index = results.indexOf(drop_val);
-        }
+            // Ability Rolls
+            for (let rs = 0; rs < this._settingNumberOfSetsRolledCount(); rs++) {
+                const roll = new Roll(this.Formula_Abilities());
+                const rolled_results = roll.evaluate({ async: false });
+                this.results_abilities.push(rolled_results)
 
-        // Bonus Points
-        switch (this._settings.BonusPoints) {
-            case "zero-points":
-                this._bonus_point_total = 0;
-                break;
-            case "one-point":
-                this._bonus_point_total = 1;
-                break;
-            case "one-d-four":
-                const bonus = new Roll("1d4");
-                const bonus_result = bonus.evaluate({ async: false });
-                this._bonus_point_total = bonus_result.total;
-                    
-                // Get roll data
-                this.GetRollData(bonus_result, 0);
+                //Get roll data
+                this.GetRollData(rolled_results, 0);
+            }
 
-                break;
-            default:
-        }
+            // Get index of lowest Set to drop
+            if (this._settings.DropLowestSet) {
+                const results = this.results_abilities.map(function (e) { return e.total; }).join(',').split(',').map(Number);
+                const drop_val = Math.min(...results);
+                this.drop_val_index = results.indexOf(drop_val);
+            }
+
+            // Bonus Points
+            switch (this._settings.BonusPoints) {
+                case "zero-points":
+                    this._bonus_point_total = 0;
+                    break;
+                case "one-point":
+                    this._bonus_point_total = 1;
+                    break;
+                case "one-d-four":
+                    const bonus = new Roll("1d4");
+                    const bonus_result = bonus.evaluate({ async: false });
+                    this._bonus_point_total = bonus_result.total;
+
+                    // Get roll data
+                    this.GetRollData(bonus_result, 0);
+
+                    break;
+                default:
+            }
+
+            // Validate min/max totals of results + bonus
+            tries_remaining--;
+            result_set_total = this.GetFinalResults().reduce(function (x, y) { return x + y }, 0) + this._bonus_point_total;
+            //console.log(result_set_total);
+            if (check_minmax && tries_remaining > 0 && (result_set_total < this._settings.MinimumAbilityTotal || (result_set_total > this._settings.MaximumAbilityTotal && this._settings.MaximumAbilityTotal > 0))) {
+                this._roll_data = [];
+                this.results_abilities = [];
+            }
+
+        } while (check_minmax && tries_remaining > 0 && (result_set_total < this._settings.MinimumAbilityTotal || (result_set_total > this._settings.MaximumAbilityTotal && this._settings.MaximumAbilityTotal > 0)))
+
     }
 
     async RollOtherProperties(formula) {
@@ -330,7 +348,7 @@ export class DiceRoller {
         let d6_results = []
 
         // NOTE: If more rolls than needed to fill abilities is selected, and Distrubute results is unchecked without selecting Drop Lowest Set,
-        // the last roll will still be displayed, but not applied to any ability. 
+        // the last roll(s) will still be displayed, but not applied to any ability. 
         // This might look confusing to players - so maybe a way to indicate this in the chat message??
         if (this._settings.ChatShowCondensedResults) { 
             // Condensed
@@ -370,6 +388,13 @@ export class DiceRoller {
         }
         
         return results_text;
+    }
+
+    GetTotalAbilityScore() {
+        let results_text = "<p>";
+        results_text += "<b>" + game.i18n.localize("RNCS.results-text.results.total-ability-score") + ": </b>" + (this.GetFinalResults().reduce(function (x, y) { return x + y }, 0) + this._bonus_point_total);
+        results_text += "</p>";  
+        return results_text;      
     }
 
     GetDieResultSet() {

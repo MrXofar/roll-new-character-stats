@@ -8,6 +8,8 @@
         <div>DropLowestSet_value            :{{DropLowestSet_value}}</div>
         <div>BonusPoints_value              :{{BonusPoints_value}}</div>
         <div>Over18Allowed_value            :{{Over18Allowed_value}}</div>
+        <div>MinimumAbilityTotal_value      :{{MinimumAbilityTotal_value}}</div>
+        <div>MaximumAbilityTotal_value      :{{MaximumAbilityTotal_value}}</div>
         <div>DistributionMethod_value       :{{DistributionMethod_value}}</div>
     </div>
 
@@ -82,6 +84,24 @@
                 value="{{Over18Allowed_value}}" data-dtype="Boolean" {{checked Over18Allowed_value}}>
         </div>
         <p class="notes">{{localize "RNCS.settings.Over18Allowed.Hint"}}</p>
+    </div>
+
+    {{!-- MinimumAbilityTotal --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.MinimumAbilityTotal.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <input type="text" name="rncs_MinimumAbilityTotal" value="{{MinimumAbilityTotal_value}}" data-dtype="number">
+        </div>
+        <p class="notes">{{localize "RNCS.settings.MinimumAbilityTotal.Hint"}}</p>
+    </div>
+
+    {{!-- MaximumAbilityTotal --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.MaximumAbilityTotal.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <input type="text" name="rncs_MaximumAbilityTotal" value="{{MaximumAbilityTotal_value}}" data-dtype="number">
+        </div>
+        <p class="notes">{{localize "RNCS.settings.MaximumAbilityTotal.Hint"}}</p>
     </div>
 
     {{!-- DistributionMethod --}}

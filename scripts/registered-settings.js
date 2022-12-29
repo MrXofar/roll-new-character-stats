@@ -18,13 +18,15 @@ export class RegisteredSettings{
     DropLowestSet = game.settings.get(settingsKey, "DropLowestSet");
     BonusPoints = game.settings.get(settingsKey, "BonusPoints");
     Over18Allowed = game.settings.get(settingsKey, "Over18Allowed");
-    // DistributeResults = game.settings.get(settingsKey, "DistributeResults");
+    MinimumAbilityTotal = game.settings.get(settingsKey, "MinimumAbilityTotal");
+    MaximumAbilityTotal = game.settings.get(settingsKey, "MaximumAbilityTotal");
     DistributionMethod = game.settings.get(settingsKey, "DistributionMethod");
 
     ChatRemoveConfigureActorButton = game.settings.get(settingsKey, "ChatRemoveConfigureActorButton");
     ChatShowDescription = game.settings.get(settingsKey, "ChatShowDescription");
     ChatShowMethodText = game.settings.get(settingsKey, "ChatShowMethodText");
     ChatShowResultsText = game.settings.get(settingsKey, "ChatShowResultsText");
+    ChatShowTotalAbilityScore = game.settings.get(settingsKey, "ChatShowTotalAbilityScore");
     ChatShowCondensedResults = game.settings.get(settingsKey, "ChatShowCondensedResults");
     ChatShowDieResultSet = game.settings.get(settingsKey, "ChatShowDieResultSet");
     ChatShowBonusPointsText = game.settings.get(settingsKey, "ChatShowBonusPointsText");

@@ -92,6 +92,14 @@
         "Name": "Scores Over 18 Allowed",
         "Hint": "Checking this setting will allow scores over 18 when distributing rolled scores and/or bonuses. Setting is ignored when Distribution Method selected is \"Apply as Rolled\" - and no Bonus Points are awarded."    
       },
+      "MinimumAbilityTotal": {
+        "Name": "Minimum Ability Total",
+        "Hint": "Minimum final total ability score, including bonus points. 0 = No Min"    
+      },
+      "MaximumAbilityTotal": {
+        "Name": "Maximum Ability Total",
+        "Hint": "Maximum final total ability score, including bonus points. 0 = No Max"    
+      },
       "DistributeResults": {
         "Name": "Distribute Results",
         "Hint": "This setting will allow distribution of results freely among abilities."      
@@ -124,6 +132,10 @@
       "ChatShowResultsText":{
         "Name": "Ability Results",
         "Hint": "Show results of ability rolls"
+      },
+      "ChatShowTotalAbilityScore":{
+        "Name": "Total Ability Score",
+        "Hint": "Display final total ability score."
       },
       "ChatShowCondensedResults":{
         "Name": "Condensed Ability Results",
@@ -170,7 +182,8 @@
       },
       "results": {
         "label": "Results",
-        "abilities": "Abilities"
+        "abilities": "Abilities",
+        "total-ability-score":"Total Ability Score"
       },
       "bonus": {
         "label": "Bonus"

@@ -188,9 +188,11 @@ export async function RollStats() {
 
 	if (confirmed) {
 		for (let _actor = 0; _actor < dice_roller._settingNumberOfActors(); _actor += 1) {
+
 			// Roll abilities
 			dice_roller = new DiceRoller()
 			await dice_roller.RollThemDice();
+
 			// Show results
 			if (_settings.DiceSoNiceEnabled) {
 				let data = { throws: [{ dice: dice_roller._roll_data }] };
@@ -207,7 +209,7 @@ async function ShowResultsInChatMessage(dice_roller) {
 	const _settings = new RegisteredSettings;
 	const speaker = ChatMessage.getSpeaker();
 	const owner_id = game.user.id;
-	const final_results = dice_roller.GetFinalResults(dice_roller.result_sets);
+	const final_results = dice_roller.GetFinalResults();
 	const bonus_points = dice_roller._bonus_point_total;
 	const other_properties_results = dice_roller._other_properties_results;
 	const individual_rolls = dice_roller.GetIndividualRolls();
@@ -241,6 +243,11 @@ async function ShowResultsInChatMessage(dice_roller) {
 	// Add Results (Abilitites) to message
 	if(_settings.ChatShowResultsText){
 		results_message += await dice_roller.GetResultsAbilitiesText();
+	}
+
+	// Add total ability score to message
+	if(_settings.ChatShowTotalAbilityScore){
+		results_message += dice_roller.GetTotalAbilityScore();
 	}
 
 	// Add Die Results Set (Abilitites) to message
