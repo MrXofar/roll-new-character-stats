@@ -72,6 +72,7 @@ export class DiceRoller {
         let result_set_total = 0;
         let tries_remaining = 20; // Prevent infinite loop for unachievable results
         let check_minmax = (this._settings.MinimumAbilityTotal > 0 || this._settings.MaximumAbilityTotal > 0);
+        let fails_minmax = false;
         do {
 
             // Ability Rolls
@@ -114,13 +115,13 @@ export class DiceRoller {
             // Validate min/max totals of results + bonus
             tries_remaining--;
             result_set_total = this.GetFinalResults().reduce(function (x, y) { return x + y }, 0) + this._bonus_point_total;
-            //console.log(result_set_total);
-            if (check_minmax && tries_remaining > 0 && (result_set_total < this._settings.MinimumAbilityTotal || (result_set_total > this._settings.MaximumAbilityTotal && this._settings.MaximumAbilityTotal > 0))) {
+            fails_minmax = check_minmax && tries_remaining && (result_set_total < this._settings.MinimumAbilityTotal || (result_set_total > this._settings.MaximumAbilityTotal && this._settings.MaximumAbilityTotal > 0));
+            if (fails_minmax) {
                 this._roll_data = [];
                 this.results_abilities = [];
             }
 
-        } while (check_minmax && tries_remaining > 0 && (result_set_total < this._settings.MinimumAbilityTotal || (result_set_total > this._settings.MaximumAbilityTotal && this._settings.MaximumAbilityTotal > 0)))
+        } while (fails_minmax)
 
     }
 
@@ -264,6 +265,9 @@ export class DiceRoller {
         if(!this._settings.Over18Allowed && (this._settings.DistributionMethod !== "apply-as-rolled" || this._settingIsBonusPointApplied() || game.system.id === "dnd5e"))
         {
             method_text += game.i18n.localize("RNCS.results-text.methods.over-18-not-allowed") + "</br>"
+        }
+        if(this._settings.MinimumAbilityTotal > 0 || this._settings.MaximumAbilityTotal > 0){
+            method_text += "Min/Max Total Ability Score: " + this._settings.MinimumAbilityTotal + "/" + this._settings.MaximumAbilityTotal + "</br>"
         }
         method_text += game.i18n.localize("RNCS.settings.DistributionMethod.choices." + this._settings.DistributionMethod);
         method_text += "</p>"
@@ -433,6 +437,11 @@ export class DiceRoller {
 
         // Bonus Point distribution - if any
         if (this._settingIsBonusPointApplied()) { note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.distribute-bonus-points"); }
+
+        // Min/Max limits
+        if(this._settings.MinimumAbilityTotal > 0 || this._settings.MaximumAbilityTotal > 0){
+            note_from_dm += "Total of all ability scores must be between " + this._settings.MinimumAbilityTotal + " and " + this._settings.MaximumAbilityTotal + ". ";
+        }
 
         // Mention final score limit - if any
         if(!this._settings.Over18Allowed && (this._settings.DistributionMethod !== "apply-as-rolled" || this._settingIsBonusPointApplied()))

@@ -1,3 +1,11 @@
+v3.1.61 - x/x/2022
+----------------------------------------------
+- Missed a couple things for Min/Max settings
+  Method text display to show Min/Max range before rolling and in chat.
+  Dm note describing Min/Max range in chat.
+
+- Other minor updates
+
 v3.1.6 - 12/29/2022
 ----------------------------------------------
 - "More v10 compatibility changes"

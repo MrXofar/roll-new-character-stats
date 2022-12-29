@@ -444,7 +444,7 @@ class RollAndDistributionMethodSettings extends FormApplication {
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
             id: "rncs-roll-dist-method",
-            title: "RNCS - Edit Roll & Distribution Method",
+            title: "RNCS - " + game.i18n.localize("RNCS.settings.ChatShowMethodText.Name"),
             template: "./modules/roll-new-character-stats/templates/form-apps/edit-roll-dist-method.hbs",
             width:500,
             closeOnSubmit: true,
