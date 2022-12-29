@@ -126,7 +126,7 @@
         "Hint": "Show character description - if any."
       },
       "ChatShowMethodText":{
-        "Name": "Roll Method & Distribution",
+        "Name": "Roll Method & Distribution Rules",
         "Hint": "Show the Roll Method & Distribution rules for new abilities."
       },
       "ChatShowResultsText":{
@@ -161,7 +161,7 @@
 
     "results-text": {
       "methods":{
-        "label": "Roll Method & Distribution",
+        "label": "Roll Method & Distribution Rules",
         "drop-lowest-die": " - drop lowest die",
         "re-roll-ones": " - reroll ones",
         "drop-lowest-set": " - drop lowest set",
