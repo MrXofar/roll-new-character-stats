@@ -1,7 +1,18 @@
-v3.1.6 - x/x/2022
+v3.1.6 - 12/29/2022
 ----------------------------------------------
 - "More v10 compatibility changes"
+- Implemented Min/Max settings - Set the min/max of ability score totals and display result total in chat. 
+  There is a hard coded limiter (20 tries) to prevent infinite looping when min/max is impossible or unlikely to be achieved.
 
+- New Settings:
+  RNCS > Chat Settings > Total Ability Score [bool]
+    "Display final total ability score."
+
+  RNCS > Roll Method & Distribution > Minimum Ability Total [number]
+    "Minimum final total ability score, including bonus points. 0 = No Min"
+
+  RNCS > Roll Method & Distribution > Maximum Ability Total [number]
+    "Maximum final total ability score, including bonus points. 0 = No Max"
 
 v3.1.5 - 09/07/2022
 ----------------------------------------------
