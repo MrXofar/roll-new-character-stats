@@ -183,7 +183,8 @@
       "results": {
         "label": "Results",
         "abilities": "Abilities",
-        "total-ability-score":"Total Ability Score"
+        "total-ability-score":"Total Ability Score",
+        "min_max_failed":" (Adjust number of die/sets rolled or Min/Max values)"
       },
       "bonus": {
         "label": "Bonus"

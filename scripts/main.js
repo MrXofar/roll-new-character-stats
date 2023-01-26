@@ -42,6 +42,7 @@ Hooks.on("renderChatMessage", (app, [html]) => {
 
 Hooks.on("renderChatLog", (app, [html]) => {
 	html.addEventListener("click", ({ target }) => {
+		console.log("clicked config actor");
 		const msgId = target.closest(".chat-message[data-message-id]")?.dataset.messageId;
 		if (msgId && target.matches(".chat-card button") && target.dataset.action === "configure_new_actor") {
 			const msg = game.messages.get(msgId);
@@ -241,7 +242,7 @@ async function ShowResultsInChatMessage(dice_roller) {
 	}
 
 	// Add Results (Abilitites) to message
-	if(_settings.ChatShowResultsText){
+	if(_settings.ChatShowResultsText && _settings.DistributionMethod !== "ring-method"){
 		results_message += await dice_roller.GetResultsAbilitiesText();
 	}
 
@@ -251,7 +252,7 @@ async function ShowResultsInChatMessage(dice_roller) {
 	}
 
 	// Add Die Results Set (Abilitites) to message
-	if(_settings.ChatShowDieResultSet){
+	if(_settings.ChatShowDieResultSet || _settings.DistributionMethod === "ring-method"){
 		results_message += await dice_roller.GetDieResultSet();
 	}
 
@@ -273,7 +274,8 @@ async function ShowResultsInChatMessage(dice_roller) {
 		case "ose":
 		case "archmage":
 		case "dcc":
-			results_message += "<div class=\"card-buttons rncs-configure-new-actor\"><button data-action=\"configure_new_actor\">";
+		case "osric":
+			results_message += "<div class=\"card-buttons chatCard-action rncs-configure-new-actor\"><button data-action=\"configure_new_actor\">";
 			results_message += game.i18n.localize("RNCS.dialog.results-button.configure-new-actor");
 			results_message += "</button></div></div>"
 			break;

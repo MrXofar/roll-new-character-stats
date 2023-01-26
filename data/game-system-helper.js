@@ -16,6 +16,8 @@ export default class GAME_SYSTEM_Helper {
                 return jsonDATA.game_system[0].pf1.races;
             case "ose":
                 return jsonDATA.game_system[0].ose.races;
+            case "osric":
+                return jsonDATA.game_system[0].ose.races;
             case "archmage":
                 return jsonDATA.game_system[0].archmage.races;
             case "dcc":
@@ -34,6 +36,8 @@ export default class GAME_SYSTEM_Helper {
                 return jsonDATA.game_system[0].pf1.abilities;
             case "ose":
                 return jsonDATA.game_system[0].ose.abilities;
+            case "osric":
+                return jsonDATA.game_system[0].osric.abilities;
             case "archmage":
                 return jsonDATA.game_system[0].archmage.abilities;
             case "dcc":
@@ -49,6 +53,7 @@ export default class GAME_SYSTEM_Helper {
             case "pf1":
             case "ose":
             case "archmage":
+            case "osric":
                 return "character";
             case "dcc":
                 return "Player";

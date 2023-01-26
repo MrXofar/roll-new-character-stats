@@ -56,7 +56,11 @@
                     let dcc_description = document.getElementById("dcc_description");
                     dcc_description.innerHTML = dcc_description.dataset.dcc_description;
                     break;
-
+                case "osric":
+                    HideRaceOptions();
+                    HideScoreColumn(hide_score_col);
+                    HideAbilityModifierColumn();
+                    break;
                 default:
                     break;
             }
@@ -85,7 +89,7 @@
         }
 
         function HideAbilityModifierColumn() {
-            HideColumn(".rncs-modifier-header", ".modifier");
+            HideColumn(".rncs-modifier-header", ".rncs-modifier");
         }
 
         function HideColumn(table_header_class, table_data_class) {
@@ -209,6 +213,7 @@
                     case "pf1":
                     case "archmage":
                     case "ose":
+                    case "osric":
                         ability_mod = Math.floor((final_score_display.value - 10) / 2);
                         break;
                     case "dcc":
@@ -502,7 +507,9 @@
     {{#if is_archmage}}
     {{/if}}
     {{#if is_ose}}
-    {{/if}} -->
+    {{/if}} 
+    {{#if is_osric}}
+    {{/if}}-->
 
     {{#if is_dcc}}
     <p style="font-size: small;">

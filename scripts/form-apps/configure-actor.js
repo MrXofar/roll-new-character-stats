@@ -6,6 +6,7 @@ import pf1_ActorHelper from "../helpers/pf1-actor-helper.js";
 import ose_ActorHelper from "../helpers/ose-actor-helper.js";
 import archmage_ActorHelper from "../helpers/archmage-actor-helper.js";
 import dcc_ActorHelper from "../helpers/dcc-actor-helper.js";
+import osric_ActorHelper from "../helpers/osric-actor-helper.js";
 
 const game_system_helper = new GAME_SYSTEM_Helper();
 
@@ -93,6 +94,8 @@ export class ConfigureActor extends FormApplication {
                 break;
             case "archmage":
                 break;
+            case "osric":
+                break;
             case "dcc":
 
                 // Actor document is not passed in at this time since one will not be created until player accepts the new actor
@@ -151,6 +154,9 @@ export class ConfigureActor extends FormApplication {
             // ose
             is_ose: game.system.id === "ose",
 
+            // osric
+            is_osric: game.system.id === "osric",
+
             // dcc
             is_dcc: game.system.id === "dcc",
             dcc_occupation: dcc_actor_helper?.occupation,
@@ -203,6 +209,10 @@ export class ConfigureActor extends FormApplication {
             case "dcc":
                 let dcc_actor_helper = new dcc_ActorHelper(actor);
                 dcc_actor_helper._Update(formData);
+                break;
+            case "osric":
+                let osric_actor_helper = new osric_ActorHelper(actor);
+                osric_actor_helper._Update(formData);
                 break;
             default:
         }

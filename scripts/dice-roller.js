@@ -14,6 +14,7 @@ export class DiceRoller {
     _other_properties_results = [];
     _roll_data = [];
     _bonus_point_total = 0;
+    _tries_remaining = 20; //Making local so we can display something in chat card
 
     constructor(
         results_abilities = [], // Results of dice rolled for abilities
@@ -36,6 +37,8 @@ export class DiceRoller {
             case "ose":
                 break;
             case "archmage":
+                break;
+            case "osric":
                 break;
             case "dcc":
                 // Rolls with '?' are conditional. Use result in dcc-actor-handler if condition is met.
@@ -70,7 +73,7 @@ export class DiceRoller {
     RollAbilities() {
 
         let result_set_total = 0;
-        let tries_remaining = 20; // Prevent infinite loop for unachievable results
+        this._tries_remaining = 20; // Prevent infinite loop for unachievable results. 
         let check_minmax = (this._settings.MinimumAbilityTotal > 0 || this._settings.MaximumAbilityTotal > 0);
         let fails_minmax = false;
         do {
@@ -113,16 +116,15 @@ export class DiceRoller {
             }
 
             // Validate min/max totals of results + bonus
-            tries_remaining--;
+            this._tries_remaining--;
             result_set_total = this.GetFinalResults().reduce(function (x, y) { return x + y }, 0) + this._bonus_point_total;
-            fails_minmax = check_minmax && tries_remaining && (result_set_total < this._settings.MinimumAbilityTotal || (result_set_total > this._settings.MaximumAbilityTotal && this._settings.MaximumAbilityTotal > 0));
+            fails_minmax = check_minmax && this._tries_remaining && (result_set_total < this._settings.MinimumAbilityTotal || (result_set_total > this._settings.MaximumAbilityTotal && this._settings.MaximumAbilityTotal > 0));
             if (fails_minmax) {
                 this._roll_data = [];
                 this.results_abilities = [];
             }
 
         } while (fails_minmax)
-
     }
 
     async RollOtherProperties(formula) {
@@ -228,7 +230,8 @@ export class DiceRoller {
 			case "pf1":
 			case "ose":
 			case "archmage":
-				break;
+            case "osric":
+                break;
 			case "dcc":
 				let dcc_actor_helper = new dcc_ActorHelper(null, other_properties_results);
 
@@ -397,6 +400,7 @@ export class DiceRoller {
     GetTotalAbilityScore() {
         let results_text = "<p>";
         results_text += "<b>" + game.i18n.localize("RNCS.results-text.results.total-ability-score") + ": </b>" + (this.GetFinalResults().reduce(function (x, y) { return x + y }, 0) + this._bonus_point_total);
+        results_text += (this._tries_remaining === 0 ? game.i18n.localize("RNCS.results-text.results.min_max_failed") : "");
         results_text += "</p>";  
         return results_text;      
     }
