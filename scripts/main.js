@@ -1,7 +1,7 @@
 import { registerSettings } from "./settings.js";
 import { RegisteredSettings } from "./registered-settings.js";
 import { DiceRoller}  from './dice-roller.js';
-import { Controls } from './controls.js';
+//import { Controls } from './controls.js';
 import { ConfigureActor } from './form-apps/configure-actor.js';
 
 Hooks.once("init", () => {
@@ -26,9 +26,24 @@ Hooks.once("init", () => {
 
 });
 
-Hooks.on('getSceneControlButtons', (controls) => {
-	new Controls().initializeControls(controls);
+// Commenting out this code but leaving it here for future reference
+// RNCS button is being moved to the Actor tab where it belongs.
+//Hooks.on('getSceneControlButtons', (controls) => {
+//	new Controls().initializeControls(controls);
+//});
+
+Hooks.on("renderActorDirectory", (app, html) => {
+    onRenderActorDirectory(app, html);
 });
+
+async function onRenderActorDirectory(app, html) {
+	const cbButton = $(`<button><i class="fas fa-dice"></i>${game.i18n.localize("RNCS.Button.text")}</button>`); 
+	html.find('.directory-footer').append(cbButton);
+	cbButton.click(ev => {
+		ev.preventDefault();
+		RollStats();
+	});
+}
 
 Hooks.on("renderChatMessage", (app, [html]) => {
 	//Hide buttons with class "card-buttons rncs-configure-new-actor"
@@ -42,7 +57,6 @@ Hooks.on("renderChatMessage", (app, [html]) => {
 
 Hooks.on("renderChatLog", (app, [html]) => {
 	html.addEventListener("click", ({ target }) => {
-		console.log("clicked config actor");
 		const msgId = target.closest(".chat-message[data-message-id]")?.dataset.messageId;
 		if (msgId && target.matches(".chat-card button") && target.dataset.action === "configure_new_actor") {
 			const msg = game.messages.get(msgId);
@@ -126,7 +140,7 @@ function RemoveButton(msgId) {
 	let chatMessage = game.messages?.get(msgId);
 	if (!chatMessage)
 		return;
-	let content = chatMessage && duplicate(chatMessage.content);
+	let content = chatMessage && foundry.utils.duplicate(chatMessage.content);
 	const configure_actor_button = /<button data-action="configure_new_actor">[^<]*<\/button>/;
 	content = content?.replace(configure_actor_button, "");
 	chatMessage.update({ content });

@@ -1,5 +1,8 @@
 {
   "RNCS": {
+    "Button":{
+      "text": "Roll New Character Stats"
+    },
     "settings": {
       "version": {
         "title": "Module update detected",

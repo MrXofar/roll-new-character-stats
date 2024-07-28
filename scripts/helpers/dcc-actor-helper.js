@@ -405,15 +405,15 @@ export default class dcc_ActorHelper extends base_ActorHelper {
             switch (this._settings.NameFormat) {
                 case "player-occupation":
                     // Player (Occupation)
-                    this._character_name = game.users.get(this._owner_id)?.name + " (" + (farmer_type !== "" ? farmer_type + " " : "") + occupation_desc + ")"
+                    return game.users.get(this._owner_id)?.name + " (" + (farmer_type !== "" ? farmer_type + " " : "") + occupation_desc + ")"
                     break;
                 case "occupation-player":
                     // Occupation (Player)
-                    this._character_name = (farmer_type !== "" ? farmer_type + " " : "") + occupation_desc + " (" + game.users.get(this._owner_id)?.name + ")"
+                    return (farmer_type !== "" ? farmer_type + " " : "") + occupation_desc + " (" + game.users.get(this._owner_id)?.name + ")"
                     break;
                 case "occupation":
                     // Occupation
-                    this._character_name = (farmer_type !== "" ? farmer_type + " " : "") + occupation_desc;
+                    return (farmer_type !== "" ? farmer_type + " " : "") + occupation_desc;
                     break;
                 case "random":
                     // Random name from "Appendix S: Sobriquets"
