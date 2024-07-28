@@ -373,7 +373,7 @@ Hooks.on('renderChatSettings', () => {
 class ChatSettings extends FormApplication {
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: "rncs-chat-settings",
             title: "RNCS - Edit Chat Settings",
             template: "./modules/roll-new-character-stats/templates/form-apps/edit-chat-settings.hbs",
@@ -442,7 +442,7 @@ class RollAndDistributionMethodSettings extends FormApplication {
     }
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: "rncs-roll-dist-method",
             title: "RNCS - " + game.i18n.localize("RNCS.settings.RollMethodAndDistribution.Name"),
             template: "./modules/roll-new-character-stats/templates/form-apps/edit-roll-dist-method.hbs",
