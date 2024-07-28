@@ -4,17 +4,21 @@
     "description": "Small mod for rolling new table-top-rpg character stats to get your game rolling!",
     "authors": [{"name": "Richard Fox"}],
     "version": "3.2.1",
-    "compatibility" : {"minimum": "12", "verified":"12"},
     "changelog": "",
+    "compatibility": {"minimum": "12", "verified":"12"},
     "styles":["styles/rncs-styles.css"],
-    "relationships.systems": [
-      "dnd5e",
-      "pf1",
-      "ose",
-      "archmage",
-      "dcc",
-      "osric"
-    ], 
+    "relationships": {
+      "systems": [
+        {"id": "dnd5e", "type": "system"},
+        {"id": "pf1", "type": "system"},
+        {"id": "ose", "type": "system"},
+        {"id": "archmage", "type": "system"},
+        {"id": "dcc", "type": "system"},
+        {"id": "osric", "type": "system"}
+      ],
+      "requires": [],
+      "conflicts": []
+    },
     "esmodules": [
       "scripts/main.js"
     ], 
