@@ -105,8 +105,8 @@ export class ConfigureActor extends FormApplication {
                 currency_cp = dcc_actor_helper._RollStartingMoney("5d12","cp");  // default formula provided in case no other_properties_results provided
 
                 // Roll/Set system unique properties
-                dcc_actor_helper.stamina_modifier = CONFIG.DCC.abilities.modifiers[this.final_results[2]];// Stamina Modifier
-                dcc_actor_helper.luck_modifier = CONFIG.DCC.abilities.modifiers[this.final_results[5]];// Luck Modifier
+                dcc_actor_helper.stamina_modifier = CONFIG.DCC.abilityModifiers[this.final_results[2]];// Stamina Modifier
+                dcc_actor_helper.luck_modifier = CONFIG.DCC.abilityModifiers[this.final_results[5]];// Luck Modifier
                 await dcc_actor_helper.RollOccupation();    // No return value - set internaly and passed to form application
                 await dcc_actor_helper.RollEquipment();     // No return value - set internaly and passed to form application
                 await dcc_actor_helper.RollLuck();          // No return value - set internaly and passed to form application
@@ -177,7 +177,7 @@ export class ConfigureActor extends FormApplication {
         const owner = this.owner_id;
         let actor = await Actor.create({
             name: ((formData.character_name === "New Actor" || formData.character_name === "") && formData.select_race !== "" ? formData.select_race : formData.character_name),
-            permission: { [owner]: CONST.DOCUMENT_PERMISSION_LEVELS.OWNER },
+            permission: { [owner]: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER },
             type: game_system_helper.getSystemActorType(),
             img: "icons/svg/mystery-man.svg"
         });

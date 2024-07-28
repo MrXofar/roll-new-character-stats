@@ -56,9 +56,10 @@ export class base_ActorHelper {
         return amount
     }
 
-    _RollDiceForTotal(formula, override_dicesonice) {
-        let roll = new Roll(formula);
-        let total = roll.evaluate({ async: false }).total;
+    async _RollDiceForTotal(formula, override_dicesonice) {
+        let roll = new Roll(formula);        
+        let roll_evaluate = await roll.evaluate();
+        let total = roll_evaluate.total;
         if (this._settings.DiceSoNiceEnabled && !override_dicesonice) { game.dice3d?.showForRoll(roll); }
         return total;
     }

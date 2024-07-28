@@ -183,6 +183,7 @@
 
             let score_over_18 = false;
             for (let row = 0; row < ability_rows.length; row += 1) {
+
                 const ability_row = document.getElementById(ability_rows[row].id);
                 let ability_drop_item = ability_row.querySelector(".rncs-ability-drop-zone").querySelector(".rncs-ability-drop-item");
                 if(!ability_drop_item){
@@ -212,7 +213,7 @@
                         ability_mod = Math.floor((final_score_display.value - 10) / 2);
                         break;
                     case "dcc":
-                        ability_mod = CONFIG.DCC.abilities.modifiers[final_score_display.value];
+                        ability_mod = CONFIG.DCC.abilityModifiers[final_score_display.value];
                         break;
                     default:
                         ability_mod = Math.floor((final_score_display.value - 10) / 2);
@@ -473,7 +474,7 @@
         <div class="rncs-div-label">Race:</div>
         <div class="rncs-div-user-input">
             <select id="select_race" name="select_race" onchange="UpdateRaceBonus(event)" style="width:100%;">
-                {{selectOptions races selected=value nameAttr="race" labelAttr="race"}}
+                {{selectOptions races selected=value valueAttr="race" labelAttr="race"}}
             </select>
         </div>
     </div>

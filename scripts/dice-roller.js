@@ -25,7 +25,7 @@ export class DiceRoller {
 
     // Roll Them Dice!
     async RollThemDice() {
-        this.RollAbilities();    
+        await this.RollAbilities();    
         // Prepare formula to roll other properties
         let formula = "";
         switch (game.system.id) {
@@ -67,11 +67,11 @@ export class DiceRoller {
         return formula;
     }
 
-    RollAbilities(){
+    async RollAbilities(){
         // Ability Rolls
         for (let rs = 0; rs < this._settingNumberOfSetsRolledCount(); rs++) {
             const roll = new Roll(this.Formula_Abilities());
-            const rolled_results = roll.evaluate({ async: false });
+            const rolled_results = await roll.evaluate();
             this.results_abilities.push(rolled_results)
 
             //Get roll data
@@ -95,7 +95,7 @@ export class DiceRoller {
                 break;
             case "one-d-four":
                 const bonus = new Roll("1d4");
-                const bonus_result = bonus.evaluate({ async: false });
+                const bonus_result = await bonus.evaluate();
                 this._bonus_point_total = bonus_result.total;
                     
                 // Get roll data
@@ -108,7 +108,7 @@ export class DiceRoller {
 
     async RollOtherProperties(formula) {
         const roll = await new Roll(formula);
-        const rolled_results = await roll.evaluate({ async: false });
+        const rolled_results = await roll.evaluate();
 
         for (let index = 0; index < rolled_results.dice.length; index += 1) {
             this._other_properties_results.push(rolled_results.dice[index].total);
@@ -219,14 +219,14 @@ export class DiceRoller {
 				dcc_actor_helper._RollStartingMoney();
 
 				// Roll/Set system unique properties
-				dcc_actor_helper.stamina_modifier = CONFIG.DCC.abilities.modifiers[final_results[2]];// Stamina Modifier
-				dcc_actor_helper.luck_modifier = CONFIG.DCC.abilities.modifiers[final_results[5]];// Luck Modifier
+				dcc_actor_helper.stamina_modifier = CONFIG.DCC.abilityModifiers[final_results[2]];// Stamina Modifier
+				dcc_actor_helper.luck_modifier = CONFIG.DCC.abilityModifiers[final_results[5]];// Luck Modifier
 				await dcc_actor_helper.RollOccupation();    // No return value - set internal to dcc_actor_helper.occupation
-				await dcc_actor_helper.RollEquipment();     // No return value - set internal to dcc_actor_helper.
-				await dcc_actor_helper.RollLuck();          // No return value - set internal to dcc_actor_helper.
+				await dcc_actor_helper.RollEquipment();     // No return value - set internal to dcc_actor_helper.equipment
+				await dcc_actor_helper.RollLuck();          // No return value - set internal to dcc_actor_helper.luck
 
 				// Build description
-				description = dcc_actor_helper.BuildDescription();
+				description = await dcc_actor_helper.BuildDescription();
 				break;
 		}
 		description_text += description;

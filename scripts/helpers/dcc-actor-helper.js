@@ -57,7 +57,7 @@ export default class dcc_ActorHelper extends base_ActorHelper {
         if(this.other_properties_results){
             // let test = 36
             // rolled_occupation = rolltable_doc?.results.contents.filter(x => x.range[0] === test && x.range[1] >= test)[0];
-            rolled_occupation = rolltable_doc?.results.contents.filter(x => x.range[0] <= this.other_properties_results[opr.OCCUPATION] && 
+            rolled_occupation = await rolltable_doc?.results.contents.filter(x => x.range[0] <= this.other_properties_results[opr.OCCUPATION] && 
                                                                          x.range[1] >= this.other_properties_results[opr.OCCUPATION])[0];
         }else{
             let result = await rolltable_doc?.roll(); 
@@ -100,8 +100,7 @@ export default class dcc_ActorHelper extends base_ActorHelper {
                     default:
                     // No change	
                 }
-            }
-            
+            }            
 
             this.trade_good = this.occupation_details[2];
             // Tarot deck			- Trade Good   - Tarot Deck in Occupation Items
@@ -174,7 +173,7 @@ export default class dcc_ActorHelper extends base_ActorHelper {
             }
 
             // Set Character Name - Can be changed in Configure Actor form
-            this._SetCharacterName(this._character_name, this.farmer_type, this.occupation_desc)
+            this._character_name = await this._SetCharacterName(this._character_name, this.farmer_type, this.occupation_desc)
         }
     }
 
@@ -426,19 +425,19 @@ export default class dcc_ActorHelper extends base_ActorHelper {
                         // Parse out the names
                         let pattern = /(?<=<td>)(.+?)(?=<\/td>)/g;
                         let name_list = rolled_names.text.match(pattern);
-                        let name_id = this._RollDiceForTotal("1d4", true);
-                        this._character_name = name_list[name_id - 1];// Pick from Random Column
+                        let name_id = await this._RollDiceForTotal("1d4", true);
+                        return name_list[name_id - 1];// Pick from Random Column
                     }
                     else // Premium pack not installed - Maybe provide a list of random names not found in premium pack? User custom names list?
                     {// Make my own random name generator maybe ???
-                        this._character_name = "No Random Name Choices";
+                        return "No Random Name Choices";
                     }
                     break;
                 default:
-                    this._character_name = "New DCC Actor";
+                    return "New DCC Actor";
             }
         }
-        else { this._character_name = character_name; }
+        else { return character_name; }
     }
 
     async _Update(data) {
@@ -477,15 +476,10 @@ export default class dcc_ActorHelper extends base_ActorHelper {
         // Equipment
         this._EmbedItem("dcc-core-book.dcc-core-equipment", data.dcc_equipment); // Premium Pack
 
-        // Set name
-        if(data.character_name === "New Actor"){
-            this._SetCharacterName(data.character_name, data.dcc_farmer_type, data.dcc_occupation_desc);
-        }else{this._character_name = data.character_name;}
-
         // UPDATE
         const hit_points = Math.max(parseInt(data.hp_base) + parseInt(data.hp_modifier), 1);
         await this._actor.update({
-            'name': this._character_name,
+            'name': data.character_name,
             'system.attributes.hp.value': hit_points,
             'system.attributes.hp.max': hit_points,
             'system.attributes.ac.value':10 + parseInt(data.agl_modifier),
