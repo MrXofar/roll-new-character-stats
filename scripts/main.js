@@ -42,6 +42,7 @@ Hooks.on("renderChatMessage", (app, [html]) => {
 
 Hooks.on("renderChatLog", (app, [html]) => {
 	html.addEventListener("click", ({ target }) => {
+		console.log("clicked config actor");
 		const msgId = target.closest(".chat-message[data-message-id]")?.dataset.messageId;
 		if (msgId && target.matches(".chat-card button") && target.dataset.action === "configure_new_actor") {
 			const msg = game.messages.get(msgId);
@@ -188,9 +189,11 @@ export async function RollStats() {
 
 	if (confirmed) {
 		for (let _actor = 0; _actor < dice_roller._settingNumberOfActors(); _actor += 1) {
+
 			// Roll abilities
 			dice_roller = new DiceRoller()
 			await dice_roller.RollThemDice();
+
 			// Show results
 			if (_settings.DiceSoNiceEnabled) {
 				let data = { throws: [{ dice: dice_roller._roll_data }] };
@@ -207,7 +210,7 @@ async function ShowResultsInChatMessage(dice_roller) {
 	const _settings = new RegisteredSettings;
 	const speaker = ChatMessage.getSpeaker();
 	const owner_id = game.user.id;
-	const final_results = dice_roller.GetFinalResults(dice_roller.result_sets);
+	const final_results = dice_roller.GetFinalResults();
 	const bonus_points = dice_roller._bonus_point_total;
 	const other_properties_results = dice_roller._other_properties_results;
 	const individual_rolls = dice_roller.GetIndividualRolls();
@@ -239,12 +242,17 @@ async function ShowResultsInChatMessage(dice_roller) {
 	}
 
 	// Add Results (Abilitites) to message
-	if(_settings.ChatShowResultsText){
+	if(_settings.ChatShowResultsText && _settings.DistributionMethod !== "ring-method"){
 		results_message += await dice_roller.GetResultsAbilitiesText();
 	}
 
+	// Add total ability score to message
+	if(_settings.ChatShowTotalAbilityScore){
+		results_message += dice_roller.GetTotalAbilityScore();
+	}
+
 	// Add Die Results Set (Abilitites) to message
-	if(_settings.ChatShowDieResultSet){
+	if(_settings.ChatShowDieResultSet || _settings.DistributionMethod === "ring-method"){
 		results_message += await dice_roller.GetDieResultSet();
 	}
 
@@ -266,7 +274,8 @@ async function ShowResultsInChatMessage(dice_roller) {
 		case "ose":
 		case "archmage":
 		case "dcc":
-			results_message += "<div class=\"card-buttons rncs-configure-new-actor\"><button data-action=\"configure_new_actor\">";
+		case "osric":
+			results_message += "<div class=\"card-buttons chatCard-action rncs-configure-new-actor\"><button data-action=\"configure_new_actor\">";
 			results_message += game.i18n.localize("RNCS.dialog.results-button.configure-new-actor");
 			results_message += "</button></div></div>"
 			break;

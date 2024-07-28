@@ -56,7 +56,11 @@
                     let dcc_description = document.getElementById("dcc_description");
                     dcc_description.innerHTML = dcc_description.dataset.dcc_description;
                     break;
-
+                case "osric":
+                    HideRaceOptions();
+                    HideScoreColumn(hide_score_col);
+                    HideAbilityModifierColumn();
+                    break;
                 default:
                     break;
             }
@@ -85,7 +89,7 @@
         }
 
         function HideAbilityModifierColumn() {
-            HideColumn(".rncs-modifier-header", ".modifier");
+            HideColumn(".rncs-modifier-header", ".rncs-modifier");
         }
 
         function HideColumn(table_header_class, table_data_class) {
@@ -210,6 +214,7 @@
                     case "pf1":
                     case "archmage":
                     case "ose":
+                    case "osric":
                         ability_mod = Math.floor((final_score_display.value - 10) / 2);
                         break;
                     case "dcc":
@@ -312,7 +317,7 @@
             }
 
             // Update Race Bonus column
-            // TODO: Allow hybrid - some hard wired ASI and some variant ASI
+            // TODO-LOW: Allow hybrid - some hard wired ASI and some variant ASI
             const ability_rows = ability_scores.querySelectorAll(".rncs-ability-row")
             for (let row = 0; row < ability_rows.length; row += 1) {
                 const ability_row = document.getElementById(ability_rows[row].id);
@@ -503,7 +508,9 @@
     {{#if is_archmage}}
     {{/if}}
     {{#if is_ose}}
-    {{/if}} -->
+    {{/if}} 
+    {{#if is_osric}}
+    {{/if}}-->
 
     {{#if is_dcc}}
     <p style="font-size: small;">

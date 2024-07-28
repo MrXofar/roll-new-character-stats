@@ -12,6 +12,7 @@
         <div>ChatShowDescription_value              :{{ChatShowDescription_value              }}</div>
         <div>ChatShowMethodText_value               :{{ChatShowMethodText_value               }}</div>
         <div>ChatShowResultsText_value              :{{ChatShowResultsText_value              }}</div>
+        <div>ChatShowTotalAbilityScore_value        :{{ChatShowTotalAbilityScore_value         }}</div>
         <div>ChatShowCondensedResults_value         :{{ChatShowCondensedResults_value         }}</div>
         <div>ChatShowDieResultSet_value             :{{ChatShowDieResultSet_value             }}</div>
         <div>ChatShowBonusPointsText_value          :{{ChatShowBonusPointsText_value          }}</div>
@@ -55,6 +56,15 @@
             <input type="checkbox" name="rncs_ChatShowResultsText" value="{{ChatShowResultsText_value}}" data-dtype="Boolean" {{checked ChatShowResultsText_value}}>
         </div>
         <p class="notes">{{localize "RNCS.settings.ChatShowResultsText.Hint"}}</p>
+    </div>
+
+    {{!-- ChatShowTotalAbilityScore --}}
+    <div class="rncs-form-group">
+        <label><span>{{localize "RNCS.settings.ChatShowTotalAbilityScore.Name"}}</span></label>
+        <div class="rncs-form-fields">
+            <input type="checkbox" name="rncs_ChatShowTotalAbilityScore" value="{{ChatShowTotalAbilityScore_value}}" data-dtype="Boolean" {{checked ChatShowTotalAbilityScore_value}}>
+        </div>
+        <p class="notes">{{localize "RNCS.settings.ChatShowTotalAbilityScore.Hint"}}</p>
     </div>
     
     {{!-- ChatShowCondensedResults --}}

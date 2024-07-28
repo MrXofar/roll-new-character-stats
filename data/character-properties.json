@@ -1766,6 +1766,17 @@
                 ],
                 "races": []
             },
+            "osric": {
+                "abilities": [
+                    "str",
+                    "dex",
+                    "con",
+                    "int",
+                    "wis",
+                    "cha"
+                ],
+                "races": []
+            },
             "archmage": {
                 "abilities": [
                     "str",

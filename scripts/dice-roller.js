@@ -14,6 +14,7 @@ export class DiceRoller {
     _other_properties_results = [];
     _roll_data = [];
     _bonus_point_total = 0;
+    _tries_remaining = 20; //Making local so we can display something in chat card
 
     constructor(
         results_abilities = [], // Results of dice rolled for abilities
@@ -36,6 +37,8 @@ export class DiceRoller {
             case "ose":
                 break;
             case "archmage":
+                break;
+            case "osric":
                 break;
             case "dcc":
                 // Rolls with '?' are conditional. Use result in dcc-actor-handler if condition is met.
@@ -67,23 +70,30 @@ export class DiceRoller {
         return formula;
     }
 
-    async RollAbilities(){
-        // Ability Rolls
-        for (let rs = 0; rs < this._settingNumberOfSetsRolledCount(); rs++) {
-            const roll = new Roll(this.Formula_Abilities());
-            const rolled_results = await roll.evaluate();
-            this.results_abilities.push(rolled_results)
+    async RollAbilities() {
 
-            //Get roll data
-            this.GetRollData(rolled_results, 0);
-        }
+        let result_set_total = 0;
+        this._tries_remaining = 20; // Prevent infinite loop for unachievable results. 
+        let check_minmax = (this._settings.MinimumAbilityTotal > 0 || this._settings.MaximumAbilityTotal > 0);
+        let fails_minmax = false;
+        do {
 
-        // Get index of lowest Set to drop
-        if (this._settings.DropLowestSet) {
-            const results = this.results_abilities.map(function (e) { return e.total; }).join(',').split(',').map(Number);
-            const drop_val = Math.min(...results);
-            this.drop_val_index = results.indexOf(drop_val);
-        }
+            // Ability Rolls
+            for (let rs = 0; rs < this._settingNumberOfSetsRolledCount(); rs++) {
+                const roll = new Roll(this.Formula_Abilities());
+                const rolled_results = await roll.evaluate();
+                this.results_abilities.push(rolled_results)
+
+                //Get roll data
+                this.GetRollData(rolled_results, 0);
+            }
+
+            // Get index of lowest Set to drop
+            if (this._settings.DropLowestSet) {
+                const results = this.results_abilities.map(function (e) { return e.total; }).join(',').split(',').map(Number);
+                const drop_val = Math.min(...results);
+                this.drop_val_index = results.indexOf(drop_val);
+            }
 
         // Bonus Points
         switch (this._settings.BonusPoints) {
@@ -101,9 +111,20 @@ export class DiceRoller {
                 // Get roll data
                 this.GetRollData(bonus_result, 0);
 
-                break;
-            default:
-        }
+                    break;
+                default:
+            }
+
+            // Validate min/max totals of results + bonus
+            this._tries_remaining--;
+            result_set_total = this.GetFinalResults().reduce(function (x, y) { return x + y }, 0) + this._bonus_point_total;
+            fails_minmax = check_minmax && this._tries_remaining && (result_set_total < this._settings.MinimumAbilityTotal || (result_set_total > this._settings.MaximumAbilityTotal && this._settings.MaximumAbilityTotal > 0));
+            if (fails_minmax) {
+                this._roll_data = [];
+                this.results_abilities = [];
+            }
+
+        } while (fails_minmax)
     }
 
     async RollOtherProperties(formula) {
@@ -209,7 +230,8 @@ export class DiceRoller {
 			case "pf1":
 			case "ose":
 			case "archmage":
-				break;
+            case "osric":
+                break;
 			case "dcc":
 				let dcc_actor_helper = new dcc_ActorHelper(null, other_properties_results);
 
@@ -246,6 +268,9 @@ export class DiceRoller {
         if(!this._settings.Over18Allowed && (this._settings.DistributionMethod !== "apply-as-rolled" || this._settingIsBonusPointApplied() || game.system.id === "dnd5e"))
         {
             method_text += game.i18n.localize("RNCS.results-text.methods.over-18-not-allowed") + "</br>"
+        }
+        if(this._settings.MinimumAbilityTotal > 0 || this._settings.MaximumAbilityTotal > 0){
+            method_text += "Min/Max Total Ability Score: " + this._settings.MinimumAbilityTotal + "/" + this._settings.MaximumAbilityTotal + "</br>"
         }
         method_text += game.i18n.localize("RNCS.settings.DistributionMethod.choices." + this._settings.DistributionMethod);
         method_text += "</p>"
@@ -330,7 +355,7 @@ export class DiceRoller {
         let d6_results = []
 
         // NOTE: If more rolls than needed to fill abilities is selected, and Distrubute results is unchecked without selecting Drop Lowest Set,
-        // the last roll will still be displayed, but not applied to any ability. 
+        // the last roll(s) will still be displayed, but not applied to any ability. 
         // This might look confusing to players - so maybe a way to indicate this in the chat message??
         if (this._settings.ChatShowCondensedResults) { 
             // Condensed
@@ -372,6 +397,14 @@ export class DiceRoller {
         return results_text;
     }
 
+    GetTotalAbilityScore() {
+        let results_text = "<p>";
+        results_text += "<b>" + game.i18n.localize("RNCS.results-text.results.total-ability-score") + ": </b>" + (this.GetFinalResults().reduce(function (x, y) { return x + y }, 0) + this._bonus_point_total);
+        results_text += (this._tries_remaining === 0 ? game.i18n.localize("RNCS.results-text.results.min_max_failed") : "");
+        results_text += "</p>";  
+        return results_text;      
+    }
+
     GetDieResultSet() {
 
         let results_text = "<p>";
@@ -408,6 +441,11 @@ export class DiceRoller {
 
         // Bonus Point distribution - if any
         if (this._settingIsBonusPointApplied()) { note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.distribute-bonus-points"); }
+
+        // Min/Max limits
+        if(this._settings.MinimumAbilityTotal > 0 || this._settings.MaximumAbilityTotal > 0){
+            note_from_dm += "Total of all ability scores must be between " + this._settings.MinimumAbilityTotal + " and " + this._settings.MaximumAbilityTotal + ". ";
+        }
 
         // Mention final score limit - if any
         if(!this._settings.Over18Allowed && (this._settings.DistributionMethod !== "apply-as-rolled" || this._settingIsBonusPointApplied()))

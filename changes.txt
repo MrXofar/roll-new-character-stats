@@ -1,7 +1,49 @@
-v3.1.6 - x/x/2022
+v3.2.0 - 1/25/2023
+------------------------------------------
+
+- Display only d6 result set when Ring Method is selected.
+
+- Added "(Adjust number of die/sets rolled or Min/Max values)" to chat card message when dice roller fails to achieve selected min/max limits after 20 attempts.
+
+- Implemented basic support for Advanced Roleplaying System "osric".
+
+- KNOWN ISSUE: Advanced Roleplaying System "osric" will experience an error message that reads "Unable to find originating chat cards token/actor. [undefined/undefined]" when clicking the Configure Actor button. This message has no effect on the functionality of the mod, and is the result of a message from "osric" when a button is clicked on the chat card due to the system expecting an actor or token. No current actor or selected token is required for for RNCS chat card button to function.
+
+I submitted an Issue to the developers but you can fix locally (if you are comfortable with coding in general) by commenting out the error message on chat.js.chatAction(event) and wrap everything that follows "if (!sourceActor) {...}" in an else{}.
+
+Like so...
+if (!sourceActor) {
+     //ui.notifications.error(`Unable to find originating chat cards token/actor. [${sourceTokenId}/${sourceActorId}]`)
+     return;
+}
+else{
+     //sourceAction stuff...
+}
+
+
+v3.1.61 - 1/2/2023
+----------------------------------------------
+- Missed a couple things for Min/Max settings
+  Method text display to show Min/Max range before rolling and in chat.
+  Dm note describing Min/Max range in chat.
+
+- Other minor updates
+
+v3.1.6 - 12/29/2022
 ----------------------------------------------
 - "More v10 compatibility changes"
+- Implemented Min/Max settings - Set the min/max of ability score totals and display result total in chat. 
+  There is a hard coded limiter (20 tries) to prevent infinite looping when min/max is impossible or unlikely to be achieved.
 
+- New Settings:
+  RNCS > Chat Settings > Total Ability Score [bool]
+    "Display final total ability score."
+
+  RNCS > Roll Method & Distribution > Minimum Ability Total [number]
+    "Minimum final total ability score, including bonus points. 0 = No Min"
+
+  RNCS > Roll Method & Distribution > Maximum Ability Total [number]
+    "Maximum final total ability score, including bonus points. 0 = No Max"
 
 v3.1.5 - 09/07/2022
 ----------------------------------------------

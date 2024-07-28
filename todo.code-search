@@ -1,19 +1,19 @@
 # Query: todo
 
-8 results - 4 files
+9 results - 4 files
+
+changes.txt:
+  285: Added todo-list.txt to show at a glance what is marked up as TODO-PRIORITY in the code.
+  300: See /todo-list.txt for other items of interest
 
 scripts\dice-roller.js:
-  55: // TODO-LOW: Add DieType|Sides setting to roll different sided die for abilities under different game systems
-  56: // TODO-LOW: Change "roll +modifiers" into a separate setting 
+  63:         formula += "d6"; // TODO-LOW: Add AbilitiesRollMethodNumFaces() setting to roll different sided die
+  66:         formula += this._settingAbilitiesRollMethodNumDie() === 2 ? "+6" : ""; // TODO-LOW: Add AbilitiesRollMethodDieMod() to add modifier to rolls
 
-scripts\main.js:
-   60: // TODO-MEDIUM: UpdateActor with (other-properties) from results_
-   82: // TODO-MEDIUM: Implement dice_roller.RollThemDice("other-properties")
-  114: // TODO-MEDIUM: Add Results (other-properties) to message
+scripts\helpers\pf1-actor-helper.js:
+  21:         // TODO-LOW: Figure out how to include "flavored" pf1 races
 
-scripts\form-apps\distribute-ability-scores.js:
-   88: // TODO-MEDIUM: Include other racial skills/features/bonuses/languages
-  115: // TODO-LOW: Figure out how to include "flavored" pf1 races
-
-templates\form-apps\distribute-ability-scores.html:
-  134: // TODO-LOW: Validation for score over 18 is still kinda sucky
+templates\form-apps\configure-actor.hbs:
+  225:                 // TODO-LOW: Validation for score over 18 is still kinda sucky                
+  314:             // TODO-LOW: Allow hybrid - some hard wired ASI and some variant ASI
+  423:             // TODO: Simplify
