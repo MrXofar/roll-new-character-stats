@@ -37,52 +37,55 @@ Hooks.on("renderActorDirectory", (app, html) => {
 });
 
 async function onRenderActorDirectory(app, html) {
-	const cbButton = $(`<button><i class="fas fa-dice"></i>${game.i18n.localize("RNCS.Button.text")}</button>`); 
-	html.find('.directory-footer').append(cbButton);
-	cbButton.click(ev => {
-		ev.preventDefault();
-		RollStats();
-	});
+  const cbButton = document.createElement('button');
+  cbButton.innerHTML = `<i class="fas fa-dice"></i>${game.i18n.localize("RNCS.Button.text")}`;
+  html.querySelector('.directory-footer').append(cbButton);
+  cbButton.addEventListener('click', ev => {
+    ev.preventDefault();
+    RollStats();
+  });
 }
 
-Hooks.on("renderChatMessage", (app, [html]) => {
-	//Hide buttons with class "card-buttons rncs-configure-new-actor"
-	const button = html.querySelectorAll(".rncs-configure-new-actor")
-	if (!game.user.can("ACTOR_CREATE")) {
-		for (let i = 0; i < button.length; i += 1) {
-			button[i].classList.add("rncs-display-none");
-		}
-	}
+Hooks.on("renderChatMessageHTML", (app, html) => {
+  // Find buttons with class "rncs-configure-new-actor"
+  const buttons = html.querySelectorAll(".rncs-configure-new-actor");
+  if (!game.user.can("ACTOR_CREATE")) {
+    buttons.forEach(button => {
+      button.classList.add("rncs-display-none");
+    });
+  }
 });
 
-Hooks.on("renderChatLog", (app, [html]) => {
-	html.addEventListener("click", ({ target }) => {
-		const msgId = target.closest(".chat-message[data-message-id]")?.dataset.messageId;
-		if (msgId && target.matches(".chat-card button") && target.dataset.action === "configure_new_actor") {
-			const msg = game.messages.get(msgId);
-			const flags = msg.flags.roll_new_character_stats;
+Hooks.on("renderChatLog", (app, html) => {
+  html.addEventListener("click", ({ target }) => {
+    const msgId = target.closest(".chat-message[data-message-id]")?.dataset.messageId;
+    if (msgId && target.matches(".chat-card button") && target.dataset.action === "configure_new_actor") {
+      const msg = game.messages.get(msgId);
+      const flags = msg.flags.roll_new_character_stats;
 
-			const owner_id = flags.owner_id;
-			const final_results = flags.final_results;
-			const bonus_points = flags.bonus_points; 
-			const other_properties_results = flags.other_properties_results;
-			const individual_rolls = flags.individual_rolls;  
-			const Over18Allowed = flags.Over18Allowed;
-			const HideResultsZone = flags.HideResultsZone;
-			const DistributionMethod = flags.DistributionMethod;
-			FormApp_ConfigureActor(target, 
-								   msgId, 
-								   owner_id, 
-								   final_results, 
-								   bonus_points, 
-								   other_properties_results, 
-								   individual_rolls, 
-								   Over18Allowed,
-								   HideResultsZone,
-								   DistributionMethod);
-		}
-	});
-}); 
+      const owner_id = flags.owner_id;
+      const final_results = flags.final_results;
+      const bonus_points = flags.bonus_points;
+      const other_properties_results = flags.other_properties_results;
+      const individual_rolls = flags.individual_rolls;
+      const Over18Allowed = flags.Over18Allowed;
+      const HideResultsZone = flags.HideResultsZone;
+      const DistributionMethod = flags.DistributionMethod;
+      FormApp_ConfigureActor(
+        target,
+        msgId,
+        owner_id,
+        final_results,
+        bonus_points,
+        other_properties_results,
+        individual_rolls,
+        Over18Allowed,
+        HideResultsZone,
+        DistributionMethod
+      );
+    }
+  });
+});
 
 Hooks.on("ready", () => {	
 	if(game.user.isGM) { VersionUpdateValidation(); }

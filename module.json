@@ -1,37 +1,36 @@
 {
-    "name": "roll-new-character-stats",
-    "title": "Roll New Character Stats (RNCS)",
-    "description": "Small mod for rolling new table-top-rpg character stats to get your game rolling!",
-    "authors": [{"name": "Richard Fox"}],
-    "version": "3.2.1",
-    "changelog": "",
-    "compatibility": {"minimum": "12", "verified":"12"},
-    "styles":["styles/rncs-styles.css"],
-    "relationships": {
-      "systems": [
-        {"id": "dnd5e", "type": "system"},
-        {"id": "pf1", "type": "system"},
-        {"id": "ose", "type": "system"},
-        {"id": "archmage", "type": "system"},
-        {"id": "dcc", "type": "system"},
-        {"id": "osric", "type": "system"}
-      ],
-      "requires": [],
-      "conflicts": []
-    },
-    "esmodules": [
-      "scripts/main.js"
-    ], 
-    "languages": [
-      {
-        "lang": "en",
-        "name": "English",
-        "path": "lang/en.json"
-      }
-    ],
-    "manifest": "https://raw.githubusercontent.com/MrXofar/roll-new-character-stats/master/module.json",
-    "download": "https://github.com/MrXofar/roll-new-character-stats/archive/refs/tags/v3.2.1.zip",
-    "url": "https://github.com/MrXofar/roll-new-character-stats",
-    "readme": "https://github.com/MrXofar/roll-new-character-stats/blob/master/README.md",
-    "bugs": "https://github.com/MrXofar/roll-new-character-stats/issues"
-  }
+  "id": "roll-new-character-stats",
+  "name": "roll-new-character-stats",
+  "title": "Roll New Character Stats (RNCS)",
+  "description": "Small mod for rolling new table-top-rpg character stats to get your game rolling!",
+  "authors": [{"name": "Richard Fox"}],
+  "version": "3.2.2",
+  "compatibility": {
+    "minimum": "12",
+    "verified": "13"
+  },
+  "styles": ["styles/rncs-styles.css"],
+  "esmodules": ["scripts/main.js"],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "relationships": {
+    "systems": [
+      {"id": "dnd5e", "type": "system"},
+      {"id": "pf1", "type": "system"},
+      {"id": "ose", "type": "system"},
+      {"id": "archmage", "type": "system"},
+      {"id": "dcc", "type": "system"},
+      {"id": "osric", "type": "system"}
+    ]
+  },
+  "manifest": "https://raw.githubusercontent.com/MrXofar/roll-new-character-stats/v3.2.2/module.json",
+  "download": "https://github.com/MrXofar/roll-new-character-stats/archive/refs/tags/v3.2.2.zip",
+  "url": "https://github.com/MrXofar/roll-new-character-stats",
+  "readme": "https://github.com/MrXofar/roll-new-character-stats/blob/master/README.md",
+  "bugs": "https://github.com/MrXofar/roll-new-character-stats/issues"
+}
