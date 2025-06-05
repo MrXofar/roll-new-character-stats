@@ -40,6 +40,8 @@ export class DiceRoller {
                 break;
             case "osric":
                 break;
+            case "fantastic-depths":
+                break;
             case "dcc":
                 // Rolls with '?' are conditional. Use result in dcc-actor-handler if condition is met.
                 // Example: The result from the 1d8? for farmer type will only be applied if the 1d100 results in a Farmer* occupation.
@@ -230,6 +232,7 @@ export class DiceRoller {
 			case "pf1":
 			case "ose":
 			case "archmage":
+			case "fantastic-depths":
             case "osric":
                 break;
 			case "dcc":
@@ -359,12 +362,17 @@ export class DiceRoller {
         // This might look confusing to players - so maybe a way to indicate this in the chat message??
         if (this._settings.ChatShowCondensedResults) { 
             // Condensed
-            results_text += "<table><tr>";
+            results_text += "<table><tr style=\"text-align: center;\">";
             for (let set = 0; set < this.results_abilities.length; set++) {
-                d6_results = this.results_abilities[set].dice[0].results.map(function (e) { return e.result; }).join(', ');
                 apply_to = (att_idx < abilities.length && this._settings.DistributionMethod === "apply-as-rolled" && this.drop_val_index !== set ? abilities[att_idx] : "R" + (set + 1));
+                results_text += "<th class=\"rncs-ability-text\">";
+                results_text += (this.drop_val_index === set ? "X" : apply_to);
+                results_text += "</th>";
+                if (this.drop_val_index !== set) { att_idx++; }
+            }
+            results_text += "</tr><tr>";
+            for (let set = 0; set < this.results_abilities.length; set++) {
                 results_text += "<td style=\"text-align: center;\">";
-                results_text += "<label class=\"rncs-ability-text\">" + (this.drop_val_index === set ? "X" : apply_to) + "</label><br>";
                 results_text += this.results_abilities[set].total
                 results_text += "</td>";
                 if (this.drop_val_index !== set) { att_idx++; }

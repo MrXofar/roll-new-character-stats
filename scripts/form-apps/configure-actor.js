@@ -7,6 +7,7 @@ import ose_ActorHelper from "../helpers/ose-actor-helper.js";
 import archmage_ActorHelper from "../helpers/archmage-actor-helper.js";
 import dcc_ActorHelper from "../helpers/dcc-actor-helper.js";
 import osric_ActorHelper from "../helpers/osric-actor-helper.js";
+import fd_ActorHelper from "../helpers/fd-actor-helper.js";
 
 const game_system_helper = new GAME_SYSTEM_Helper();
 
@@ -96,6 +97,8 @@ export class ConfigureActor extends FormApplication {
                 break;
             case "osric":
                 break;
+            case "fantastic-depths":
+                break;
             case "dcc":
 
                 // Actor document is not passed in at this time since one will not be created until player accepts the new actor
@@ -153,6 +156,9 @@ export class ConfigureActor extends FormApplication {
 
             // ose
             is_ose: game.system.id === "ose",
+
+            // fantastic-depths
+            is_fantastic_depths: game.system.id === "fantastic-depths",
 
             // osric
             is_osric: game.system.id === "osric",
@@ -213,6 +219,10 @@ export class ConfigureActor extends FormApplication {
             case "osric":
                 let osric_actor_helper = new osric_ActorHelper(actor);
                 osric_actor_helper._Update(formData);
+                break;
+            case "fantastic-depths":
+                let fd_actor_helper = new fd_ActorHelper(actor);
+                fd_actor_helper._Update(formData);
                 break;
             default:
         }

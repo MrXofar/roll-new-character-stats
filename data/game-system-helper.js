@@ -15,13 +15,15 @@ export default class GAME_SYSTEM_Helper {
             case "pf1":
                 return jsonDATA.game_system[0].pf1.races;
             case "ose":
-                return jsonDATA.game_system[0].ose.races;
+                //return jsonDATA.game_system[0].ose.races;
             case "osric":
-                return jsonDATA.game_system[0].ose.races;
+                //return jsonDATA.game_system[0].ose.races;
             case "archmage":
-                return jsonDATA.game_system[0].archmage.races;
+                //return jsonDATA.game_system[0].archmage.races;
             case "dcc":
-                return jsonDATA.game_system[0].dcc.races;
+                //return jsonDATA.game_system[0].dcc.races;
+            case "fantastic-depths":
+                //return jsonDATA.game_system[0].fantasticdepths.races;
             default:// Default to dnd5e for now
                 return jsonDATA.game_system[0].dnd5e.races;
         }
@@ -42,6 +44,8 @@ export default class GAME_SYSTEM_Helper {
                 return jsonDATA.game_system[0].archmage.abilities;
             case "dcc":
                 return jsonDATA.game_system[0].dcc.abilities;
+            case "fantastic-depths":
+                return jsonDATA.game_system[0].fantasticdepths.abilities;
             default:// Default to dnd5e for now
                 return jsonDATA.game_system[0].dnd5e.abilities;
         }
@@ -53,6 +57,7 @@ export default class GAME_SYSTEM_Helper {
             case "pf1":
             case "ose":
             case "archmage":
+            case "fantastic-depths":
             case "osric":
                 return "character";
             case "dcc":

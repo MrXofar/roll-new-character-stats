@@ -75,6 +75,7 @@
     text-transform: capitalize;
     font-family: var(--modesto);
     font-weight: 700;
+    padding: 5px;
   }
   .rncs-over18{
     color: red;
@@ -170,9 +171,6 @@
   }
   .rncs-form-group{
     clear: both;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
     margin: 3px 0;
     align-items: center;
     padding: 5px 2px 5px 9px;

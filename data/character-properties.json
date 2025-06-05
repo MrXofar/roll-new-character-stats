@@ -1798,6 +1798,17 @@
                     "lck"
                 ],
                 "races": []
+            },
+            "fantasticdepths": {
+                "abilities": [
+                    "str",
+                    "int",
+                    "wis",
+                    "dex",
+                    "con",
+                    "cha"
+                ],
+                "races": []
             }
         }
     ]

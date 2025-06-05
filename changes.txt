@@ -1,4 +1,10 @@
-v3.2.2 - 2025
+v3.2.3 - -/-/2025
+------------------------------------------
+- Added Fantastic Depths
+- Some formatting fixed
+- Configure Actor on popup chat message is now functional
+
+v3.2.2 - 6/3/2025
 ------------------------------------------
 - Fix v13 compatibility issues
 

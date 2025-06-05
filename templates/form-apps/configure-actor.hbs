@@ -37,6 +37,7 @@
             switch (game.system.id) {
 
                 case "dnd5e":
+                case "fantastic-depths":
                     // Always show Score column because players can select Race during Configuration
                     break;
                 case "pf1":
@@ -214,6 +215,7 @@
                     case "pf1":
                     case "archmage":
                     case "ose":
+                    case "fantastic-depths":
                     case "osric":
                         ability_mod = Math.floor((final_score_display.value - 10) / 2);
                         break;
@@ -510,7 +512,10 @@
     {{#if is_ose}}
     {{/if}} 
     {{#if is_osric}}
-    {{/if}}-->
+    {{/if}} 
+    {{#if is_fantastic_depths}}
+    {{/if}}
+    -->
 
     {{#if is_dcc}}
     <p style="font-size: small;">

@@ -56,12 +56,15 @@ Hooks.on("renderChatMessageHTML", (app, html) => {
   }
 });
 
-Hooks.on("renderChatLog", (app, html) => {
-  html.addEventListener("click", ({ target }) => {
-    const msgId = target.closest(".chat-message[data-message-id]")?.dataset.messageId;
-    if (msgId && target.matches(".chat-card button") && target.dataset.action === "configure_new_actor") {
-      const msg = game.messages.get(msgId);
-      const flags = msg.flags.roll_new_character_stats;
+Hooks.on("renderChatMessage", (chatMessage, html, data) => {
+  // Check if the message is from RNCS
+  if (chatMessage.flags?.roll_new_character_stats) {
+    // Find the Configure Actor button
+    const configureButton = html.find(".rncs-configure-new-actor button[data-action='configure_new_actor']");
+    configureButton.on("click", (event) => {
+      event.preventDefault(); // Prevent default behavior
+      const msgId = chatMessage.id;
+      const flags = chatMessage.flags.roll_new_character_stats;
 
       const owner_id = flags.owner_id;
       const final_results = flags.final_results;
@@ -71,8 +74,10 @@ Hooks.on("renderChatLog", (app, html) => {
       const Over18Allowed = flags.Over18Allowed;
       const HideResultsZone = flags.HideResultsZone;
       const DistributionMethod = flags.DistributionMethod;
+
+      // Call the configure actor form
       FormApp_ConfigureActor(
-        target,
+        event.currentTarget,
         msgId,
         owner_id,
         final_results,
@@ -83,8 +88,8 @@ Hooks.on("renderChatLog", (app, html) => {
         HideResultsZone,
         DistributionMethod
       );
-    }
-  });
+    });
+  }
 });
 
 Hooks.on("ready", () => {	
@@ -291,10 +296,12 @@ async function ShowResultsInChatMessage(dice_roller) {
 		case "ose":
 		case "archmage":
 		case "dcc":
+		case "fantastic-depths":
 		case "osric":
-			results_message += "<div class=\"card-buttons chatCard-action rncs-configure-new-actor\"><button data-action=\"configure_new_actor\">";
+			results_message += "<div class=\"card-buttons chatCard-action rncs-configure-new-actor\">";
+			results_message += "<button class=\"rncs-configure-button\" data-action=\"configure_new_actor\">";
 			results_message += game.i18n.localize("RNCS.dialog.results-button.configure-new-actor");
-			results_message += "</button></div></div>"
+			results_message += "</button></div></div>";
 			break;
 		default:
 			console.log(RNCS.ID + " | unable to add [" + game.i18n.localize("RNCS.dialog.results-button.configure-new-actor") + "] button to chat card. Game system not supported yet.");
