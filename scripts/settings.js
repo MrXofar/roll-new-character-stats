@@ -17,45 +17,45 @@ export function registerSettings() {
     });
 
     game.settings.register(RNCS.ID, "version", {
-		scope: "world",
-		config: false,
-		default: "0.0.0",
-		type: String,
-		onChange: () => {
-			if (!game.user.isGM || game.settings.get(RNCS.ID,"ForceDefaultSettings") === false) return;
-			new Dialog({
-				title: `RNCS | ${game.i18n.localize("RNCS.settings.version.title")}`,
-				content: game.i18n.localize("RNCS.settings.version.content"),
-				buttons: {
-					yes: {
-						label: game.i18n.localize("OK"),
-						callback: () => {
-							RNCS.restoreDefaultSettings();
-						},
-					},
-				},
-				default: "yes",
-			}).render(true);
-		},
-	});    
+        scope: "world",
+        config: false,
+        default: "0.0.0",
+        type: String,
+        onChange: () => {
+            if (!game.user.isGM || game.settings.get(RNCS.ID, "ForceDefaultSettings") === false) return;
+            new Dialog({
+                title: `RNCS | ${game.i18n.localize("RNCS.settings.version.title")}`,
+                content: game.i18n.localize("RNCS.settings.version.content"),
+                buttons: {
+                    yes: {
+                        label: game.i18n.localize("OK"),
+                        callback: () => {
+                            RNCS.restoreDefaultSettings();
+                        },
+                    },
+                },
+                default: "yes",
+            }).render(true);
+        },
+    });
 
-	game.settings.registerMenu(settingsKey, "ChatSettings", {
-		name: "",
-		hint: game.i18n.localize("RNCS.settings.ChatSettings.Hint"),
-		label: game.i18n.localize("RNCS.settings.ChatSettings.Name"),
-		icon: "fas fa-comments",
-		type: ChatSettings,
-		restricted: true,
-	})
-    
-	game.settings.registerMenu(settingsKey, "RollMethodAndDistribution", {
-		name: "",
-		hint: game.i18n.localize("RNCS.settings.RollMethodAndDistribution.Hint"),
-		label: game.i18n.localize("RNCS.settings.RollMethodAndDistribution.Name"),
-		icon: "fas fa-dice",
-		type: RollAndDistributionMethodSettings,
-		restricted: true,
-	})
+    game.settings.registerMenu(settingsKey, "ChatSettings", {
+        name: "",
+        hint: game.i18n.localize("RNCS.settings.ChatSettings.Hint"),
+        label: game.i18n.localize("RNCS.settings.ChatSettings.Name"),
+        icon: "fas fa-comments",
+        type: ChatSettings,
+        restricted: true,
+    })
+
+    game.settings.registerMenu(settingsKey, "RollMethodAndDistribution", {
+        name: "",
+        hint: game.i18n.localize("RNCS.settings.RollMethodAndDistribution.Hint"),
+        label: game.i18n.localize("RNCS.settings.RollMethodAndDistribution.Name"),
+        icon: "fas fa-dice",
+        type: RollAndDistributionMethodSettings,
+        restricted: true,
+    })
 
     game.settings.register(settingsKey, "NumberOfActors", {
         name: game.i18n.localize("RNCS.settings.NumberOfActors.Name"),
@@ -85,8 +85,8 @@ export function registerSettings() {
         choices: {
             "player-occupation": game.i18n.localize("RNCS.settings.NameFormat.choices.player-occupation"),
             "occupation-player": game.i18n.localize("RNCS.settings.NameFormat.choices.occupation-player"),
-            "occupation"       : game.i18n.localize("RNCS.settings.NameFormat.choices.occupation"),
-            "random"           : game.i18n.localize("RNCS.settings.NameFormat.choices.random")
+            "occupation": game.i18n.localize("RNCS.settings.NameFormat.choices.occupation"),
+            "random": game.i18n.localize("RNCS.settings.NameFormat.choices.random")
         },
         default: "player-occupation"
     });
@@ -196,7 +196,7 @@ export function registerSettings() {
         type: Boolean,
         default: true
     });
-    
+
     game.settings.register(settingsKey, "ChatShowBonusPointsText", {
         name: game.i18n.localize("RNCS.settings.ChatShowBonusPointsText.Name"),
         hint: game.i18n.localize("RNCS.settings.ChatShowBonusPointsText.Hint"),
@@ -222,7 +222,7 @@ export function registerSettings() {
         config: false,
         type: Boolean,
         default: true
-    });    
+    });
     // END Chat Settings 
 
     // BEGIN Roll & Distribution Method Settings
@@ -290,8 +290,8 @@ export function registerSettings() {
         type: String,
         choices: {
             "zero-points": game.i18n.localize("RNCS.settings.BonusPoints.choices.zero-points"),
-            "one-point"  : game.i18n.localize("RNCS.settings.BonusPoints.choices.one-point"),
-            "one-d-four" : game.i18n.localize("RNCS.settings.BonusPoints.choices.one-d-four")
+            "one-point": game.i18n.localize("RNCS.settings.BonusPoints.choices.one-point"),
+            "one-d-four": game.i18n.localize("RNCS.settings.BonusPoints.choices.one-d-four")
         },
         default: "zero-points"
     });
@@ -312,7 +312,7 @@ export function registerSettings() {
         config: false,
         type: Number,
         default: 0,
-		restricted: true,
+        restricted: true,
     });
 
     game.settings.register(settingsKey, "MaximumAbilityTotal", {
@@ -322,7 +322,7 @@ export function registerSettings() {
         config: false,
         type: Number,
         default: 0,
-		restricted: true,
+        restricted: true,
     });
 
     game.settings.register(settingsKey, "DistributionMethod", {
@@ -332,14 +332,14 @@ export function registerSettings() {
         config: false,
         type: String,
         choices: {
-            "apply-as-rolled"  : game.i18n.localize("RNCS.settings.DistributionMethod.choices.apply-as-rolled"  ),
+            "apply-as-rolled": game.i18n.localize("RNCS.settings.DistributionMethod.choices.apply-as-rolled"),
             "distribute-freely": game.i18n.localize("RNCS.settings.DistributionMethod.choices.distribute-freely"),
-            "ring-method"      : game.i18n.localize("RNCS.settings.DistributionMethod.choices.ring-method"      )
+            "ring-method": game.i18n.localize("RNCS.settings.DistributionMethod.choices.ring-method")
         },
         default: "apply-as-rolled"
     });
     // END Roll & Distribution Method Settings
-    
+
     // game.settings.register(settingsKey, "SettingName", {
     //     name: game.i18n.localize("RNCS.settings.SettingName.Name"),
     //     hint: game.i18n.localize("RNCS.settings.SettingName.Hint"),
@@ -363,13 +363,13 @@ export function registerSettings() {
     //     default: "0"
     // });
 
-	console.log(RNCS.ID + " | Registered Settings");
+    console.log(RNCS.ID + " | Registered Settings");
 }
 
 Hooks.on('renderChatSettings', () => {
     Intitialize();
 });
-    
+
 class ChatSettings extends FormApplication {
 
     static get defaultOptions() {
@@ -377,40 +377,54 @@ class ChatSettings extends FormApplication {
             id: "rncs-chat-settings",
             title: "RNCS - Edit Chat Settings",
             template: "./modules/roll-new-character-stats/templates/form-apps/edit-chat-settings.hbs",
-            width:500,
+            width: 500, height: "auto",
             closeOnSubmit: true,
             submitOnClose: false
         })
     }
 
-    async getData(){
-        return{
+    async getData() {
+        return {
             ChatRemoveConfigureActorButton_value: game.settings.get(settingsKey, "ChatRemoveConfigureActorButton"),
-            ChatShowDescription_value:            game.settings.get(settingsKey, "ChatShowDescription"),
-            ChatShowMethodText_value:             game.settings.get(settingsKey, "ChatShowMethodText"),
-            ChatShowResultsText_value:            game.settings.get(settingsKey, "ChatShowResultsText"),
-            ChatShowTotalAbilityScore_value:      game.settings.get(settingsKey, "ChatShowTotalAbilityScore"),
-            ChatShowCondensedResults_value:       game.settings.get(settingsKey, "ChatShowCondensedResults"),
-            ChatShowDieResultSet_value:           game.settings.get(settingsKey, "ChatShowDieResultSet"),
-            ChatShowBonusPointsText_value:        game.settings.get(settingsKey, "ChatShowBonusPointsText"),
-            ChatShowDifficultyText_value:         game.settings.get(settingsKey, "ChatShowDifficultyText"),
-            ChatShowNoteFromDM_value:             game.settings.get(settingsKey, "ChatShowNoteFromDM")
+            ChatShowDescription_value: game.settings.get(settingsKey, "ChatShowDescription"),
+            ChatShowMethodText_value: game.settings.get(settingsKey, "ChatShowMethodText"),
+            ChatShowResultsText_value: game.settings.get(settingsKey, "ChatShowResultsText"),
+            ChatShowTotalAbilityScore_value: game.settings.get(settingsKey, "ChatShowTotalAbilityScore"),
+            ChatShowCondensedResults_value: game.settings.get(settingsKey, "ChatShowCondensedResults"),
+            ChatShowDieResultSet_value: game.settings.get(settingsKey, "ChatShowDieResultSet"),
+            ChatShowBonusPointsText_value: game.settings.get(settingsKey, "ChatShowBonusPointsText"),
+            ChatShowDifficultyText_value: game.settings.get(settingsKey, "ChatShowDifficultyText"),
+            ChatShowNoteFromDM_value: game.settings.get(settingsKey, "ChatShowNoteFromDM")
         }
     }
-    
+
     async _updateObject(event, formData) {
-        if(event.submitter.id !== "cancel"){
+        if (event.submitter.id !== "cancel") {
             game.settings.set(settingsKey, "ChatRemoveConfigureActorButton", formData.rncs_ChatRemoveConfigureActorButton),
-            game.settings.set(settingsKey, "ChatShowDescription", formData.rncs_ChatShowDescription),
-            game.settings.set(settingsKey, "ChatShowMethodText", formData.rncs_ChatShowMethodText),
-            game.settings.set(settingsKey, "ChatShowResultsText", formData.rncs_ChatShowResultsText),
-            game.settings.set(settingsKey, "ChatShowTotalAbilityScore", formData.rncs_ChatShowTotalAbilityScore),
-            game.settings.set(settingsKey, "ChatShowCondensedResults", formData.rncs_ChatShowCondensedResults),
-            game.settings.set(settingsKey, "ChatShowDieResultSet", formData.rncs_ChatShowDieResultSet),
-            game.settings.set(settingsKey, "ChatShowBonusPointsText", formData.rncs_ChatShowBonusPointsText),
-            game.settings.set(settingsKey, "ChatShowDifficultyText", formData.rncs_ChatShowDifficultyText),
-            game.settings.set(settingsKey, "ChatShowNoteFromDM", formData.rncs_ChatShowNoteFromDM)
+                game.settings.set(settingsKey, "ChatShowDescription", formData.rncs_ChatShowDescription),
+                game.settings.set(settingsKey, "ChatShowMethodText", formData.rncs_ChatShowMethodText),
+                game.settings.set(settingsKey, "ChatShowResultsText", formData.rncs_ChatShowResultsText),
+                game.settings.set(settingsKey, "ChatShowTotalAbilityScore", formData.rncs_ChatShowTotalAbilityScore),
+                game.settings.set(settingsKey, "ChatShowCondensedResults", formData.rncs_ChatShowCondensedResults),
+                game.settings.set(settingsKey, "ChatShowDieResultSet", formData.rncs_ChatShowDieResultSet),
+                game.settings.set(settingsKey, "ChatShowBonusPointsText", formData.rncs_ChatShowBonusPointsText),
+                game.settings.set(settingsKey, "ChatShowDifficultyText", formData.rncs_ChatShowDifficultyText),
+                game.settings.set(settingsKey, "ChatShowNoteFromDM", formData.rncs_ChatShowNoteFromDM)
         }
+    }
+    activateListeners(html) {
+        super.activateListeners(html);
+        html.find(".rncs-form-group").on("click", (event) => {
+            // Skip if clicking the text input or its label
+            if (event.target.closest("#rncs_NoteFromDM, label[for='rncs_NoteFromDM']")) {
+                return;
+            }
+            const checkbox = event.currentTarget.querySelector("input[type='checkbox']");
+            if (checkbox && !event.target.matches("input[type='checkbox']")) {
+                checkbox.checked = !checkbox.checked;
+                checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+            }
+        });
     }
 }
 
@@ -423,7 +437,7 @@ class RollAndDistributionMethodSettings extends FormApplication {
     }
 
     NumberOfSetsRolled_choices = {
-        "6": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.6" ),
+        "6": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.6"),
         "7": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.7"),
         "8": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.8"),
         "9": game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices.9")
@@ -431,14 +445,14 @@ class RollAndDistributionMethodSettings extends FormApplication {
 
     BonusPoints_choices = {
         "zero-points": game.i18n.localize("RNCS.settings.BonusPoints.choices.zero-points"),
-        "one-point"  : game.i18n.localize("RNCS.settings.BonusPoints.choices.one-point"),
-        "one-d-four" : game.i18n.localize("RNCS.settings.BonusPoints.choices.one-d-four"),
+        "one-point": game.i18n.localize("RNCS.settings.BonusPoints.choices.one-point"),
+        "one-d-four": game.i18n.localize("RNCS.settings.BonusPoints.choices.one-d-four"),
     }
 
     DistributionMethod_choices = {
-        "apply-as-rolled"  : game.i18n.localize("RNCS.settings.DistributionMethod.choices.apply-as-rolled"  ),
+        "apply-as-rolled": game.i18n.localize("RNCS.settings.DistributionMethod.choices.apply-as-rolled"),
         "distribute-freely": game.i18n.localize("RNCS.settings.DistributionMethod.choices.distribute-freely"),
-        "ring-method"      : game.i18n.localize("RNCS.settings.DistributionMethod.choices.ring-method"      ),
+        "ring-method": game.i18n.localize("RNCS.settings.DistributionMethod.choices.ring-method"),
     }
 
     static get defaultOptions() {
@@ -446,43 +460,57 @@ class RollAndDistributionMethodSettings extends FormApplication {
             id: "rncs-roll-dist-method",
             title: "RNCS - " + game.i18n.localize("RNCS.settings.RollMethodAndDistribution.Name"),
             template: "./modules/roll-new-character-stats/templates/form-apps/edit-roll-dist-method.hbs",
-            width:500,
+            width: 500,
             closeOnSubmit: true,
             submitOnClose: false
         })
     }
 
-    async getData(){
-        return{
-            AbilitiesRollMethod_choices     :this.AbilitiesRollMethod_choices,
-            AbilitiesRollMethod_value       :game.settings.get(settingsKey, "AbilitiesRollMethod"),
-            DropLowestDieRoll_value         :game.settings.get(settingsKey, "DropLowestDieRoll"),
-            ReRollOnes_value                :game.settings.get(settingsKey, "ReRollOnes"),
-            NumberOfSetsRolled_choices      :this.NumberOfSetsRolled_choices,
-            NumberOfSetsRolled_value        :game.settings.get(settingsKey, "NumberOfSetsRolled"),
-            DropLowestSet_value             :game.settings.get(settingsKey, "DropLowestSet"),
-            BonusPoints_choices             :this.BonusPoints_choices,
-            BonusPoints_value               :game.settings.get(settingsKey, "BonusPoints"),
-            Over18Allowed_value             :game.settings.get(settingsKey, "Over18Allowed"),
-            MinimumAbilityTotal_value       :game.settings.get(settingsKey, "MinimumAbilityTotal"),
-            MaximumAbilityTotal_value       :game.settings.get(settingsKey, "MaximumAbilityTotal"),
-            DistributionMethod_choices      :this.DistributionMethod_choices,
-            DistributionMethod_value        :game.settings.get(settingsKey, "DistributionMethod")
+    async getData() {
+        return {
+            AbilitiesRollMethod_choices: this.AbilitiesRollMethod_choices,
+            AbilitiesRollMethod_value: game.settings.get(settingsKey, "AbilitiesRollMethod"),
+            DropLowestDieRoll_value: game.settings.get(settingsKey, "DropLowestDieRoll"),
+            ReRollOnes_value: game.settings.get(settingsKey, "ReRollOnes"),
+            NumberOfSetsRolled_choices: this.NumberOfSetsRolled_choices,
+            NumberOfSetsRolled_value: game.settings.get(settingsKey, "NumberOfSetsRolled"),
+            DropLowestSet_value: game.settings.get(settingsKey, "DropLowestSet"),
+            BonusPoints_choices: this.BonusPoints_choices,
+            BonusPoints_value: game.settings.get(settingsKey, "BonusPoints"),
+            Over18Allowed_value: game.settings.get(settingsKey, "Over18Allowed"),
+            MinimumAbilityTotal_value: game.settings.get(settingsKey, "MinimumAbilityTotal"),
+            MaximumAbilityTotal_value: game.settings.get(settingsKey, "MaximumAbilityTotal"),
+            DistributionMethod_choices: this.DistributionMethod_choices,
+            DistributionMethod_value: game.settings.get(settingsKey, "DistributionMethod")
         }
     }
-    
+
     async _updateObject(event, formData) {
-        if(event.submitter.id !== "cancel"){
-            game.settings.set(settingsKey, "AbilitiesRollMethod",  formData.rncs_AbilitiesRollMethod),
-            game.settings.set(settingsKey, "DropLowestDieRoll",    formData.rncs_DropLowestDieRoll),
-            game.settings.set(settingsKey, "ReRollOnes",           formData.rncs_ReRollOnes),
-            game.settings.set(settingsKey, "NumberOfSetsRolled",   formData.rncs_NumberOfSetsRolled),
-            game.settings.set(settingsKey, "DropLowestSet",        formData.rncs_DropLowestSet),
-            game.settings.set(settingsKey, "BonusPoints",          formData.rncs_BonusPoints),
-            game.settings.set(settingsKey, "Over18Allowed",        formData.rncs_Over18Allowed),
-            game.settings.set(settingsKey, "MinimumAbilityTotal",  formData.rncs_MinimumAbilityTotal),
-            game.settings.set(settingsKey, "MaximumAbilityTotal",  formData.rncs_MaximumAbilityTotal),
-            game.settings.set(settingsKey, "DistributionMethod",   formData.rncs_DistributionMethod)
+        if (event.submitter.id !== "cancel") {
+            game.settings.set(settingsKey, "AbilitiesRollMethod", formData.rncs_AbilitiesRollMethod),
+                game.settings.set(settingsKey, "DropLowestDieRoll", formData.rncs_DropLowestDieRoll),
+                game.settings.set(settingsKey, "ReRollOnes", formData.rncs_ReRollOnes),
+                game.settings.set(settingsKey, "NumberOfSetsRolled", formData.rncs_NumberOfSetsRolled),
+                game.settings.set(settingsKey, "DropLowestSet", formData.rncs_DropLowestSet),
+                game.settings.set(settingsKey, "BonusPoints", formData.rncs_BonusPoints),
+                game.settings.set(settingsKey, "Over18Allowed", formData.rncs_Over18Allowed),
+                game.settings.set(settingsKey, "MinimumAbilityTotal", formData.rncs_MinimumAbilityTotal),
+                game.settings.set(settingsKey, "MaximumAbilityTotal", formData.rncs_MaximumAbilityTotal),
+                game.settings.set(settingsKey, "DistributionMethod", formData.rncs_DistributionMethod)
         }
+    }
+        activateListeners(html) {
+        super.activateListeners(html);
+        html.find(".rncs-form-group").on("click", (event) => {
+            // Skip if clicking the text input or its label
+            if (event.target.closest("#rncs_DistributionMethod, label[for='rncs_DistributionMethod']")) {
+                return;
+            }
+            const checkbox = event.currentTarget.querySelector("input[type='checkbox']");
+            if (checkbox && !event.target.matches("input[type='checkbox']")) {
+                checkbox.checked = !checkbox.checked;
+                checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+            }
+        });
     }
 }

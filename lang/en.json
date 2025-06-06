@@ -93,7 +93,7 @@
       },
       "Over18Allowed": {        
         "Name": "Scores Over 18 Allowed",
-        "Hint": "Checking this setting will allow scores over 18 when distributing rolled scores and/or bonuses. Setting is ignored when Distribution Method selected is \"Apply as Rolled\" - and no Bonus Points are awarded."    
+        "Hint": "Allow scores over 18 when distributing rolled scores and/or bonuses. Setting is ignored when Distribution Method selected is \"Apply as Rolled\" - and no Bonus Points are awarded."    
       },
       "MinimumAbilityTotal": {
         "Name": "Minimum Ability Total",
@@ -105,11 +105,11 @@
       },
       "DistributeResults": {
         "Name": "Distribute Results",
-        "Hint": "This setting will allow distribution of results freely among abilities."      
+        "Hint": "Allow distribution of results freely."      
       },
       "DistributionMethod": {
         "Name": "Distribution Method",
-        "Hint": "Choose how results will be distributed among abilities.",
+        "Hint": "Choose how results will be distributed.",
         "choices":{
           "apply-as-rolled"  : "Apply as Rolled",
           "distribute-freely": "Distribute Freely",
@@ -118,7 +118,7 @@
       },
       "ChatRemoveConfigureActorButton": {
         "Name": "Remove Configure Actor Button",
-        "Hint": "This setting will remove the Configure Actor button when clicked."      
+        "Hint": "Remove the Configure Actor button when clicked."      
       },
       "ChatSettings": {
         "Name": "Chat Settings",
@@ -126,39 +126,39 @@
       },
       "ChatShowDescription":{
         "Name": "Description",
-        "Hint": "Show character description - if any."
+        "Hint": "Show character description in chat message - if any."
       },
       "ChatShowMethodText":{
         "Name": "Roll Method & Distribution Rules",
         "Hint": "Show the Roll Method & Distribution rules for new abilities."
       },
       "ChatShowResultsText":{
-        "Name": "Ability Results",
-        "Hint": "Show results of ability rolls"
-      },
-      "ChatShowTotalAbilityScore":{
-        "Name": "Total Ability Score",
-        "Hint": "Display final total ability score."
+        "Name": "Show Results",
+        "Hint": "Show results of all rolls. Uncheck to hide all rolls in chat message."
       },
       "ChatShowCondensedResults":{
         "Name": "Condensed Ability Results",
-        "Hint": "Display ability results in condensed form if Ability Results is checked."
+        "Hint": "Display ability results in condensed form if Show Results is checked."
       },
       "ChatShowDieResultSet":{
         "Name": "Die Result Set",
-        "Hint": "Show all die rolls, excluding rerolled and discarded rolls, as a set in chat message. e.g. d6 = [1, 2, 3,...]."
+        "Hint": "Show all die rolls, excl. rerolls and discards if Show Results is checked."
       },
       "ChatShowBonusPointsText":{
         "Name": "Bonus Points",
-        "Hint": "Show Bonus Points."
+        "Hint": "Show Bonus Points if Show Results is checked."
+      },
+      "ChatShowTotalAbilityScore":{
+        "Name": "Total Ability Score",
+        "Hint": "Show total of all rolls and bonuses in chat message."
       },
       "ChatShowDifficultyText":{
         "Name": "Difficulty",
-        "Hint": "Show Difficulty text - this is just a fun way of showing the probability of rolling high numbers."
+        "Hint": "Show Difficulty text - a fun way of showing the probability of rolling high."
       },
       "ChatShowNoteFromDM":{
         "Name": "Note From DM",
-        "Hint": "A simple - automated - note from DM which explains the distribution and score limit rules to players."
+        "Hint": "A note from DM which summarizes the Roll Method & Distribution rules."
       }
     },
 

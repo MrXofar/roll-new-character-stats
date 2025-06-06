@@ -1,8 +1,19 @@
 v3.2.3 - -/-/2025
 ------------------------------------------
 - Added Fantastic Depths
+
 - Some formatting fixed
+
 - Configure Actor on popup chat message is now functional
+
+- Changed "Ability Results" setting to "Show Results" and changed the description and function.
+  Now reads as : "Show results of all rolls. Uncheck to hide all rolls in chat message."
+  This setting previously only hid the ability roll totals when Ring Method was not selected.
+  Total Ability Score will still be displayed.
+
+- Cleaned up settings layout and some of the descriptions in general.
+
+- Settings checkboxes will now toggle when clicking in the setting description box itself.
 
 v3.2.2 - 6/3/2025
 ------------------------------------------
