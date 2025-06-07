@@ -81,38 +81,52 @@ export class DiceRoller {
         do {
 
             // Ability Rolls
-            for (let rs = 0; rs < this._settingNumberOfSetsRolledCount(); rs++) {
-                const roll = new Roll(this.Formula_Abilities());
-                const rolled_results = await roll.evaluate();
-                this.results_abilities.push(rolled_results)
+            
+            if (this._settings.DistributionMethod !== "point-buy-method") {
+                for (let rs = 0; rs < this._settingNumberOfSetsRolledCount(); rs++) {
+                    const roll = new Roll(this.Formula_Abilities());
+                    const rolled_results = await roll.evaluate();
+                    this.results_abilities.push(rolled_results)
 
-                //Get roll data
-                this.GetRollData(rolled_results, 0);
+                    //Get roll data
+                    this.GetRollData(rolled_results, 0);
+                }
+            } else {
+                const system_helper = new GAME_SYSTEM_Helper();
+                const abilities = await system_helper.getSystemAbilities();
+                for (let rs = 0; rs < abilities.length; rs++) {
+                    const roll = new Roll("1d8");
+                    const rolled_results = await roll.evaluate({maximize: true}); // Evaluate the roll
+                    this.results_abilities.push(rolled_results)
+                }
             }
 
             // Get index of lowest Set to drop
-            if (this._settings.DropLowestSet) {
+            if (this._settings.DropLowestSet && this._settings.DistributionMethod !== "point-buy-method") {
                 const results = this.results_abilities.map(function (e) { return e.total; }).join(',').split(',').map(Number);
                 const drop_val = Math.min(...results);
                 this.drop_val_index = results.indexOf(drop_val);
             }
 
+            // Save point-buy points in _bonus_point_total
+            if(this._settings.DistributionMethod === "point-buy-method"){
+                this._bonus_point_total = 27;
+            }
+
         // Bonus Points
         switch (this._settings.BonusPoints) {
             case "zero-points":
-                this._bonus_point_total = 0;
+                this._bonus_point_total += 0;
                 break;
             case "one-point":
-                this._bonus_point_total = 1;
+                this._bonus_point_total += 1;
                 break;
             case "one-d-four":
                 const bonus = new Roll("1d4");
                 const bonus_result = await bonus.evaluate();
-                this._bonus_point_total = bonus_result.total;
-                    
+                this._bonus_point_total += bonus_result.total;
                 // Get roll data
                 this.GetRollData(bonus_result, 0);
-
                     break;
                 default:
             }
@@ -193,12 +207,13 @@ export class DiceRoller {
     GetIndividualRolls() {
         // Get individual rolls from results_abilities[] and ignore dropped val if one exists
         let _individual_rolls = [];
+
         this.results_abilities.forEach(score => {
             const score_index = this.results_abilities.indexOf(score);
             if (score_index !== this.drop_val_index) {
-                for(let i = 0; i < this.results_abilities[score_index].dice[0].results.length; i += 1){
+                for (let i = 0; i < this.results_abilities[score_index].dice[0].results.length; i += 1) {
                     let result = this.results_abilities[score_index].dice[0].results[i];
-                    if(!result.rerolled && !result.discarded){                        
+                    if (!result.rerolled && !result.discarded) {
                         _individual_rolls.push(result);
                     }
                 }
@@ -208,6 +223,9 @@ export class DiceRoller {
     }
 
     _settingNumberOfActors() {
+        if (this._settings.DistributionMethod === "point-buy-method") {
+            return 1;
+        }
         return parseInt(this._settings.NumberOfActors);
     }
     
@@ -262,18 +280,20 @@ export class DiceRoller {
     // Get results text
     GetMethodText() {
         let method_text = "<p><b>" + game.i18n.localize("RNCS.results-text.methods.label") + ":</b></br>";
-        method_text += "<em>" + game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices." + this._settings.AbilitiesRollMethod);
-        method_text += (this._settings.DropLowestDieRoll ? game.i18n.localize("RNCS.results-text.methods.drop-lowest-die") : "");
-        method_text += (this._settings.ReRollOnes ? game.i18n.localize("RNCS.results-text.methods.re-roll-ones") : "") + "</br>";
-        method_text += game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices." + this._settings.NumberOfSetsRolled);
-        method_text += (this._settings.DropLowestSet ? game.i18n.localize("RNCS.results-text.methods.drop-lowest-set") : "") + "</br>";
-        method_text += (this._settingIsBonusPointApplied() ? "+" + game.i18n.localize("RNCS.settings.BonusPoints.choices." + this._settings.BonusPoints) + "</br>" : "");        
-        if(!this._settings.Over18Allowed && (this._settings.DistributionMethod !== "apply-as-rolled" || this._settingIsBonusPointApplied() || game.system.id === "dnd5e"))
-        {
-            method_text += game.i18n.localize("RNCS.results-text.methods.over-18-not-allowed") + "</br>"
+
+        if (this._settings.DistributionMethod !== "point-buy-method") {
+            method_text += "<em>" + game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices." + this._settings.AbilitiesRollMethod);
+            method_text += (this._settings.DropLowestDieRoll ? game.i18n.localize("RNCS.results-text.methods.drop-lowest-die") : "");
+            method_text += (this._settings.ReRollOnes ? game.i18n.localize("RNCS.results-text.methods.re-roll-ones") : "") + "</br>";
+            method_text += game.i18n.localize("RNCS.settings.NumberOfSetsRolled.choices." + this._settings.NumberOfSetsRolled);
+            method_text += (this._settings.DropLowestSet ? game.i18n.localize("RNCS.results-text.methods.drop-lowest-set") : "") + "</br>";
+            if (this._settings.MinimumAbilityTotal > 0 || this._settings.MaximumAbilityTotal > 0) {
+                method_text += "Min/Max Total Ability Score: " + this._settings.MinimumAbilityTotal + "/" + this._settings.MaximumAbilityTotal + "</br>"
+            }
         }
-        if(this._settings.MinimumAbilityTotal > 0 || this._settings.MaximumAbilityTotal > 0){
-            method_text += "Min/Max Total Ability Score: " + this._settings.MinimumAbilityTotal + "/" + this._settings.MaximumAbilityTotal + "</br>"
+        method_text += (this._settingIsBonusPointApplied() ? "+" + game.i18n.localize("RNCS.settings.BonusPoints.choices." + this._settings.BonusPoints) + "</br>" : "");
+        if (!this._settings.Over18Allowed && (this._settings.DistributionMethod !== "apply-as-rolled" || this._settingIsBonusPointApplied() || game.system.id === "dnd5e")) {
+            method_text += game.i18n.localize("RNCS.results-text.methods.over-18-not-allowed") + "</br>"
         }
         method_text += game.i18n.localize("RNCS.settings.DistributionMethod.choices." + this._settings.DistributionMethod);
         method_text += "</p>"
@@ -301,7 +321,8 @@ export class DiceRoller {
         // DistributionMethod
         difficulty += this._settings.DistributionMethod === "apply as rolled" ? 0 : 0;   
         difficulty += this._settings.DistributionMethod === "distribute-freely" ? 2 : 0;  
-        difficulty += this._settings.DistributionMethod === "ring-method" ? 3 : 0;        
+        difficulty += this._settings.DistributionMethod === "ring-method" ? 3 : 0; 
+        difficulty += this._settings.DistributionMethod === "point-buy-method" ? 3 : 0;       
 
         // Check Box selections
         difficulty += this._settings.ReRollOnes ? 3 : 0;
@@ -444,6 +465,9 @@ export class DiceRoller {
                 break;
             case "ring-method":
                 note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.ring-method")
+                break;
+            case "point-buy-method":
+                note_from_dm += game.i18n.localize("RNCS.results-text.note-from-dm.point-buy-method")
                 break;
         }
 

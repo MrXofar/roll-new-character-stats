@@ -1,10 +1,12 @@
-v3.2.3 - -/-/2025
+v3.2.3 - 6/6/2025
 ------------------------------------------
-- Added Fantastic Depths
+- Added Point Buy Distribution Method!
+
+- Added Fantastic Depths game system
 
 - Some formatting fixed
 
-- Configure Actor on popup chat message is now functional
+- Configure Actor button on popup chat message is now functional.
 
 - Changed "Ability Results" setting to "Show Results" and changed the description and function.
   Now reads as : "Show results of all rolls. Uncheck to hide all rolls in chat message."

@@ -11,8 +11,8 @@
             const ability_scores = document.getElementById("ability_scores");
             HideResultsZone(ability_scores.dataset.hideresultszone === "true")
             HideRingMethodZone(ability_scores.dataset.distributionmethod !== "ring-method");
-            HideBonusPointColumn(ability_scores.dataset.bonus_points === "0");
-            if(ability_scores.dataset.distributionmethod === "apply-as-rolled"){
+            HideBonusPointColumn(ability_scores.dataset.bonus_points === "0" && ability_scores.dataset.distributionmethod !== "point-buy-method");
+            if(ability_scores.dataset.distributionmethod === "apply-as-rolled" || ability_scores.dataset.distributionmethod === "point-buy-method"){
                 ApplyAsRolled();
             }
             
@@ -599,8 +599,8 @@
 
         <tr id="header_row" class="rncs-header-row">
             <th>Ability</th>
-            <th>Result</th>
-            <th class="rncs-bonus-header">Bonus&nbsp;</span><span id="span_bp_remaining">{{bonus_points}}</span>/<span id="span_bp_max">{{bonus_points}}</span></th>
+            <th>Base</th>
+            <th class="rncs-bonus-header">+</span><span id="span_bp_remaining">{{bonus_points}}</span>/<span id="span_bp_max">{{bonus_points}}</span></th>
             <th class="rncs-race-mod-header">Race Bonus</th>
             <th class="rncs-score-header">Score
                 {{#if_AorB DistributionMethod bonus_points}}

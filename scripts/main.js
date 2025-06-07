@@ -201,11 +201,18 @@ export async function RollStats() {
 	// Roll them dice!
 	const _settings = new RegisteredSettings;
 	let dice_roller = new DiceRoller();
-
-	let question = game.i18n.localize("RNCS.dialog.confirm-roll.Content").toString().format(_settings.NumberOfActors, (_settings.NumberOfActors === 1 ? "character" : "characters"));
+	let title = '';
+	let question = '';
+	if(_settings.DistributionMethod !== "point-buy-method"){
+		title = game.i18n.localize("RNCS.dialog.confirm-roll.Title")
+		question = game.i18n.localize("RNCS.dialog.confirm-roll.Content").toString().format(_settings.NumberOfActors, (_settings.NumberOfActors === 1 ? "character" : "characters"));
+	}else{
+		title = game.i18n.localize("RNCS.dialog.point-buy.Title")
+		question = game.i18n.localize("RNCS.dialog.point-buy.Content").toString()
+	}
 
 	const confirmed = await Dialog.confirm({
-		title: game.i18n.localize("RNCS.dialog.confirm-roll.Title"),
+		title: title,
 		content: "<small>" + dice_roller.GetMethodText() + "<p>" + question + "</p></small>"
 	});
 
@@ -241,7 +248,7 @@ async function ShowResultsInChatMessage(dice_roller) {
 	// This is necessary for when the Configure Actor button is not removed, and we want the 
 	// the seetings at the time the message was created to still apply to this roll.
 	const Over18Allowed = _settings.Over18Allowed;
-	const HideResultsZone = (_settings.HideResultsZone && _settings.DistributionMethod !== "distribute-freely") || _settings.DistributionMethod === "ring-method"; // DistributionMethod(1) === Distribute Freely
+	const HideResultsZone = (_settings.HideResultsZone && _settings.DistributionMethod !== "distribute-freely") || _settings.DistributionMethod === "ring-method" || _settings.DistributionMethod === "point-buy-method"; // DistributionMethod(1) === Distribute Freely
 	const DistributionMethod = _settings.DistributionMethod;
 
 	// Results message header

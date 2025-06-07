@@ -28,7 +28,7 @@
       },
       "HideResultsZone": {
         "Name": "Hide Results Zone",
-        "Hint": "This setting will hide Results Zone when \"Apply as Rolled\" is selected."      
+        "Hint": "This setting will hide Results Zone when \"Apply as Rolled\" or \"Point Buy\" is selected."      
       },
       "ReverseRingMethodScrolling": {
         "Name": "Reverse Ring Method Scrolling",
@@ -93,7 +93,7 @@
       },
       "Over18Allowed": {        
         "Name": "Scores Over 18 Allowed",
-        "Hint": "Allow scores over 18 when distributing rolled scores and/or bonuses. Setting is ignored when Distribution Method selected is \"Apply as Rolled\" - and no Bonus Points are awarded."    
+        "Hint": "Allow scores over 18 when distributing rolled scores and/or bonuses. Setting is ignored when Distribution Method selected is \"Apply as Rolled\" - and no Bonus Points are awarded, or \"Point Buy\" is selected."    
       },
       "MinimumAbilityTotal": {
         "Name": "Minimum Ability Total",
@@ -113,7 +113,8 @@
         "choices":{
           "apply-as-rolled"  : "Apply as Rolled",
           "distribute-freely": "Distribute Freely",
-          "ring-method"      : "Ring Method"
+          "ring-method"      : "Ring Method",
+          "point-buy-method" : "Point Buy"
         }          
       },
       "ChatRemoveConfigureActorButton": {
@@ -172,7 +173,8 @@
         "over-18-not-allowed": "No scores over 18 allowed",
         "distribute-freely": "Distribute freely",
         "apply-as-rolled": "Apply as rolled",
-        "ring-method": "Ring method distribution"
+        "ring-method": "Ring method distribution",
+        "point-buy": "Point Buy distribution"
       },
       "difficulty": {
         "label": "Difficulty",
@@ -197,6 +199,7 @@
         "apply-as-rolled": "Each result will be applied to abilities in the order they were rolled. ",
         "distribute-freely": "You may distribute these scores among your abilities as you desire. ",
         "ring-method": "You may select three consecutive die rolls and apply them to any ability. ",
+        "point-buy-method": "You may distribute 27 points among your abilities. ",
         "distribute-bonus-points": "The Bonus Point(s) may be distributed among any of your scores. ",
         "final-scores-may": "Final scores may ",
         "final-scores-may-not": "Final scores may <b>not</b> ",
@@ -213,6 +216,10 @@
       },
       "results-button":{
         "configure-new-actor": "Configure Actor"
+      },
+      "point-buy":{
+        "Title": "Begin New Character Stats",
+        "Content": "Begin new character with point buy method?"
       }
     },
     "form-app":{
@@ -220,7 +227,8 @@
         "applied-as-rolled": "Applied as rolled. ",
         "over-18-not-allowed": "* No scores over 18 allowed.",
         "accept-new-actor": "Accept New Actor",
-        "ring-method": "Ring Method: This method allows you to select three consecutive die rolls and apply them to any ability."
+        "ring-method": "Ring Method: This method allows you to select three consecutive die rolls and apply them to any ability.",
+        "point-buy-method": "Point Buy Method: You may distribute 27 points among your abilities. "
       }
     }
   }

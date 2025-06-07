@@ -334,7 +334,8 @@ export function registerSettings() {
         choices: {
             "apply-as-rolled": game.i18n.localize("RNCS.settings.DistributionMethod.choices.apply-as-rolled"),
             "distribute-freely": game.i18n.localize("RNCS.settings.DistributionMethod.choices.distribute-freely"),
-            "ring-method": game.i18n.localize("RNCS.settings.DistributionMethod.choices.ring-method")
+            "ring-method": game.i18n.localize("RNCS.settings.DistributionMethod.choices.ring-method"),
+            "point-buy-method": game.i18n.localize("RNCS.settings.DistributionMethod.choices.point-buy-method")
         },
         default: "apply-as-rolled"
     });
@@ -433,7 +434,7 @@ class RollAndDistributionMethodSettings extends FormApplication {
     AbilitiesRollMethod_choices = {// choices.# represents number of d6
         "3": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.3"),
         "4": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.4"),
-        "2": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.2"),
+        "2": game.i18n.localize("RNCS.settings.AbilitiesRollMethod.choices.2")
     }
 
     NumberOfSetsRolled_choices = {
@@ -446,13 +447,14 @@ class RollAndDistributionMethodSettings extends FormApplication {
     BonusPoints_choices = {
         "zero-points": game.i18n.localize("RNCS.settings.BonusPoints.choices.zero-points"),
         "one-point": game.i18n.localize("RNCS.settings.BonusPoints.choices.one-point"),
-        "one-d-four": game.i18n.localize("RNCS.settings.BonusPoints.choices.one-d-four"),
+        "one-d-four": game.i18n.localize("RNCS.settings.BonusPoints.choices.one-d-four")
     }
 
     DistributionMethod_choices = {
         "apply-as-rolled": game.i18n.localize("RNCS.settings.DistributionMethod.choices.apply-as-rolled"),
         "distribute-freely": game.i18n.localize("RNCS.settings.DistributionMethod.choices.distribute-freely"),
         "ring-method": game.i18n.localize("RNCS.settings.DistributionMethod.choices.ring-method"),
+        "point-buy-method": game.i18n.localize("RNCS.settings.DistributionMethod.choices.point-buy-method")
     }
 
     static get defaultOptions() {
