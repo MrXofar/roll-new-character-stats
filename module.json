@@ -6,7 +6,7 @@
   "authors": [{"name": "Richard Fox"}],
   "version": "3.2.3",
   "compatibility": {
-    "minimum": "12",
+    "minimum": "13",
     "verified": "13"
   },
   "styles": ["styles/rncs-styles.css"],
